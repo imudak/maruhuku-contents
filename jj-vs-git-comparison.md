@@ -98,7 +98,7 @@ jjでは「ブックマーク（bookmark）」、Gitでは「ブランチ（bran
 ```powershell
 # ブックマークを作成・設定
 jj bookmark create feature-name
-jj bookmark set main -r '@-'
+jj bookmark set main  # デフォルトで現在のリビジョン(@)が対象
 
 # ブックマーク一覧を表示
 jj bookmark list
@@ -192,13 +192,13 @@ jj split
 # ブックマーク作成
 jj bookmark create feature-branch
 
-# ブックマークを設定
-jj bookmark set main -r '@-'
+# ブックマークを設定してプッシュ
+jj git push -b main  # bookmarkのsetとpushを同時に実行
 
 # ブックマーク一覧
 jj bookmark list
 
-# リモートにプッシュ
+# リモートにプッシュ（ブックマーク設定済みの場合）
 jj git push
 ```
 
@@ -284,25 +284,26 @@ jj new
 jjで初めてpushする際、ブックマーク（ブランチ）が設定されていないとpushできません。以下の手順が必要です：
 
 ```powershell
-# ブックマークが設定されていない場合
-jj git push
-# Warning: No bookmarks found in the default push revset
-# Nothing changed.
-
-# mainブックマークを現在の変更に設定
-jj bookmark set main -r '@-'
-
-# リモートのブックマークをトラッキング
+# 方法1: pushと同時にブックマークを設定（推奨）
+jj describe -m "変更内容"
+jj git push -b main  # -bオプションでbookmarkを指定
 jj bookmark track main --remote=origin
+```
 
-# 再度push
+または、従来の方法：
+
+```powershell
+# 方法2: 別々に実行
+jj describe -m "変更内容"
+jj bookmark set main  # デフォルトで現在のリビジョンが対象
+jj bookmark track main --remote=origin
 jj git push
 ```
 
-**初回のpush時のポイント：**
+**push時のポイント：**
 
-- `jj bookmark set` でブックマーク（ブランチ）を設定する
-- `@-` は一つ前の変更を示す（現在の作業中の変更ではなく、確定した変更）
+- **推奨**: `jj git push -b main` でbookmarkのsetとpushを同時に実行
+- `jj bookmark set main` は `-r @` を省略可能（デフォルトで現在のリビジョン）
 - `jj bookmark track` でリモートブックマークとの連携を設定する
 - 2回目以降は `jj git push` だけでOK
 
