@@ -59,6 +59,43 @@ jj change (変更ID: abc123)
 Git commit (SHA: def456)
 ```
 
+### ブックマーク（Bookmark）とブランチ（Branch）
+
+jjでは「ブックマーク（bookmark）」、Gitでは「ブランチ（branch）」と呼ばれますが、基本的には同じ概念です：
+
+**主な違い：**
+
+| 項目 | Git（ブランチ） | jj（ブックマーク） |
+|------|----------------|-------------------|
+| 作成 | 明示的に作成が必要 | 任意（なくても作業可能） |
+| 切り替え | `git checkout/switch` で切り替え | 変更（change）単位で作業 |
+| 自動更新 | 現在のブランチに新しいコミットが追加される | 手動で更新（`jj bookmark set`） |
+| 命名 | 作業開始時に名前が必要 | 後から名前を付けられる |
+| Push時 | ブランチ名が必須 | ブックマークがないとpushできない |
+
+**jjでのブックマーク操作：**
+
+```powershell
+# ブックマークを作成・設定
+jj bookmark create feature-name
+jj bookmark set main -r '@-'
+
+# ブックマーク一覧を表示
+jj bookmark list
+
+# リモートのブックマークをトラッキング
+jj bookmark track main --remote=origin
+
+# ブックマークを削除
+jj bookmark delete feature-name
+```
+
+**Gitとの対応関係：**
+
+- jjの「ブックマーク」= Gitの「ブランチ」
+- jjでpushするには、変更にブックマークを設定する必要がある
+- Gitリポジトリと連携する場合、jjのブックマークがGitのブランチとして扱われる
+
 ## Gitとjjのコマンド比較
 
 | Git | jj | 説明 |
@@ -68,6 +105,10 @@ Git commit (SHA: def456)
 | `git status` | `jj status` | 状態確認 |
 | `git log` | `jj log` | 履歴表示 |
 | `git diff` | `jj diff` | 差分表示 |
+| `git branch <name>` | `jj bookmark create <name>` | ブランチ/ブックマーク作成 |
+| `git branch -d <name>` | `jj bookmark delete <name>` | ブランチ/ブックマーク削除 |
+| `git branch` | `jj bookmark list` | ブランチ/ブックマーク一覧 |
+| `git checkout <branch>` | （変更単位で作業） | ブランチ切り替え |
 | `git rebase -i` | `jj squash` / `jj split` | 変更の統合・分割 |
 | `git push` | `jj git push` | リモートへプッシュ |
 | `git pull` | `jj git fetch` + `jj rebase` | リモートから取得 |
@@ -119,8 +160,14 @@ jj squash
 # 変更を分割
 jj split
 
-# ブランチ作成
-jj branch create feature-branch
+# ブックマーク作成
+jj bookmark create feature-branch
+
+# ブックマークを設定
+jj bookmark set main -r '@-'
+
+# ブックマーク一覧
+jj bookmark list
 
 # リモートにプッシュ
 jj git push
@@ -202,10 +249,37 @@ jj new
 
 ```powershell
 # リモートにプッシュ
-jj git push
+ jj git push
 ```
 
 プッシュ時に、jjの変更がGitコミットとしてリモートに送信されます。
+
+#### push時の注意点：ブックマークの設定
+
+jjで初めてpushする際、ブックマーク（ブランチ）が設定されていないとpushできません。以下の手順が必要です：
+
+```powershell
+# ブックマークが設定されていない場合
+jj git push
+# Warning: No bookmarks found in the default push revset
+# Nothing changed.
+
+# mainブックマークを現在の変更に設定
+jj bookmark set main -r '@-'
+
+# リモートのブックマークをトラッキング
+jj bookmark track main --remote=origin
+
+# 再度push
+jj git push
+```
+
+**初回のpush時のポイント：**
+
+- `jj bookmark set` でブックマーク（ブランチ）を設定する
+- `@-` は一つ前の変更を示す（現在の作業中の変更ではなく、確定した変更）
+- `jj bookmark track` でリモートブックマークとの連携を設定する
+- 2回目以降は `jj git push` だけでOK
 
 ### 3. 確認方法
 
