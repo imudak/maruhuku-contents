@@ -40,11 +40,19 @@ jjは、Googleで開発されている次世代のバージョン管理システ
 
 jjでは、ファイルの変更が**自動的に記録**されます。Gitのように `git add` と `git commit` を毎回実行する必要はありません。
 
-| 操作 | Git | jj |
-|------|-----|-----|
-| 変更の記録 | `git add` + `git commit` | 自動（ファイル保存時） |
-| 説明の追加 | `git commit -m "message"` | `jj describe` |
-| 変更の確認 | `git status` | `jj status` |
+**主な違い：**
+
+- **変更の記録**
+  - Git: `git add` + `git commit` で手動記録
+  - jj: 自動（ファイル保存時）
+
+- **説明の追加**
+  - Git: `git commit -m "message"` でコミット時に必須
+  - jj: `jj describe` で後から追加可能
+
+- **変更の確認**
+  - Git: `git status`
+  - jj: `jj status`
 
 ### 変更（Change）とコミット（Commit）
 
@@ -61,17 +69,29 @@ Git commit (SHA: def456)
 
 ### ブックマーク（Bookmark）とブランチ（Branch）
 
-jjでは「ブックマーク（bookmark）」、Gitでは「ブランチ（branch）」と呼ばれますが、基本的には同じ概念です：
+jjでは「ブックマーク（bookmark）」、Gitでは「ブランチ（branch）」と呼ばれますが、基本的には同じ概念です。
 
 **主な違い：**
 
-| 項目 | Git（ブランチ） | jj（ブックマーク） |
-|------|----------------|-------------------|
-| 作成 | 明示的に作成が必要 | 任意（なくても作業可能） |
-| 切り替え | `git checkout/switch` で切り替え | 変更（change）単位で作業 |
-| 自動更新 | 現在のブランチに新しいコミットが追加される | 手動で更新（`jj bookmark set`） |
-| 命名 | 作業開始時に名前が必要 | 後から名前を付けられる |
-| Push時 | ブランチ名が必須 | ブックマークがないとpushできない |
+- **作成**
+  - Git: 明示的に作成が必要
+  - jj: 任意（なくても作業可能）
+
+- **切り替え**
+  - Git: `git checkout/switch` で切り替え
+  - jj: 変更（change）単位で作業
+
+- **自動更新**
+  - Git: 現在のブランチに新しいコミットが追加される
+  - jj: 手動で更新（`jj bookmark set`）
+
+- **命名**
+  - Git: 作業開始時に名前が必要
+  - jj: 後から名前を付けられる
+
+- **Push時**
+  - Git: ブランチ名が必須
+  - jj: ブックマークがないとpushできない
 
 **jjでのブックマーク操作：**
 
@@ -98,20 +118,29 @@ jj bookmark delete feature-name
 
 ## Gitとjjのコマンド比較
 
-| Git | jj | 説明 |
-|-----|-----|------|
-| `git add` + `git commit -m "msg"` | `jj describe -m "msg"` | 変更に説明を追加 |
-| `git commit --amend` | `jj describe` | 説明を修正（何度でも可能） |
-| `git status` | `jj status` | 状態確認 |
-| `git log` | `jj log` | 履歴表示 |
-| `git diff` | `jj diff` | 差分表示 |
-| `git branch <name>` | `jj bookmark create <name>` | ブランチ/ブックマーク作成 |
-| `git branch -d <name>` | `jj bookmark delete <name>` | ブランチ/ブックマーク削除 |
-| `git branch` | `jj bookmark list` | ブランチ/ブックマーク一覧 |
-| `git checkout <branch>` | （変更単位で作業） | ブランチ切り替え |
-| `git rebase -i` | `jj squash` / `jj split` | 変更の統合・分割 |
-| `git push` | `jj git push` | リモートへプッシュ |
-| `git pull` | `jj git fetch` + `jj rebase` | リモートから取得 |
+**基本操作：**
+
+- `git add` + `git commit -m "msg"` → `jj describe -m "msg"`（変更に説明を追加）
+- `git commit --amend` → `jj describe`（説明を修正、何度でも可能）
+- `git status` → `jj status`（状態確認）
+- `git log` → `jj log`（履歴表示）
+- `git diff` → `jj diff`（差分表示）
+
+**ブランチ/ブックマーク操作：**
+
+- `git branch <name>` → `jj bookmark create <name>`（作成）
+- `git branch -d <name>` → `jj bookmark delete <name>`（削除）
+- `git branch` → `jj bookmark list`（一覧）
+- `git checkout <branch>` → （jjは変更単位で作業）
+
+**履歴操作：**
+
+- `git rebase -i` → `jj squash` / `jj split`（変更の統合・分割）
+
+**リモート操作：**
+
+- `git push` → `jj git push`（リモートへプッシュ）
+- `git pull` → `jj git fetch` + `jj rebase`（リモートから取得）
 
 ## jjの「コミット」ワークフロー
 
@@ -177,9 +206,7 @@ jj git push
 
 ### 何度でも書き直し可能
 
-> **jjの最大の特徴**
->
-> 説明を何度でも書き直せることです。Gitの `commit --amend` よりもはるかにシンプルで直感的です。
+jjの最大の特徴は、説明を何度でも書き直せることです。Gitの `commit --amend` よりもはるかにシンプルで直感的です。
 
 ```powershell
 # 最初の説明
@@ -200,9 +227,9 @@ jj describe -m "feat: AudioInputServiceにデバイス列挙機能を追加
 - エラーハンドリング強化"
 ```
 
-> **重要な仕様**
->
-> `jj describe` は現在の変更の説明を**上書き**します。履歴に残るのは最後の説明のみです。複数の説明が履歴に残るわけではありません。
+**重要な仕様：**
+
+`jj describe` は現在の変更の説明を**上書き**します。履歴に残るのは最後の説明のみです。複数の説明が履歴に残るわけではありません。
 
 ### jj new後の説明変更
 
@@ -229,9 +256,7 @@ jj describe abc456 -m "feat: AudioInputServiceにデバイス列挙機能を追�
 
 ## Git連携のタイミング
 
-> **Git連携の仕組み**
->
-> jjがGitリポジトリと連携している場合、以下のタイミングで**Gitコミットが作成/更新**されます。
+jjがGitリポジトリと連携している場合、以下のタイミングで**Gitコミットが作成/更新**されます。
 
 ### 1. `jj new` 実行時
 
@@ -295,9 +320,7 @@ git log
 
 ## Push後の履歴書き換え
 
-> **注意が必要な操作**
->
-> Push後の履歴書き換えは、個人開発では問題ありませんが、チーム開発では慎重に行う必要があります。
+**注意：** Push後の履歴書き換えは、個人開発では問題ありませんが、チーム開発では慎重に行う必要があります。
 
 ### ケース1: まだ誰もPullしていない場合
 
@@ -327,25 +350,28 @@ jj git push --force-with-lease
 # Error: The push would overwrite commits on the remote
 ```
 
-> **チーム開発でのリスク**
->
-> - 他の開発者のローカル履歴と矛盾する
-> - `git pull --rebase` や手動での対応が必要になる
-> - チーム開発では**避けるべき**操作です
+**チーム開発でのリスク：**
 
-### jjとGitの履歴書き換え対応表
+- 他の開発者のローカル履歴と矛盾する
+- `git pull --rebase` や手動での対応が必要になる
+- チーム開発では**避けるべき**操作です
 
-| jj操作 | Git相当 | Push後の影響 |
-|--------|---------|-------------|
-| `jj describe <change>` | `git commit --amend` | force push必要 |
-| `jj squash` | `git rebase -i` (squash) | force push必要 |
-| `jj split` | `git reset + 複数commit` | force push必要 |
-| `jj rebase` | `git rebase` | force push必要 |
-| `jj new` + 新規変更 | 通常のcommit | 通常のpush |
+### jjとGitの履歴書き換え対応
+
+**force pushが必要な操作：**
+
+- `jj describe <change>` = `git commit --amend`
+- `jj squash` = `git rebase -i` (squash)
+- `jj split` = `git reset + 複数commit`
+- `jj rebase` = `git rebase`
+
+**通常のpushでOK：**
+
+- `jj new` + 新規変更 = 通常のcommit
 
 ## 実践的なワークフロー
 
-> **開発スタイル別の使い分け**
+**開発スタイル別の使い分け**
 
 ### 個人開発の場合
 
@@ -413,22 +439,20 @@ jj git push --force-with-lease  # 他の人の変更を上書きしないか確�
 
 ## 重要なポイント
 
-> **覚えておきたい8つのポイント**
->
-> 1. **自動コミット**: ファイルを編集すると自動的に変更が記録されます
-> 2. **説明は後付け可能**: `jj describe` でいつでも説明を追加・変更できます
-> 3. **`jj new` で区切り**: 論理的な区切りで `jj new` を実行して変更を完了させます
-> 4. **`jj new` 後も説明変更可能**: Git側ではコミットが書き換えられます（新しいSHA）
-> 5. **Push前は自由**: 何度でも `jj describe` で書き直せます
-> 6. **Push後は慎重に**: `--force` が必要で、他の開発者に影響します
-> 7. **個人開発では柔軟**: 比較的自由に履歴を書き換えられます
-> 8. **`--force-with-lease` を推奨**: 他の人の変更を誤って上書きしません
+**覚えておきたい8つのポイント：**
+
+1. **自動コミット**: ファイルを編集すると自動的に変更が記録されます
+2. **説明は後付け可能**: `jj describe` でいつでも説明を追加・変更できます
+3. **`jj new` で区切り**: 論理的な区切りで `jj new` を実行して変更を完了させます
+4. **`jj new` 後も説明変更可能**: Git側ではコミットが書き換えられます（新しいSHA）
+5. **Push前は自由**: 何度でも `jj describe` で書き直せます
+6. **Push後は慎重に**: `--force` が必要で、他の開発者に影響します
+7. **個人開発では柔軟**: 比較的自由に履歴を書き換えられます
+8. **`--force-with-lease` を推奨**: 他の人の変更を誤って上書きしません
 
 ## jjの哲学
 
-> **設計思想**
->
-> jjの設計哲学は「**完璧な履歴を作る**」ことです。
+jjの設計哲学は「**完璧な履歴を作る**」ことです。
 
 **Gitとの違い:**
 - **Git**: コミット後の変更は複雑（`git rebase -i`、`git commit --amend` など）
@@ -438,13 +462,27 @@ Git連携していても、この柔軟性は維持されますが、**Push後�
 
 ## まとめ
 
-| 項目 | Git | jj |
-|------|-----|-----|
-| 変更の記録 | 手動（`git add` + `git commit`） | 自動 |
-| 説明の追加 | コミット時に必須 | 後から追加可能 |
-| 説明の変更 | 複雑（`--amend`、`rebase -i`） | シンプル（`jj describe`） |
-| 履歴の編集 | 難しい | 簡単（設計思想） |
-| Push後の変更 | 避けるべき | 可能だが慎重に |
+**Gitとjjの主な違い：**
+
+- **変更の記録**
+  - Git: 手動（`git add` + `git commit`）
+  - jj: 自動
+
+- **説明の追加**
+  - Git: コミット時に必須
+  - jj: 後から追加可能
+
+- **説明の変更**
+  - Git: 複雑（`--amend`、`rebase -i`）
+  - jj: シンプル（`jj describe`）
+
+- **履歴の編集**
+  - Git: 難しい
+  - jj: 簡単（設計思想）
+
+- **Push後の変更**
+  - Git: 避けるべき
+  - jj: 可能だが慎重に
 
 jjは「**完璧な履歴を作る**」ことを目指して設計されたツールです。
 
