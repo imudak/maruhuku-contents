@@ -295,6 +295,144 @@ $ jj edit change-124
 $ jj rebase -r @ -d main  # mainにchange-123がマージされた後
 ```
 
+## changeの統合: 複数のchangeを1つにまとめる
+
+作業していて「やっぱり2つのchangeを1つにまとめたい」という場合があります。そんなときは`jj squash`を使います。
+
+### 基本的な使い方
+
+```bash
+# 現在の状態
+@  change-2 "Fix: 追加の修正"
+◆  change-1 "Fix: 初期修正"
+◆  main
+
+# 現在のchangeを親changeに統合
+$ jj squash
+
+# 実行後
+@  (empty) (no description set)  # 新しい空のchange
+◆  change-1 "Fix: 初期修正"     # change-2の内容が統合された
+◆  main
+```
+
+### よくあるユースケース
+
+**ケース1: 細かく分けすぎたchangeを統合**
+
+```bash
+# 作業中に細かく分けすぎてしまった
+@  fix-3 "Fix: タイポ修正"
+◆  fix-2 "Fix: スタイル修正"
+◆  fix-1 "Fix: バグ修正"
+◆  main
+
+# 全部1つにまとめたい
+$ jj squash  # fix-3をfix-2に統合
+$ jj squash  # fix-2をfix-1に統合
+
+# 結果
+@  (empty)
+◆  fix-1 "Fix: バグ修正"  # 全ての変更が統合された
+◆  main
+```
+
+**ケース2: 別のissueだと思ったが実は同じだった**
+
+```bash
+# 2つのissueを並行作業
+@  issue-456 "Fix: database (#456)"
+│
+│ ◆  issue-123 "Fix: auth (#123)"
+├─╯
+◆  main
+
+# 実は同じ問題だったので統合したい
+$ jj squash --into issue-123
+
+# 結果
+@  (empty)
+│
+◆  issue-123 "Fix: auth (#123)"  # issue-456の内容も含まれた
+◆  main
+```
+
+### オプション
+
+```bash
+# 説明も統合したい場合（インタラクティブに編集）
+$ jj squash -i
+# または
+$ jj squash --interactive
+
+# 特定のchangeに統合
+$ jj squash --into <change-id>
+
+# 別のchangeから現在のchangeに統合
+$ jj squash --from <change-id>
+
+# メッセージを指定して統合
+$ jj squash -m "新しい説明"
+```
+
+### 注意点
+
+**squash後は空のchangeが残る**
+
+`jj squash`を実行すると、現在のchangeは空になります。これは意図的な設計です。
+
+```bash
+# squash後
+@  (empty) (no description set)  # ← ここに残る
+◆  統合されたchange
+```
+
+次の作業に進むには：
+
+```bash
+# 新しいchangeを作る
+$ jj new -m "次の作業"
+
+# または、空のchangeを削除したい場合
+$ jj abandon @
+```
+
+### Gitとの比較
+
+| Git | jj |
+|-----|-----|
+| `git rebase -i` で squash | `jj squash` |
+| 手動でコミットを選択 | コマンド1つで統合 |
+| エディタが開く | シンプルに実行 |
+| 履歴を書き換える | 安全に統合（undo可能） |
+
+### 実践例: 作業を整理する
+
+```bash
+# レビュー前に細かいchangeをまとめる
+$ jj log
+@  docs "docs: コメント追加"
+◆  style "style: フォーマット"
+◆  fix "fix: バグ修正"
+◆  main
+
+# まとめて1つのchangeにする
+$ jj edit docs
+$ jj squash  # docsをstyleに統合
+
+$ jj edit style  # (現在のchange)
+$ jj squash  # styleをfixに統合
+
+# 結果: きれいな1つのchange
+@  (empty)
+◆  fix "fix: バグ修正"  # 全ての変更が含まれる
+◆  main
+
+# 説明を更新
+$ jj edit fix
+$ jj describe -m "fix: バグ修正とコード整理"
+```
+
 ## まとめ
 
 ### 基本的な使い方
