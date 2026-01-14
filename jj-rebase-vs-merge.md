@@ -203,17 +203,137 @@ $ jj rebase -s feature-1 -d main
 
 ### Q4: rebase中にコンフリクトが起きたら？
 
-**A:** jjは自動的にコンフリクトマーカーを残してくれます。
+**A:** jjは自動的にコンフリクトマーカーを残してくれます。詳しくは次のセクションを参照してください。
+
+## コンフリクト解決の違い
+
+rebaseとmergeでは、コンフリクト解決の考え方が少し異なります。
+
+### rebase時のコンフリクト
+
+jjでは、rebase中のコンフリクトもコミットとして扱われます。
 
 ```bash
 $ jj rebase -r @ -d main
 # コンフリクトが発生
 
 $ jj status
-# コンフリクトファイルを表示
+Working copy changes:
+Conflicted:
+  src/main.rs
 
-# 手動で解決してから
-$ jj commit -m "Resolve conflicts"
+$ cat src/main.rs
+# ファイルにコンフリクトマーカーが表示される
+<<<<<<< Conflict 1 of 1
++++++++ Contents of side #1
+自分の変更
+------- Contents of base
+元のコード
++++++++ Contents of side #2
+mainブランチの変更
+>>>>>>> Conflict 1 of 1 ends
+
+# エディタで手動解決
+$ vim src/main.rs
+
+# 解決内容を確認
+$ jj diff
+
+# 自動的に現在のchangeに反映される
+# （git rebase --continueは不要！）
+```
+
+**jjの特徴:**
+
+- コンフリクト状態もchangeとして扱える
+- 解決途中で他の作業に切り替え可能（`jj new`）
+- `jj undo`で解決をやり直せる
+- `git rebase --continue`のような特別なコマンドは不要
+
+### merge時のコンフリクト
+
+mergeの場合も同様ですが、両方の親の変更が見えます。
+
+```bash
+$ jj new @ main -m "Merge main into feature"
+# コンフリクトが発生
+
+$ jj log
+@    merge-commit (コンフリクト中)
+├─╮
+│ ◆  main
+◆  feature
+
+$ jj status
+Working copy changes:
+Conflicted:
+  src/main.rs
+
+# ファイルを編集してコンフリクトを解決
+
+# 解決後、マージchangeに自動反映
+# （git merge --continueも不要）
+```
+
+### Gitとの違い
+
+| 操作 | Git | jj |
+|------|-----|-----|
+| **コンフリクト発生時** | 特殊な状態（detached HEAD等） | 通常のchange |
+| **解決の継続** | `git rebase --continue` 必要 | 不要（自動反映） |
+| **解決中の移動** | 困難（状態が壊れる） | 簡単（`jj new`で移動） |
+| **やり直し** | `git rebase --abort` | `jj undo`（何度でも） |
+| **複数コンフリクト** | 順番に解決 | 一度に全て見える |
+
+### コンフリクト解決のベストプラクティス
+
+1. **まずステータスを確認**
+
+   ```bash
+   $ jj status
+   # どのファイルがコンフリクトしているか確認
+   ```
+
+2. **コンフリクトマーカーを探す**
+
+   ```bash
+   $ jj diff
+   # コンフリクト箇所を確認
+   ```
+
+3. **解決してテスト**
+
+   ```bash
+   # ファイルを編集
+   $ vim src/main.rs
+
+   # テストを実行
+   $ cargo test
+   ```
+
+4. **確認してコミット（自動）**
+
+   jjでは、ファイルを保存するだけで自動的にchangeに反映されます。
+
+5. **うまくいかなければやり直し**
+
+   ```bash
+   $ jj undo
+   # 何度でもやり直せる
+   ```
+
+### 複雑なコンフリクトの場合
+
+```bash
+# コンフリクト解決用の一時changeを作る
+$ jj new
+# 元のコンフリクトは残ったまま、新しいchangeで作業
+
+# 解決できたら、元のchangeに戻る
+$ jj edit <コンフリクトchange>
+
+# 解決内容を適用
+$ jj squash --from <一時change>
 ```
 
 ## まとめ
