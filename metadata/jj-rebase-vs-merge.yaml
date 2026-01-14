@@ -1,0 +1,34 @@
+# Zenn用メタデータ
+title: "jjでの「分岐の付け替え」: rebase vs merge"
+emoji: "🌿"
+type: "tech"
+topics:
+  - jj
+  - git
+  - versioncontrol
+  - rebase
+  - merge
+published: false
+
+# プラットフォーム別設定
+platforms:
+  zenn:
+    enabled: true
+    slug: "jj-rebase-vs-merge"
+  qiita:
+    enabled: true
+    tags: ["jj", "Git", "バージョン管理", "rebase", "merge"]
+  note:
+    enabled: false
+    hashtags: ["jj", "Git", "バージョン管理", "エンジニア", "技術記事"]
+
+# SEO・説明
+description: "jjでの分岐の付け替え方法について、rebaseとmergeを比較します。個人開発とチーム開発での使い分けやコンフリクト解決の方法も解説。"
+keywords:
+  - jj
+  - Jujutsu
+  - Git
+  - rebase
+  - merge
+  - バージョン管理
+  - コンフリクト解決

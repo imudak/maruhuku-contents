@@ -1,0 +1,16 @@
+# 生成されたZenn記事
+zenn-articles/
+
+# Node modules
+node_modules/
+
+# npm
+package-lock.json
+
+# エディタ設定
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
