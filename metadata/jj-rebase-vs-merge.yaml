@@ -8,7 +8,7 @@ topics:
   - versioncontrol
   - rebase
   - merge
-published: false
+published: true
 
 # プラットフォーム別設定
 platforms:
