@@ -87,7 +87,10 @@ node scripts/merge-metadata.js --all
 
 このリポジトリをZenn CLIと連携させます。
 
-**前提**: このリポジトリはjjとGitをcolocate（共存）させて管理しています。
+**前提**:
+- このリポジトリはjjとGitをcolocate（共存）させて管理しています
+- **⚠️ GitHub連携はpublicリポジトリでのみ利用可能です**
+- privateリポジトリの場合は方法Aを使用してください
 
 1. Zenn CLIをインストール
    ```bash
