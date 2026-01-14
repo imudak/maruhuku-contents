@@ -14,7 +14,7 @@ const yaml = require('yaml');
 // ディレクトリパス
 const METADATA_DIR = path.join(__dirname, '../metadata');
 const ARTICLES_DIR = path.join(__dirname, '..');
-const OUTPUT_DIR = path.join(__dirname, '../zenn-articles');
+const OUTPUT_DIR = path.join(__dirname, '../articles');
 
 /**
  * メタデータから必要な情報を抽出
