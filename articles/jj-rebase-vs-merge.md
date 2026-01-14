@@ -8,7 +8,7 @@ topics:
   - versioncontrol
   - rebase
   - merge
-published: false
+published: true
 ---
 
 # jjでの「分岐の付け替え」: rebase vs merge

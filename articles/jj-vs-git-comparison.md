@@ -8,7 +8,7 @@ topics:
   - versioncontrol
   - 初心者向け
   - 比較
-published: false
+published: true
 ---
 
 # jj (Jujutsu) と Git の比較・連携ガイド
