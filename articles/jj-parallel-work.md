@@ -8,7 +8,7 @@ topics:
   - workflow
   - versioncontrol
   - 初心者向け
-published: false
+published: true
 ---
 
 # jjで複数のissueを並行作業する方法
