@@ -1,0 +1,35 @@
+# Zenn用メタデータ
+title: "技術ブログをGitHubリポジトリからpushで自動投稿する方法"
+emoji: "🚀"
+type: "tech"
+topics:
+  - GitHub
+  - Zenn
+  - Qiita
+  - 技術記事
+  - 自動化
+published: true
+
+# プラットフォーム別設定
+platforms:
+  zenn:
+    enabled: true
+    slug: "github-blog-auto-publish"
+  qiita:
+    enabled: true
+    tags: ["GitHub", "Zenn", "Qiita", "技術記事", "自動化"]
+  note:
+    enabled: false
+    hashtags: ["GitHub", "技術記事", "自動化", "エンジニア"]
+
+# SEO・説明
+description: "Zenn・Qiita・noteへの技術記事投稿をGitHubリポジトリから自動化する方法を解説。各プラットフォームの対応状況と具体的なセットアップ手順をまとめました。"
+keywords:
+  - GitHub
+  - Zenn
+  - Qiita
+  - note
+  - 自動投稿
+  - GitHub Actions
+  - 技術ブログ
+  - CI/CD
