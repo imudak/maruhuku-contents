@@ -4,105 +4,6 @@
 
 Jujutsu（jj）は次世代のバージョン管理システムですが、Windows環境特有の問題に遭遇することがあります。この記事では、実際に遭遇したトラブルとその解決方法、そして日常的に便利なTipsをまとめます。
 
-## トラブルシューティング
-
-### 問題1: `nul`ファイルによるエラー
-
-#### エラー内容
-
-```powershell
-PS> jj status
-Error: Failed to reset Git HEAD state
-Caused by:
-1: Could not create index from tree at 3cb8fa35f0e166ce4f8ef4fe438be082e5d662d5
-2: The path "nul" is invalid
-3: Windows device-names may have side-effects and are not allowed
-```
-
-#### 原因
-
-Windowsでは`nul`、`con`、`prn`、`aux`などはデバイス名として予約されており、ファイル名として使用できません。誤ってこれらの名前のファイルがリポジトリに含まれると、Gitが正常に動作しなくなります。
-
-#### 解決方法
-
-##### Step 1: Jujutsuを一時退避
-
-```powershell
-Rename-Item -Path .jj -NewName .jj.bak
-```
-
-##### Step 2: 問題のファイルを確認
-
-```powershell
-git log --oneline -n 10
-git ls-tree HEAD | Select-String nul
-```
-
-##### Step 3: Gitインデックスを削除
-
-```powershell
-Remove-Item -Path .git/index -Force
-```
-
-##### Step 4: 新しいブランチで修正
-
-```powershell
-# 新しいブランチを作成
-git checkout -b fix-nul-file
-
-# 現在のワーキングディレクトリの内容を追加（nulを除く）
-git add .
-
-# コミット
-git commit -m "fix: nulファイルを削除（Windowsデバイス名との衝突を解消）"
-```
-
-##### Step 5: mainブランチを更新
-
-```powershell
-# mainブランチを新しいコミットに移動
-git branch -f main fix-nul-file
-
-# HEADを切り替え
-git symbolic-ref HEAD refs/heads/main
-git reset --hard HEAD
-```
-
-##### Step 6: Jujutsuを再初期化
-
-```powershell
-# 古いバックアップを削除
-Remove-Item -Path .jj.bak -Recurse -Force
-
-# Jujutsuを再初期化
-jj git init --colocate
-
-# リモートブランチのトラッキング設定
-jj bookmark track main --remote=origin
-```
-
-##### Step 7: 動作確認
-
-```powershell
-jj status
-```
-
-### 問題2: Git rebase後のconflict
-
-Gitでrebaseを実行した後、Jujutsuで古いコミットがconflict状態になることがあります。
-
-#### 解決方法
-
-不要なコミットを`jj abandon`で削除します：
-
-```powershell
-# conflictになっているコミットIDを確認
-jj log
-
-# 不要なコミットを削除
-jj abandon xztxukmv
-```
-
 ## 便利なTips
 
 ### Tip 1: 長い履歴を表示する
@@ -201,6 +102,7 @@ jj desc -m "説明"
 ```
 
 **効果**：
+
 - 現在のchangeに説明を設定するだけ
 - **新しいchangeは作成しない**
 - そのまま同じchangeで作業を続ける
@@ -212,6 +114,7 @@ jj commit -m "説明"
 ```
 
 **効果**：
+
 - 現在のchangeに説明を設定
 - **新しい空のchangeを自動作成**
 - 次の作業に移る
@@ -242,7 +145,30 @@ jj commit -m "feat: 機能完成"
 # → 新しいchangeで次の作業へ
 ```
 
-### Tip 6: mainブランチへの反映方法
+### Tip 6: 不要なchangeを削除する（`jj abandon`）
+
+古いコミットや不要になったchangeは`jj abandon`で削除できます：
+
+```powershell
+# 現在のchangeの履歴を確認
+jj log
+
+# 不要なchangeを削除（change IDを指定）
+jj abandon xztxukmv
+
+# 複数のchangeを削除
+jj abandon xztxukmv pqrstuvw
+```
+
+**使用例**：
+
+- Gitでrebase/reset後に残った古いchangeを削除
+- 実験的な変更が不要になった場合
+- conflictになっているchangeを削除
+
+**注意**：`jj abandon`はchangeを完全に削除します。削除後の復元はできません。
+
+### Tip 7: mainブランチへの反映方法
 
 #### ブックマークを使った方法
 
@@ -255,6 +181,7 @@ jj new
 ```
 
 **効果**：
+
 - 現在のchangeに`main`ブックマークが設定される
 - **mainブランチに変更が即座に反映される**
 - 新しい空のchangeで次の作業を開始
@@ -266,6 +193,7 @@ jj commit -m "説明"
 ```
 
 **効果**：
+
 - 現在のchangeに説明を設定
 - 新しい空のchangeを作成
 - **ブックマーク（main）は移動しない** ← ここが重要！
@@ -346,10 +274,9 @@ Jujutsuは強力なバージョン管理ツールですが、Windows環境では
 
 特に重要なポイント：
 
-1. **Windows予約デバイス名に注意**：`nul`、`con`、`prn`などをファイル名に使わない
-2. **PowerShell設定**：UTF-8エンコーディングとページャー無効化を設定
-3. **不要なコミットは`jj abandon`で削除**：conflictを避ける
-4. **`.gitattributes`で改行コードを管理**：一貫性を保つ
+1. **PowerShell設定**：UTF-8エンコーディングとページャー無効化を設定
+2. **`.gitattributes`で改行コードを管理**：一貫性を保つ
+3. **`jj abandon`で不要なchangeを削除**：履歴をクリーンに保つ
 
 ## 参考リンク
 
