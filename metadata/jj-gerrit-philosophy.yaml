@@ -1,0 +1,32 @@
+# Zenn用メタデータ
+title: "jjを使っていて驚いた「1変更1コミット」という哲学"
+emoji: "🎯"
+type: "tech"
+topics:
+  - jj
+  - git
+  - Gerrit
+  - workflow
+  - versioncontrol
+published: true
+
+# プラットフォーム別設定
+platforms:
+  zenn:
+    enabled: true
+    slug: "jj-gerrit-philosophy"
+  qiita:
+    enabled: true
+    tags: ["jj", "Git", "Gerrit", "ワークフロー", "バージョン管理"]
+
+# 記事情報
+description: "jj (Jujutsu) の1変更1コミットという思想とGerritのコードレビューモデルの関係について"
+created_at: "2026-01-15"
+updated_at: "2026-01-15"
+
+# 公開設定
+publication_name: ""
+published_at: ""
+
+# SEO
+canonical_url: ""

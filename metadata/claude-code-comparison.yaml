@@ -1,0 +1,32 @@
+# Zenn用メタデータ
+title: "Claude Code: API認証 vs Proプラン比較ガイド"
+emoji: "🤖"
+type: "tech"
+topics:
+  - Claude
+  - AI
+  - API
+  - 開発環境
+  - 料金比較
+published: true
+
+# プラットフォーム別設定
+platforms:
+  zenn:
+    enabled: true
+    slug: "claude-code-comparison"
+  qiita:
+    enabled: true
+    tags: ["Claude", "AI", "API", "開発環境", "料金"]
+
+# 記事情報
+description: "Claude CodeとAPI経由のClaude利用の違い、および認証方法による使い分けについてまとめたガイド"
+created_at: "2026-01-15"
+updated_at: "2026-01-15"
+
+# 公開設定
+publication_name: ""
+published_at: ""
+
+# SEO
+canonical_url: ""
