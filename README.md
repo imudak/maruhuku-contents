@@ -4,7 +4,7 @@
 
 ## ディレクトリ構造
 
-```
+```text
 maruhuku-contents/
 ├── *.md                    # 記事本文（メタデータなし）
 ├── metadata/               # 記事ごとのメタデータ
@@ -71,6 +71,7 @@ node scripts/merge-metadata.js --all
 #### 方法A: Zennのウェブエディタで公開（簡単・推奨）
 
 1. 記事を生成
+
    ```bash
    npm run build
    ```
@@ -88,26 +89,31 @@ node scripts/merge-metadata.js --all
 このリポジトリをZenn CLIと連携させます。
 
 **前提**:
+
 - このリポジトリはjjとGitをcolocate（共存）させて管理しています
-- **⚠️ GitHub連携はpublicリポジトリでのみ利用可能です**
+- GitHub連携はpublicリポジトリでのみ利用可能です（privateリポジトリでは利用できません）
 - privateリポジトリの場合は方法Aを使用してください
 
 1. Zenn CLIをインストール
+
    ```bash
    npm install zenn-cli
    ```
 
 2. Zennの設定を初期化
+
    ```bash
    npx zenn init
    ```
 
 3. 記事を生成（`articles/` に直接出力されます）
+
    ```bash
    npm run build
    ```
 
 4. jjで変更を記録してGitHubにpush
+
    ```bash
    # 変更を確認
    jj status

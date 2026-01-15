@@ -36,7 +36,7 @@ Jujutsuはデフォルトでページャー（less等）を使用しますが、
 
 #### 恒久的に無効化
 
-`~/.jjconfig.toml` を編集（なければ新規作成）：
+`~/.jjconfig.toml` を編集（なければ新規作成）します。
 
 ```toml
 [ui]
@@ -45,7 +45,7 @@ pager = ""
 
 Windowsの場合、ファイルの場所は `C:\Users\<ユーザー名>\.jjconfig.toml` です。
 
-設定後、すぐに反映されます：
+設定後、すぐに反映されます。
 
 ```powershell
 jj log -r "all()"
@@ -87,7 +87,7 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 
 ### Tip 4: PowerShellで`@`記号を使う
 
-PowerShellでは`@`が特殊文字として扱われるため、引用符で囲む必要があります：
+PowerShellでは`@`が特殊文字として扱われるため、引用符で囲む必要があります。
 
 ```powershell
 # ❌ エラーになる
@@ -131,7 +131,7 @@ jj commit -m "説明"
 #### 使い分け
 
 | ケース | 使うコマンド |
-|--------|-------------|
+| -------- | ------------- |
 | まだ作業を続ける | `jj describe` |
 | 作業を完了して次へ | `jj commit` |
 | 過去のchangeを編集 | `jj describe @-` |
@@ -154,7 +154,7 @@ jj commit -m "feat: 機能完成"
 
 ### Tip 6: 不要なchangeを削除する（`jj abandon`）
 
-古いコミットや不要になったchangeは`jj abandon`で削除できます：
+古いコミットや不要になったchangeは`jj abandon`で削除できます。
 
 ```powershell
 # 現在のchangeの履歴を確認
@@ -167,13 +167,13 @@ jj abandon xztxukmv
 jj abandon xztxukmv pqrstuvw
 ```
 
-**使用例**：
+使用例：
 
 - Gitでrebase/reset後に残った古いchangeを削除
 - 実験的な変更が不要になった場合
 - conflictになっているchangeを削除
 
-**注意**：`jj abandon`はchangeを完全に削除します。削除後の復元はできません。
+注意：`jj abandon`はchangeを削除します。削除後の復元はできません。
 
 ### Tip 7: mainブランチへの反映方法
 
@@ -209,7 +209,7 @@ jj commit -m "説明"
 
 mainに反映させるには、以下のいずれかを使用：
 
-**パターン1：先にmainに反映**
+##### パターン1：先にmainに反映
 
 ```powershell
 # 1. mainブックマークを移動
@@ -222,7 +222,7 @@ jj new
 jj describe @- -m "feat: 新機能を追加"
 ```
 
-**パターン2：先に説明を付ける**
+##### パターン2：先に説明を付ける
 
 ```powershell
 # 1. 変更に説明を付ける
@@ -235,7 +235,7 @@ jj bookmark set main
 jj new
 ```
 
-**パターン3：全部まとめて**
+##### パターン3：全部まとめて
 
 ```powershell
 # 説明を付けてmainに反映、新しいchangeを作成
@@ -244,7 +244,7 @@ jj describe -m "feat: 新機能を追加" && jj bookmark set main && jj new
 
 ## .gitattributesで改行コードを管理
 
-Windows環境では改行コードの扱いが問題になることがあります。プロジェクトルートに`.gitattributes`ファイルを作成して、改行コードを明示的に管理しましょう：
+Windows環境では改行コードの扱いが問題になることがあります。プロジェクトルートに`.gitattributes`ファイルを作成して、改行コードを明示的に管理しましょう。
 
 ```gitattributes
 # デフォルト動作: チェックアウト時にCRLFに変換
