@@ -1,5 +1,5 @@
-title: "Jujutsu (jj) Windows環境でのトラブルシューティングとTips"
-emoji: "🔧"
+title: "Jujutsu (jj) Windows環境での便利なTips"
+emoji: "💡"
 type: "tech"
 topics:
   - "jujutsu"
@@ -7,5 +7,5 @@ topics:
   - "git"
   - "windows"
   - "powershell"
-published: false
+published: true
 publication_name: "hanafuku"

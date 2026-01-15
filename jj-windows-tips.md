@@ -1,21 +1,8 @@
----
-title: Jujutsu (jj) Windows環境でのトラブルシューティングとTips
-emoji: 🔧
-type: tech
-topics:
-  - jujutsu
-  - vcs
-  - git
-  - windows
-  - powershell
-published: false
----
-
-# Jujutsu (jj) Windows環境でのトラブルシューティングとTips
+# Jujutsu (jj) Windows環境での便利なTips
 
 ## はじめに
 
-Jujutsu（jj）は次世代のバージョン管理システムですが、Windows環境特有の問題に遭遇することがあります。この記事では、実際に遭遇したトラブルとその解決方法、そして日常的に便利なTipsをまとめます。
+Jujutsu（jj）をWindows環境で使う際の便利なTipsをまとめます。日常的な操作をより効率的にするためのコマンドや設定方法を紹介します。
 
 ## 便利なTips
 
@@ -47,19 +34,29 @@ jj log -r 'ancestors(@, 10)'
 
 Jujutsuはデフォルトでページャー（less等）を使用しますが、ターミナルで直接スクロールしたい場合は無効化できます。
 
+#### 恒久的に無効化
+
+`~/.jjconfig.toml` を編集（なければ新規作成）：
+
+```toml
+[ui]
+pager = ""
+```
+
+Windowsの場合、ファイルの場所は `C:\Users\<ユーザー名>\.jjconfig.toml` です。
+
+設定後、すぐに反映されます：
+
+```powershell
+jj log -r "all()"
+```
+
 #### 一時的に無効化
+
+個別のコマンドでのみ無効化したい場合：
 
 ```powershell
 jj log --no-pager
-```
-
-#### 恒久的に無効化
-
-PowerShellプロファイルに以下を追加：
-
-```powershell
-# Jujutsuのページャーを無効化
-$env:JJ_PAGER = ""
 ```
 
 ### Tip 3: PowerShellでの文字化け対策
@@ -80,9 +77,6 @@ $PROFILE
 # UTF-8エンコーディングを設定
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
-
-# Jujutsuのページャーを無効化
-$env:JJ_PAGER = ""
 ```
 
 設定を即座に適用：
