@@ -78,6 +78,7 @@ jj log --no-pager
 
 ```powershell
 $PROFILE
+C:\Users\<ユーザー名>\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
 ```
 
 プロファイルに以下を追加：
@@ -104,7 +105,7 @@ jj log -r @-
 
 # ✅ 正しい
 jj log -r '@-'
-jj log -r "@"
+jj log -r "@-"
 ```
 
 ### Tip 5: `jj commit`と`jj describe`の違い
@@ -221,34 +222,41 @@ mainに反映させるには、以下のいずれかを使用：
 ##### パターン1：先にmainに反映
 
 ```powershell
-# 1. mainブックマークを移動
+# 1. mainブックマークを現在のchange(@)に移動
 jj bookmark set main
 
 # 2. 新しい作業用changeを作成
 jj new
+# この時点で @ は新しい空のchange、@- がmainを設定したchange
 
 # 3. 後から説明を追加（必要なら）
-jj describe @- -m "feat: 新機能を追加"
+jj describe '@-' -m "feat: 新機能を追加"
 ```
 
 ##### パターン2：先に説明を付ける
 
 ```powershell
-# 1. 変更に説明を付ける
+# 1. 変更に説明を付けて新しいchangeを作成
 jj commit -m "feat: 新機能を追加"
+# この時点で @ は新しい空のchange、@- が説明を付けたchange
 
-# 2. mainブックマークを移動
-jj bookmark set main
-
-# 3. 新しい作業用changeを作成
-jj new
+# 2. mainブックマークを @-（説明を付けたchange）に移動
+jj bookmark set main -r '@-'
+# ※ jj newは不要（jj commitで既に新しいchangeが作成されている）
 ```
 
-##### パターン3：全部まとめて
+##### パターン3：全部まとめて（パターン1と同じ）
 
 ```powershell
 # 説明を付けてmainに反映、新しいchangeを作成
 jj describe -m "feat: 新機能を追加" && jj bookmark set main && jj new
+```
+
+**注意**: `jj commit`を使う場合は、その後の`jj bookmark set main`に`-r '@-'`が必要。
+
+```powershell
+# jj commitを使う場合
+jj commit -m "feat: 新機能を追加" && jj bookmark set main -r '@-'
 ```
 
 ## .gitattributesで改行コードを管理
