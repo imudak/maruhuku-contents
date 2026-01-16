@@ -259,39 +259,6 @@ jj describe -m "feat: 新機能を追加" && jj bookmark set main && jj new
 jj commit -m "feat: 新機能を追加" && jj bookmark set main -r '@-'
 ```
 
-## .gitattributesで改行コードを管理
-
-Windows環境では改行コードの扱いが問題になることがあります。プロジェクトルートに`.gitattributes`ファイルを作成して、改行コードを明示的に管理しましょう。
-
-```gitattributes
-# デフォルト動作: チェックアウト時にCRLFに変換
-* text=auto
-
-# テキストファイルは常にLFで保存
-*.md text eol=lf
-*.yaml text eol=lf
-*.yml text eol=lf
-*.json text eol=lf
-
-# Dartファイル
-*.dart text eol=lf
-
-# シェルスクリプト（LF必須）
-*.sh text eol=lf
-
-# バッチファイル（CRLF必須）
-*.bat text eol=crlf
-*.cmd text eol=crlf
-
-# バイナリファイル
-*.png binary
-*.jpg binary
-*.ico binary
-*.ttf binary
-*.woff binary
-*.woff2 binary
-```
-
 ## まとめ
 
 Jujutsuは強力なバージョン管理ツールですが、Windows環境では特有の問題に遭遇することがあります。この記事で紹介した解決方法とTipsを活用することで、より快適にJujutsuを使用できます。
@@ -299,8 +266,8 @@ Jujutsuは強力なバージョン管理ツールですが、Windows環境では
 特に重要なポイント：
 
 1. **PowerShell設定**：UTF-8エンコーディングとページャー無効化を設定
-2. **`.gitattributes`で改行コードを管理**：一貫性を保つ
-3. **`jj abandon`で不要なchangeを削除**：履歴をクリーンに保つ
+2. **`jj abandon`で不要なchangeを削除**：履歴をクリーンに保つ
+3. **改行コード問題**：[JujutsuとGitの改行コード互換性問題と解決方法](jj-git-crlf-compatibility.md)を参照
 
 ## 参考リンク
 
