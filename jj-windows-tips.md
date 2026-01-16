@@ -51,6 +51,15 @@ Windowsの場合、ファイルの場所は `C:\Users\<ユーザー名>\.jjconfi
 jj log -r "all()"
 ```
 
+**注意**: この設定では以下の警告が表示されますが、ページャーは正常に無効化されます。
+
+```text
+Warning: Failed to spawn pager '': program path has no file name
+Hint: Consider using the `:builtin` pager.
+```
+
+警告を消したい場合は `pager = ":builtin"` を使用できますが、この場合はjj組み込みページャーが有効になります。
+
 #### 一時的に無効化
 
 個別のコマンドでのみ無効化したい場合：
