@@ -8,11 +8,11 @@
 
 ## 追加で設定したこと
 
-### 1. Codexスキルだけをgit管理対象にする
+### 1. 追加したスキルをgit管理対象にする
 
-`.claude/`ディレクトリは`.gitignore`で除外しているプロジェクトが多いと思う。自分のプロジェクトもMUSUBIフレームワークの設定で`.claude/`全体を除外していた。
+`.claude/`ディレクトリは`.gitignore`で除外しているプロジェクトが多いと思う。
 
-しかし、追加したCodexスキルだけは共有したい。そこで`.gitignore`の否定パターンを使って、Codexスキルだけを許可した：
+追加したスキルは共有したいので、`.gitignore`の否定パターンを使って許可する：
 
 ```gitignore
 # .claude/は基本的に除外
@@ -21,11 +21,11 @@
 !.claude/skills/
 # skills配下は除外
 .claude/skills/*
-# codexスキルだけ許可
+# 追加したスキルだけ許可
 !.claude/skills/codex/
 ```
 
-これで `.claude/skills/codex/SKILL.md` だけがgit管理対象になる。
+これで追加したスキルだけがgit管理対象になる。
 
 ### 2. CLAUDE.mdへの記載
 
