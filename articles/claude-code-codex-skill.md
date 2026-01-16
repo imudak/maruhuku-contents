@@ -56,11 +56,33 @@ OpenAI Codex CLIを使用して、Claude以外の視点からコードベース�
 
 これでプロジェクト固有の使い方が明確になる。
 
-### 3. config.tomlの設定（Windows）
+### 3. APIキーの設定（Windows）
 
-**重要**: Codex CLI v0.86.0では、環境変数ではなく`~/.codex/config.toml`での設定が必須。
+#### v0.87.0以降（2026年1月17日追記）
 
-以下の手順でセットアップする：
+**v0.87.0からは `codex login --with-api-key` コマンドでの認証が必要になった。**
+
+```powershell
+# 1. npxで直接実行可能（グローバルインストール不要）
+npx @openai/codex --version
+
+# 2. APIキーをstdinから渡してログイン
+echo "sk-proj-your-api-key-here" | npx @openai/codex login --with-api-key
+
+# 3. ログイン状態の確認
+npx @openai/codex login status
+```
+
+**ポイント:**
+
+- **config.toml直接編集は不可**: v0.87.0では`config.toml`への`api_key`直接記載が効かなくなった
+- **loginコマンド必須**: `codex login --with-api-key` でstdinからAPIキーを渡す
+- **認証情報は安全に保存**: `~/.codex/` 配下に保存される
+- **npx推奨**: グローバルインストール不要、`npx @openai/codex` で直接実行可能
+
+#### v0.86.x以前の設定方法
+
+v0.86.x以前では、`~/.codex/config.toml`への直接記載が必要だった：
 
 ```powershell
 # 1. Codex CLIをグローバルインストール
@@ -87,11 +109,11 @@ codex --version
 cat ~\.codex\config.toml
 ```
 
-**ポイント:**
+**ポイント（v0.86.x以前）:**
 
-- **環境変数は不要**: Codex CLI v0.86.0では`OPENAI_API_KEY`環境変数は使用されない
+- **環境変数は不要**: `OPENAI_API_KEY`環境変数は使用されない
 - **model_provider必須**: `model_provider = "openai"` を文字列として設定しないと401エラーになる
-- **プロジェクトスコープAPIキー**: OpenAI Platformでは`sk-proj-`で始まるプロジェクトスコープのAPIキーのみ作成可能（2026年1月時点）
+- **プロジェクトスコープAPIキー**: OpenAI Platformでは`sk-proj-`で始まるプロジェクトスコープのAPIキーのみ作成可能
 
 ## ハマったポイント
 
@@ -114,7 +136,9 @@ jj file untrack ".claude/"
 
 1. `.gitignore`の否定パターンでCodexスキルだけをgit管理
 2. `CLAUDE.md`にプロジェクト固有の使い方を記載
-3. Windows向けの環境変数設定方法
+3. Windows向けのAPIキー設定方法（v0.86.x / v0.87.0両対応）
+
+**2026年1月17日追記**: v0.87.0からは`config.toml`直接編集ではなく`codex login --with-api-key`での認証が必要になった。
 
 元記事に感謝。
 

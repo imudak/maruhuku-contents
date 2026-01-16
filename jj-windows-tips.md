@@ -267,7 +267,7 @@ Jujutsuは強力なバージョン管理ツールですが、Windows環境では
 
 1. **PowerShell設定**：UTF-8エンコーディングとページャー無効化を設定
 2. **`jj abandon`で不要なchangeを削除**：履歴をクリーンに保つ
-3. **改行コード問題**：[JujutsuとGitの改行コード互換性問題と解決方法](jj-git-crlf-compatibility.md)を参照
+3. **改行コード問題**：[JujutsuとGitの改行コード互換性問題と解決方法](jj-git-crlf-compatibility)を参照
 
 ## 参考リンク
 
