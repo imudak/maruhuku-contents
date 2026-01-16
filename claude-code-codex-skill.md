@@ -43,15 +43,42 @@ OpenAI Codex CLIを使用して、Claude以外の視点からコードベース�
 
 これでプロジェクト固有の使い方が明確になる。
 
-### 3. 環境変数の設定（Windows）
+### 3. config.tomlの設定（Windows）
 
-元記事ではMac/Linux向けの`export`コマンドが紹介されていたが、Windowsでは以下のコマンドで永続的に設定する：
+**重要**: Codex CLI v0.86.0では、環境変数ではなく`~/.codex/config.toml`での設定が必須。
+
+以下の手順でセットアップする：
 
 ```powershell
-[System.Environment]::SetEnvironmentVariable("OPENAI_API_KEY", "sk-your-key", "User")
+# 1. Codex CLIをグローバルインストール
+npm install -g @openai/codex
+
+# 2. PATHを通す（初回のみ）
+$currentPath = [System.Environment]::GetEnvironmentVariable('Path', 'User')
+$npmPath = (npm config get prefix)
+if ($currentPath -notlike "*$npmPath*") {
+    $newPath = "$currentPath;$npmPath"
+    [System.Environment]::SetEnvironmentVariable('Path', $newPath, 'User')
+}
+# PowerShellを再起動
+
+# 3. config.tomlを作成
+mkdir ~\.codex\ -ErrorAction SilentlyContinue
+@"
+api_key = "sk-proj-your-api-key-here"
+model_provider = "openai"
+"@ | Out-File -FilePath ~\.codex\config.toml -Encoding utf8NoBOM
+
+# 4. 確認
+codex --version
+cat ~\.codex\config.toml
 ```
 
-**注意**: 設定後はClaude Codeを再起動しないと環境変数が反映されない。
+**ポイント:**
+
+- **環境変数は不要**: Codex CLI v0.86.0では`OPENAI_API_KEY`環境変数は使用されない
+- **model_provider必須**: `model_provider = "openai"` を文字列として設定しないと401エラーになる
+- **プロジェクトスコープAPIキー**: OpenAI Platformでは`sk-proj-`で始まるプロジェクトスコープのAPIキーのみ作成可能（2026年1月時点）
 
 ## ハマったポイント
 
