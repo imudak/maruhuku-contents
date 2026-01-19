@@ -1,5 +1,5 @@
 # Zenn用メタデータ
-title: "jjを使っていて驚いた「1変更1コミット」という哲学"
+title: "jjを使っていて驚いた「1つの変更を育てていく」という哲学"
 emoji: "🎯"
 type: "tech"
 topics:
@@ -20,9 +20,9 @@ platforms:
     tags: ["jj", "Git", "Gerrit", "ワークフロー", "バージョン管理"]
 
 # 記事情報
-description: "jj (Jujutsu) の1変更1コミットという思想とGerritのコードレビューモデルの関係について"
+description: "jj (Jujutsu) の「1つの変更を育てていく」という思想とGerritのコードレビューモデルの関係について"
 created_at: "2026-01-15"
-updated_at: "2026-01-15"
+updated_at: "2026-01-19"
 
 # 公開設定
 publication_name: ""

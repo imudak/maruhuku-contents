@@ -1,5 +1,5 @@
 ---
-title: jjを使っていて驚いた「1変更1コミット」という哲学
+title: jjを使っていて驚いた「1つの変更を育てていく」という哲学
 emoji: 🎯
 type: tech
 topics:
