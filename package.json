@@ -4,8 +4,7 @@
   "description": "技術記事のコンテンツ管理",
   "main": "index.js",
   "scripts": {
-    "build": "node scripts/merge-metadata.js --all",
-    "build:single": "node scripts/merge-metadata.js"
+    "preview": "npx zenn preview"
   },
   "keywords": [
     "blog",
@@ -15,7 +14,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "yaml": "^2.3.4",
     "zenn-cli": "^0.3.1"
   }
 }

@@ -5,7 +5,8 @@
       "Bash(jj log:*)",
       "Bash(jj abandon:*)",
       "Bash(jj new:*)",
-      "Bash(jj desc:*)"
+      "Bash(jj desc:*)",
+      "Bash(jj status:*)"
     ]
   }
 }
