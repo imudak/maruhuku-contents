@@ -28,16 +28,14 @@ Issue #123 → ブランチ → 複数のコミット → PR → マージ
 
 Gerritでレビューを受ける流れは次のようになります。
 
-1. 1つのchangeを作る（Gitコミットとして実装）
-2. `git push origin HEAD:refs/for/main` でレビュー用に送信
+1. 1つのchangeを作る
+2. Gerritにレビュー用として送信
 3. レビュアーからフィードバックを受ける
-4. **同じchangeを更新**（`git commit --amend`で実現）
-5. 再度pushする
+4. **同じchangeを更新**
+5. 再度送信する
 6. これを繰り返してchangeを育てる
 
 ここで重要なのは、**changeは1つのまま、内容を育てていく**という点です。修正のたびに新しいchangeを作るのではなく、レビューのフィードバックを受けながら、同じchangeを完成形に向けて育てていきます。
-
-Gerritでは、実際には「Change-Id」という識別子で変更を追跡します。`git commit --amend`でコミットハッシュが変わっても、Change-Idが同じであれば「同じchangeの新しいバージョン」として認識されます。技術的には複数のgitコミットに同じChange-Idを付けることも可能ですが、実践的には1つのchangeを育てていくワークフローが一般的です。
 
 ### Change-Id：同じ変更を追跡する仕組み
 
@@ -53,7 +51,7 @@ Date: ...
     Change-Id: I8f2a3b4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0
 ```
 
-この`Change-Id`があるおかげで、コミットハッシュが変わっても（amendするたびに変わる）、Gerritは「これは同じchangeの更新版だ」と認識できるのです。
+この`Change-Id`があるおかげで、Gerritは「これは同じchangeの更新版だ」と認識できるのです。
 
 ## jjの設計思想を知って衝撃を受けた
 
@@ -80,8 +78,8 @@ jj desc -m "Add feature with validation"  # changeを育てる
 # さらに修正...
 jj desc -m "Add feature with validation and error handling"  # さらに育てる
 
-# 最終的にpushするのは1つのchange
-jj git push
+# 最終的にPR用としてpush（明示的なブランチ名を指定）
+jj git push --branch feature/my-feature
 ```
 
 ### Git/GitHubとの根本的な違いに気づいた
@@ -154,7 +152,7 @@ jj new  # これだけ。ブランチ名すら不要
 
 - **1つのchangeには1つの論理的な変更しか含まれない**
 - だから、複数のchangeを「枝分かれ」させて管理する必要がそもそも薄い
-- jjは変更をDAG（有向非巡回グラフ）で管理するので、ブランチという概念に頼る必要がない
+- changeそのものが作業単位なので、ブランチで区別する必要がない
 
 ### Change-Idの自動管理
 
@@ -164,7 +162,7 @@ jjでは、Change-Idの概念が内部的に組み込まれています。開発
 jj log
 # @  mknwrwop 2026-01-13 12:34:56 user@example.com
 # │  Add user authentication
-# │  Change-ID: kou... (自動生成される)
+# │  Change-Id: kou... (自動生成される)
 ```
 
 ## この思想の何が革新的なのか
@@ -182,7 +180,6 @@ jj log
 
 - **Git/GitHubの常識が通用しない**
 - **「gitコミット = 作業の記録」という感覚からの脱却が必要**
-- **チーム全体での理解が必要** - 一部の人だけjjを使うのは難しい
 
 ## 実際のワークフロー例
 
@@ -192,135 +189,46 @@ jj log
 # Issue #123: ユーザー認証機能の追加
 
 # 1. 新しいchangeを作成
-jj new -m "Add user authentication feature (#123)"
+jj new
 
 # 2. コードを書く
 # ... 編集 ...
 
-# 3. レビュー依頼（実際はGitHubのPRなどに変換）
+# 3. 説明を追加
+jj desc -m "Add user authentication feature (#123)"
+
+# 4. 作業中のバックアップ（自動生成されるブランチ名でpush）
 jj git push
 
-# 4. レビューで指摘を受ける
+# さらにコードを修正...
+# またバックアップpush（同じブランチが更新される）
+jj git push
+
+# 5. PR作成（明示的なブランチ名を指定）
+jj git push --branch feature/auth-123
+
+# 6. レビューで指摘を受ける
 # 「パスワードのバリデーションが甘い」
 
-# 5. 同じchangeを修正
+# 7. 同じchangeを修正
 # ... コード修正 ...
+
+# 説明も充実させる（changeを育てる）
 jj desc -m "Add user authentication feature (#123)
 
-Implements password validation with:
+Enhanced password validation with:
 - Minimum 8 characters
 - At least one uppercase letter
 - At least one number"
 
-# 6. 再度push（同じchangeの更新）
-jj git push
+# 8. 再度push（同じブランチが更新される）
+jj git push --branch feature/auth-123
 
-# 7. さらに修正があれば繰り返す
+# 9. さらに修正があれば繰り返す
 # 最終的にpushされるのは1つのchange
 ```
 
-### GitHubとの併用
-
-jjはGitリポジトリを操作できるので、既存のGitHub中心のワークフローでも使えます。
-
-```bash
-# jjでローカル作業
-jj new
-# 編集...
-
-# GitHubのPRとして送る時は1つにまとめる
-jj git push --branch feature/auth
-
-# あとはGitHub上で普通にPRを作成
-```
-
-ただし、この場合でも「1つのPRには1つの論理的な変更」という思想は活きてきます。
-
-## 作業中のバックアップはどうするのか?
-
-ここまで理解して、気になったのがバックアップの問題です。
-
-> **「Gitではfeatureブランチでどんどんcommitしてpushして、サーバーにバックアップできる。jjでは`jj desc`で説明を上書きしていくけど、サーバーには上げないからバックアップとして不安では?」**
-
-jjでもリモートへのバックアップは可能です。
-
-### 作業中のchangeをpushする
-
-```bash
-# 現在のchangeをリモートにpush
-jj git push
-```
-
-これにより、現在のchangeがGitリポジトリの一時的なブランチとしてpushされます。まだレビュー準備ができていなくても、バックアップ目的でpushできるのです。
-
-Git側でのブランチ名は、jjが自動的に`push-<change-id>`という形式で生成します。例えば次のようになります。
-
-- `push-mknwrwopqrst`
-- `push-yqosqzytrlsw`
-
-同じchangeを何度編集してpushしても、Change IDは変わりません。そのため同じブランチ名(`push-<change-id>`)にpushされ、リモートのブランチが上書き更新されます。
-
-重要な注意点: リモートにpushされるのは**changeの現在の状態**だけです。ローカルの操作履歴(`jj op log`で見える履歴)はpushされません。操作履歴はローカルに留まります。
-
-明示的にブランチ名を指定したい場合:
-
-```bash
-jj git push --branch feature/my-feature
-```
-
-### 定期的なpushでバックアップ
-
-```bash
-# 作業中、こまめにバックアップpush
-jj git push
-
-# コード修正...
-# また同じchangeを更新してpush
-jj git push
-
-# さらに修正...
-jj git push
-```
-
-同じchangeを何度pushしても、リモートのブランチが上書きされるだけです。
-
-重要なポイント:
-
-- PCが故障してもリモートに最新の作業が残る
-- レビュー準備ができていなくても、途中でも気軽にpushできる
-- 最終的には1つのchangeとしてマージするので、履歴はクリーン
-- リモートには作業用の一時ブランチができるだけで、他の人に影響しない
-
-### 実際の作業フロー例
-
-```bash
-# 新しい機能の作業開始
-jj new -m "Add user settings page"
-
-# 1時間作業...
-# バックアップpush
-jj git push
-
-# さらに2時間作業...
-# またpush(同じchangeが更新される)
-jj git push
-
-# レビュー指摘を受けて修正
-# コード修正...
-jj desc -m "Add user settings page
-
-Implements:
-- Profile editing
-- Password change
-- Email preferences"
-
-# 最終版をpush
-jj git push
-
-# レビュー承認されたらマージ
-```
-
-Gerritの思想では「push = バックアップ」「レビュー = 別の段階」と分けて考えます。jjも同じ思想で、作業中でも安心してpushできます。
+補足: ステップ4の`jj git push`では、jjが自動的に`push-<change-id>`という形式のブランチ名（例: `push-mknwrwopqrst`）を生成してpushします。これは作業中のバックアップ用です。一方、ステップ5やステップ8では`--branch`オプションで明示的なブランチ名を指定し、PR用のブランチとして扱います。
 
 ## squashとは何が違うのか？
 
@@ -377,7 +285,7 @@ jj op log
 
 1. **ファイルを編集するだけで自動的にスナップショットが作られる**
 2. **すべての操作が記録される** - `jj desc`, `jj new`, ファイル編集、すべて
-3. **いつでも任意の時点に戻れる** - `jj op undo` または `jj op restore`
+3. **いつでも任意の時点に戻れる** - `jj undo` または `jj op restore`
 
 ### Gitのsquashでは失われるもの
 
@@ -398,7 +306,7 @@ Gitにも`git reflog`がありますが、以下の点でjjとは異なります
 | Git reflog | jj operation log |
 | ---------- | ---------------- |
 | gitコミットの参照変更を記録 | **すべての操作**を記録 |
-| ファイル編集は記録されない | **ファイル編集も自動記録** |
+| ファイル編集は記録されない | **作業のスナップショットも自動記録** |
 | ガベージコレクションで消える可能性あり | より永続的 |
 | 「いつgit commitしたか」がわかる | 「いつ何をしたか」がわかる |
 
@@ -410,7 +318,7 @@ Gitにも`git reflog`がありますが、以下の点でjjとは異なります
 # 「あ、さっきの変更、やっぱりやめたい」
 
 # 1つ前の操作に戻る
-jj op undo
+jj undo
 
 # または、特定の操作時点に戻る
 jj op restore a1b2c3d4
@@ -422,7 +330,7 @@ jj op log
 これは**Gitのsquashにはない安全網**です。jjでは以下が可能です。
 
 - 「2時間前の状態に戻りたい」→ `jj op log`で確認して`jj op restore`
-- 「間違って`jj desc`で上書きしてしまった」→ `jj op undo`で元に戻せる
+- 「間違って`jj desc`で上書きしてしまった」→ `jj undo`で元に戻せる
 - 「試行錯誤の過程を全部見たい」→ `jj op log`ですべて確認できる
 
 ### squashとの本質的な違い
@@ -477,24 +385,7 @@ jjは違います。**過去は常に保存されていて、いつでも参照�
 - **操作履歴はローカルの試行錯誤** - 個人的な作業メモのようなもの
 - **共有すべきは完成形のchange** - チームに見せるのはクリーンな結果のみ
 
-もし「作業の途中経過も残したい」というニーズがあるなら、以下の方法が思想に沿っています。
-
-```bash
-# 作業の節目で別のchangeとして保存
-jj new -m "WIP: Initial approach"
-# 試行錯誤...
-
-jj new -m "WIP: Refactored version"
-# さらに試行錯誤...
-
-jj new -m "Final implementation"
-# 最終版
-
-# すべてをpush
-jj git push --all
-```
-
-この方法なら、作業の各段階がchangeとして保存され、リモートにもバックアップされます。ただし最終的にマージするのは1つのchangeにまとめることが推奨されます。
+jjの思想では、作業の途中経過は`jj op log`で保護されており、それをリモートにpushする必要はないと考えます。
 
 ## まとめ：新しいワークフローの体験
 
