@@ -4,7 +4,8 @@
       "Bash(npm run build:*)",
       "Bash(jj log:*)",
       "Bash(jj abandon:*)",
-      "Bash(jj new:*)"
+      "Bash(jj new:*)",
+      "Bash(jj desc:*)"
     ]
   }
 }
