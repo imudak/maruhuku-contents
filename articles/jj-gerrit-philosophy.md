@@ -108,7 +108,7 @@ jj git push --branch feature/my-feature
 | 作業の過程も共有 | 完成形だけを共有 |
 | ブランチを積極的に使う | ブランチはあまり使わない |
 
-これを視覚的に表すと以下のようになります:
+これを視覚的に表すと以下のようになります。
 
 ```text
 【Git/GitHub: コミットを積み重ねる】
@@ -212,14 +212,14 @@ jj new
 jj desc -m "Add user authentication feature (#123)"
 
 # 4. 作業中のバックアップ（現在のchangeをpush）
-jj git push --change @
+jj git push -c @  # --change の省略形
 
 # さらにコードを修正...
 # またバックアップpush（同じブックマークが更新される）
-jj git push --change @
+jj git push -c @
 
 # 5. PR作成（明示的なブランチ名を指定）
-jj git push --branch feature/auth-123
+jj git push -b feature/auth-123  # --branch の省略形
 
 # 6. レビューで指摘を受ける
 # 「パスワードのバリデーションが甘い」
@@ -236,13 +236,13 @@ Enhanced password validation with:
 - At least one number"
 
 # 8. 再度push（同じブランチが更新される）
-jj git push --branch feature/auth-123
+jj git push -b feature/auth-123
 
 # 9. さらに修正があれば繰り返す
 # 最終的にpushされるのは1つのchange
 ```
 
-補足: `jj git push --change @`では、現在のchange（@）に対して自動的にブックマーク名が生成されます（デフォルトは`push-<change_id>`形式）。このブックマークは自動的にtrackされ、2回目以降の`jj git push --change @`では同じブックマークが更新されます。一方、ステップ5やステップ8の`--branch`オプションでは明示的なブランチ名を指定し、PR用のブックマークとして扱います。
+補足: `jj git push -c @`（`--change @`の省略形）では、現在のchange（@）に対して自動的にブックマーク名が生成されます（デフォルトは`push-<change_id>`形式）。このブックマークは自動的にtrackされ、2回目以降では同じブックマークが更新されます。一方、`-b`（`--branch`の省略形）では明示的なブランチ名を指定し、PR用のブックマークとして扱います。
 
 ## squashとは何が違うのか？
 
