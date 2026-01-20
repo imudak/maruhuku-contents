@@ -7,7 +7,10 @@
       "Bash(jj new:*)",
       "Bash(jj desc:*)",
       "Bash(jj status:*)",
-      "Bash(npx textlint:*)"
+      "Bash(npx textlint:*)",
+      "Skill(japanese-article-proofreading)",
+      "Skill(japanese-article-proofreading:*)",
+      "Bash(jj diff:*)"
     ]
   }
 }
