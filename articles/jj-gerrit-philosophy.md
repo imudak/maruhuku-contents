@@ -211,12 +211,12 @@ jj new
 # 3. 説明を追加
 jj desc -m "Add user authentication feature (#123)"
 
-# 4. 作業中のバックアップ（自動生成されるブランチ名でpush）
-jj git push
+# 4. 作業中のバックアップ（現在のchangeをpush）
+jj git push --change @
 
 # さらにコードを修正...
-# またバックアップpush（同じブランチが更新される）
-jj git push
+# またバックアップpush（同じブックマークが更新される）
+jj git push --change @
 
 # 5. PR作成（明示的なブランチ名を指定）
 jj git push --branch feature/auth-123
@@ -242,7 +242,7 @@ jj git push --branch feature/auth-123
 # 最終的にpushされるのは1つのchange
 ```
 
-補足: ステップ4の`jj git push`では、jjが自動的に`push-<change-id>`という形式のブランチ名（例: `push-mknwrwopqrst`）を生成してpushします。これは作業中のバックアップ用です。一方、ステップ5やステップ8では`--branch`オプションで明示的なブランチ名を指定し、PR用のブランチとして扱います。
+補足: `jj git push --change @`では、現在のchange（@）に対して自動的にブックマーク名が生成されます（デフォルトは`push-<change_id>`形式）。このブックマークは自動的にtrackされ、2回目以降の`jj git push --change @`では同じブックマークが更新されます。一方、ステップ5やステップ8の`--branch`オプションでは明示的なブランチ名を指定し、PR用のブックマークとして扱います。
 
 ## squashとは何が違うのか？
 
