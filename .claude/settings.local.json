@@ -6,7 +6,8 @@
       "Bash(jj abandon:*)",
       "Bash(jj new:*)",
       "Bash(jj desc:*)",
-      "Bash(jj status:*)"
+      "Bash(jj status:*)",
+      "Bash(npx textlint:*)"
     ]
   }
 }

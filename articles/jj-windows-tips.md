@@ -64,7 +64,7 @@ Windowsの場合、ファイルの場所は `C:\Users\<ユーザー名>\.jjconfi
 jj log -r "all()"
 ```
 
-**注意**: この設定では以下の警告が表示されますが、ページャーは正常に無効化されます。
+この設定では以下の警告が表示されるが、ページャーは正常に無効化される。
 
 ```text
 Warning: Failed to spawn pager '': program path has no file name
@@ -265,7 +265,7 @@ jj bookmark set main -r '@-'
 jj describe -m "feat: 新機能を追加" && jj bookmark set main && jj new
 ```
 
-**注意**: `jj commit`を使う場合は、その後の`jj bookmark set main`に`-r '@-'`が必要。
+`jj commit`を使う場合は、その後の`jj bookmark set main`に`-r '@-'`が必要になる。
 
 ```powershell
 # jj commitを使う場合

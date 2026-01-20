@@ -12,7 +12,7 @@ package-lock.json
 .DS_Store
 Thumbs.db
 
-# Claude Code local settings
+# Claude Code settings (local configuration should not be tracked)
 .claude/settings.local.json
 
 # 画像ファイル（note用アイキャッチ等）
