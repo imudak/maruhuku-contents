@@ -9,6 +9,7 @@ topics:
   - 料金比較
   - 開発環境
 published: true
+published_at: 2026-01-07
 ---
 
 # 先日「Copilot で十分」と書いた私が、料金を詳しく調べて Claude に乗り換えることにした話

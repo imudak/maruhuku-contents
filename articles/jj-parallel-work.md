@@ -9,6 +9,7 @@ topics:
   - versioncontrol
   - 初心者向け
 published: true
+published_at: 2026-01-14
 ---
 
 # jjで複数のissueを並行作業する方法

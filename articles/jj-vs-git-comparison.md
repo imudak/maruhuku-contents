@@ -9,6 +9,7 @@ topics:
   - 初心者向け
   - 比較
 published: true
+published_at: 2026-01-12
 ---
 
 # jj (Jujutsu) と Git の比較・連携ガイド

@@ -9,6 +9,7 @@ topics:
   - VSCode
   - 開発環境
 published: true
+published_at: 2026-01-07
 ---
 
 # Claude Codeが流行っているけど、VS Code + Copilotで困ってないならそのままでいい

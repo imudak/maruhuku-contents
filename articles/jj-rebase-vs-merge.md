@@ -9,6 +9,7 @@ topics:
   - rebase
   - merge
 published: true
+published_at: 2026-01-14
 ---
 
 # jjでの「分岐の付け替え」: rebase vs merge

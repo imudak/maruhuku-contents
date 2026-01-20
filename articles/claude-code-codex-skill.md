@@ -9,6 +9,7 @@ topics:
   - AI
   - 開発環境
 published: true
+published_at: 2026-01-16
 ---
 
 # Claude CodeとCodexの連携をSkillで設定してみた

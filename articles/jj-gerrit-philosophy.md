@@ -9,6 +9,7 @@ topics:
   - workflow
   - versioncontrol
 published: true
+published_at: 2026-01-13
 ---
 
 # jjを使っていて驚いた「1つの変更を育てていく」という哲学

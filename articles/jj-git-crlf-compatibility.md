@@ -9,6 +9,7 @@ topics:
   - windows
   - crlf
 published: true
+published_at: 2026-01-15
 ---
 
 # JujutsuとGitの改行コード互換性問題と解決方法

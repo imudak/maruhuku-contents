@@ -9,6 +9,7 @@ topics:
   - 開発環境
   - 料金比較
 published: true
+published_at: 2026-01-07
 ---
 
 # Claude Code: API認証 vs Proプラン比較ガイド

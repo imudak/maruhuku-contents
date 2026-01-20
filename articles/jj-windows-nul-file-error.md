@@ -8,6 +8,7 @@ topics:
   - windows
   - troubleshooting
 published: true
+published_at: 2026-01-15
 ---
 
 # Jujutsu (jj) Windows予約デバイス名エラーの解決方法

@@ -9,6 +9,7 @@ topics:
   - 技術記事
   - 自動化
 published: true
+published_at: 2026-01-15
 ---
 
 # 技術ブログをGitHubリポジトリからpushで自動投稿する方法
