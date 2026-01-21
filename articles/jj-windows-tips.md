@@ -122,7 +122,89 @@ jj log -r '@-'
 jj log -r "@-"
 ```
 
-### Tip 5: `jj commit`と`jj describe`の違い
+### Tip 5: リポジトリごとにユーザー情報を設定する
+
+Jujutsuでは、グローバル設定とは別に、リポジトリごとに異なるユーザー情報を設定できます。これは個人プロジェクトと業務プロジェクトで異なる名前・メールアドレスを使い分ける場合に便利です。
+
+#### 設定の優先順位
+
+Jujutsuは以下の優先順位で設定を読み込みます：
+
+1. **リポジトリローカル設定**（`.jj/repo/config.toml`）
+2. **ユーザー設定**（`~/.jjconfig.toml`）
+
+#### グローバル設定の確認
+
+```powershell
+# 現在の設定を確認
+jj config list | Select-String "user"
+```
+
+#### リポジトリごとの設定
+
+特定のリポジトリでのみ異なるユーザー情報を使う：
+
+```powershell
+# このリポジトリだけの設定
+jj config set --repo user.name "imudak"
+jj config set --repo user.email "imudak@gmail.com"
+```
+
+設定ファイルは `.jj/repo/config.toml` に保存されます。
+
+#### 現在のworking copyのauthor情報を更新
+
+リポジトリ設定を変更した後、現在作業中のchangeのauthor情報も更新する場合：
+
+```powershell
+jj metaedit --update-author
+```
+
+これにより、現在のworking copy（`@`）のauthor情報が新しい設定に更新されます。
+
+#### 設定の確認
+
+```powershell
+# リポジトリ固有の設定を確認
+jj config list --repo | Select-String "user"
+
+# 実際に使われる設定を確認（統合された結果）
+jj config list | Select-String "user"
+```
+
+#### 重要な注意点
+
+**Jujutsuの設定とGitの設定は別物です**：
+
+- `git config user.name` → Gitコマンド使用時に適用
+- `jj config set user.name` → Jujutsuコマンド使用時に適用
+
+`jj describe`や`jj commit`などでコミットを作成すると、**Jujutsuの設定**が使われます。そのため、GitとJujutsuを併用する場合は両方の設定を揃えておくことを推奨します。
+
+```powershell
+# 両方の設定を確認
+git config user.name
+git config user.email
+jj config list | Select-String "user"
+```
+
+#### 使用例
+
+```powershell
+# グローバル設定（業務用）
+jj config set --user user.name "OKANO Kazumi"
+jj config set --user user.email "kazumi.okano@morson.jp"
+
+# 個人プロジェクトのリポジトリで
+cd ~/my-personal-project
+jj config set --repo user.name "imudak"
+jj config set --repo user.email "imudak@gmail.com"
+
+# 現在のchangeのauthorも更新
+jj metaedit --update-author
+```
+
+### Tip 6: `jj commit`と`jj describe`の違い
 
 #### `jj describe`（`jj desc`）
 
@@ -176,7 +258,7 @@ jj commit -m "feat: 機能完成"
 # → 新しいchangeで次の作業へ
 ```
 
-### Tip 6: 不要なchangeを削除する（`jj abandon`）
+### Tip 7: 不要なchangeを削除する（`jj abandon`）
 
 古いコミットや不要になったchangeは`jj abandon`で削除できます。
 
@@ -199,7 +281,7 @@ jj abandon xztxukmv pqrstuvw
 
 注意：`jj abandon`はchangeを削除します。削除後の復元はできません。
 
-### Tip 7: mainブランチへの反映方法
+### Tip 8: mainブランチへの反映方法
 
 #### ブックマークを使った方法
 
