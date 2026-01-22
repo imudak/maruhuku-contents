@@ -24,3 +24,11 @@ Thumbs.db
 
 # 画像ファイル（note用アイキャッチ等）
 images/
+
+# Remotion
+video-projects/**/out/
+video-projects/**/.remotion/
+video-projects/**/*.mp4
+video-projects/**/*.gif
+video-projects/**/dist/
+video-projects/**/build/

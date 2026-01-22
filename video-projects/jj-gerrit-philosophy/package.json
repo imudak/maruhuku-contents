@@ -1,0 +1,19 @@
+{
+  "name": "jj-gerrit-philosophy-video",
+  "version": "1.0.0",
+  "description": "jj-gerrit記事の動画版",
+  "scripts": {
+    "start": "remotion studio",
+    "build": "remotion render",
+    "upgrade": "remotion upgrade"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@remotion/cli": "^4.0.409",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "remotion": "^4.0.409"
+  }
+}
