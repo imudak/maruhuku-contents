@@ -15,13 +15,13 @@ published: true
 
 ## NotebookLMスキルとは
 
-Google NotebookLMは、アップロードしたドキュメントに基づいてAIが回答してくれるサービスだ。今回試したスキルを使うと、Claude CodeからNotebookLMに直接質問を投げて、ソースに基づいた回答を得られる。
+Google NotebookLMは、アップロードしたドキュメントに基づいてAIが回答してくれるサービスです。今回試したスキルを使うと、Claude CodeからNotebookLMに直接質問を投げて、ソースに基づいた回答を得られます。
 
-自分がアップロードしたマニュアルやドキュメントについて、Claude Codeの会話の中で質問できるのは便利そうだと思い、試してみることにした。
+自分がアップロードしたマニュアルやドキュメントについて、Claude Codeの会話の中で質問できるのは便利そうだと思い、試してみることにしました。
 
 ## インストール
 
-[PleasePrompto/notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill)をインストールした。使用しているパッケージマネージャーに応じて、以下のいずれかのコマンドを実行する。
+[PleasePrompto/notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill)をインストールしました。使用しているパッケージマネージャーに応じて、以下のいずれかのコマンドを実行します。
 
 ```bash
 # npmの場合
@@ -34,30 +34,30 @@ bunx skills add PleasePrompto/notebooklm-skill
 pnpm dlx skills add PleasePrompto/notebooklm-skill
 ```
 
-このコマンドで`.claude/skills/notebooklm/`（または`.agents/skills/notebooklm/`）にスキルがインストールされる。
+このコマンドで`.claude/skills/notebooklm/`（または`.agents/skills/notebooklm/`）にスキルがインストールされます。
 
 ## 初回セットアップ
 
 ### 1. 認証の設定
 
-初回はGoogleアカウントでの認証が必要だった。Claude Codeで以下のように依頼した。
+初回はGoogleアカウントでの認証が必要でした。Claude Codeで以下のように依頼しました。
 
 ```
 NotebookLMの認証をセットアップして
 ```
 
-ブラウザが自動的に開き、Googleアカウントでログインすると認証情報が保存される。この操作は一度だけで済む。
+ブラウザが自動的に開き、Googleアカウントでログインすると認証情報が保存されます。この操作は一度だけで済みます。
 
 ### 2. NotebookLMでノートブックを準備
 
-次に、NotebookLM側でノートブックを準備した。
+次に、NotebookLM側でノートブックを準備しました。
 
 1. [notebooklm.google.com](https://notebooklm.google.com) にアクセス
 2. 新しいノートブックを作成
 3. ドキュメント（PDF、テキストなど）をアップロード
 4. 「共有」→「リンクを知っている全員」で共有設定を有効にする
 
-共有設定を忘れるとスキルからアクセスできないので注意が必要だ。
+共有設定を忘れるとスキルからアクセスできないので注意が必要です。
 
 ### 3. ノートブックをライブラリに追加
 
@@ -66,19 +66,19 @@ https://notebooklm.google.com/notebook/xxxxx
 このノートブックをライブラリに追加して
 ```
 
-Claude Codeに依頼すると、スキルが自動的にノートブックの内容を確認し、名前とタグを付けてライブラリに登録してくれる。
+Claude Codeに依頼すると、スキルが自動的にノートブックの内容を確認し、名前とタグを付けてライブラリに登録してくれます。
 
 ## 使い方
 
 ### 基本的な質問
 
-ライブラリに追加したノートブックに対して、自然言語で質問できる。試しに以下のように質問してみた。
+ライブラリに追加したノートブックに対して、自然言語で質問できます。試しに以下のように質問してみました。
 
 ```
 Cyber-Gのバッテリー使用時間は？
 ```
 
-スキルがNotebookLMにアクセスし、アップロードしたドキュメントに基づいた回答を返してくれた。
+スキルがNotebookLMにアクセスし、アップロードしたドキュメントに基づいた回答を返してくれました。
 
 実際の回答：
 
@@ -91,15 +91,15 @@ Cyber-Gのバッテリー使用時間は？
 > - USB PD等の急速充電には非対応
 > - 8分間操作がないと自動電源オフ
 
-ドキュメントからの引用なので、ハルシネーションがなく信頼性が高い。
+ドキュメントからの引用なので、ハルシネーションがなく信頼性が高いです。
 
 ### 複数のノートブックを管理する
 
-複数のNotebookLMを使い分けたい場合、ライブラリ機能が便利だった。
+複数のNotebookLMを使い分けたい場合、ライブラリ機能が便利でした。
 
 #### ノートブックの追加
 
-2つ目以降のノートブックも、最初と同じようにClaude Codeに依頼するだけで追加できる。
+2つ目以降のノートブックも、最初と同じようにClaude Codeに依頼するだけで追加できます。
 
 ```text
 https://notebooklm.google.com/notebook/xxxxx
@@ -108,13 +108,13 @@ https://notebooklm.google.com/notebook/xxxxx
 
 #### 登録したノートブックの確認
 
-登録済みのノートブックを確認したい場合も、自然言語で依頼できる。
+登録済みのノートブックを確認したい場合も、自然言語で依頼できます。
 
 ```text
 どんなノートブックが登録されていますか
 ```
 
-すると、以下のような形式で一覧が表示される。
+すると、以下のような形式で一覧が表示されます。
 
 ```text
 📚 Notebook Library:
@@ -130,17 +130,17 @@ https://notebooklm.google.com/notebook/xxxxx
      Uses: 0
 ```
 
-`[ACTIVE]`マークが付いているノートブックが、質問時のデフォルトとなる。
+`[ACTIVE]`マークが付いているノートブックが、質問時のデフォルトとなります。
 
 #### 使用するノートブックの切り替え
 
-別のノートブックに質問したい場合は、質問の中でノートブック名を指定すればよい。
+別のノートブックに質問したい場合は、質問の中でノートブック名を指定すればよいです。
 
 ```text
 MUSUBI SDD Frameworkのノートブックをアクティブにして
 ```
 
-または、質問と一緒に指定することもできる。
+または、質問と一緒に指定することもできます。
 
 ```text
 MUSUBI SDD Frameworkのノートブックで、CodeGraphの機能について教えて
@@ -148,7 +148,7 @@ MUSUBI SDD Frameworkのノートブックで、CodeGraphの機能について教
 
 ## 便利なコマンド
 
-スキルは内部でPythonスクリプトを使っている。直接実行する場合は以下のコマンドが使える。
+スキルは内部でPythonスクリプトを使っています。直接実行する場合は以下のコマンドが使えます。
 
 ```bash
 # 認証状態の確認
@@ -175,15 +175,15 @@ python scripts/run.py ask_question.py --question "質問内容" --notebook-id no
 
 ### Windows環境で文字コードエラーが発生する場合
 
-Windows環境でスキルを実行したところ、以下のようなUnicodeEncodeErrorが発生した。
+Windows環境でスキルを実行したところ、以下のようなUnicodeEncodeErrorが発生しました。
 
 ```text
 UnicodeEncodeError: 'cp932' codec can't encode character '\U0001f527' in position 0: illegal multibyte sequence
 ```
 
-スクリプト内の絵文字がWindowsのデフォルト文字コード（CP932）で出力できないのが原因だった。
+スクリプト内の絵文字がWindowsのデフォルト文字コード（CP932）で出力できないのが原因でした。
 
-環境変数`PYTHONIOENCODING=utf-8`を設定してスクリプトを実行することで解決できた。
+環境変数`PYTHONIOENCODING=utf-8`を設定してスクリプトを実行することで解決できました。
 
 ```bash
 # 認証セットアップの場合
@@ -196,7 +196,7 @@ PYTHONIOENCODING=utf-8 .venv/Scripts/python scripts/auth_manager.py status
 
 ### 認証セットアップの詳細
 
-認証セットアップ時は以下の流れで進む。
+認証セットアップ時は以下の流れで進みます。
 
 1. スクリプトが自動的にブラウザを起動する
 2. NotebookLMのログインページが表示される
@@ -204,16 +204,16 @@ PYTHONIOENCODING=utf-8 .venv/Scripts/python scripts/auth_manager.py status
 4. ログイン成功後、ブラウザの状態が自動保存される
 5. 認証情報は`~/.claude/skills/notebooklm/data/browser_state/`に保存される
 
-ブラウザウィンドウは可視状態で開く必要がある。ヘッドレスモードだと手動ログインができないためだ。
+ブラウザウィンドウは可視状態で開く必要があります。ヘッドレスモードだと手動ログインができないためです。
 
-認証が完了すると、以下のメッセージが表示される。
+認証が完了すると、以下のメッセージが表示されます。
 
 ```text
 ✅ Authentication setup complete!
 You can now use ask_question.py to query NotebookLM
 ```
 
-認証は一度行えば保存されるため、PC単位で初回のみの作業となる。
+認証は一度行えば保存されるため、PC単位で初回のみの作業となります。
 
 ## ユースケース
 
@@ -222,20 +222,20 @@ You can now use ask_question.py to query NotebookLM
 - 技術仕様書の内容確認
 - 複数のドキュメントを横断した調査
 
-NotebookLMにドキュメントを集約しておけば、Claude Codeから離れることなく必要な情報を取得できる。
+NotebookLMにドキュメントを集約しておけば、Claude Codeから離れることなく必要な情報を取得できます。
 
 ## まとめ
 
-NotebookLMスキルを試してみたところ、Claude Codeの会話の中でドキュメントベースの質問応答ができることが分かった。
+NotebookLMスキルを試してみたところ、Claude Codeの会話の中でドキュメントベースの質問応答ができることが分かりました。
 
-セットアップの流れは以下の通り。
+セットアップの流れは以下の通りです。
 
 1. `bunx skills add PleasePrompto/notebooklm-skill` でインストール
 2. 認証をセットアップ
 3. NotebookLMでノートブックを作成・共有
 4. ライブラリに追加して質問
 
-ドキュメントからの引用で回答してくれるため、ハルシネーションを避けたい場面や、手元のマニュアルを参照しながら作業したい場面で使えそうだ。
+ドキュメントからの引用で回答してくれるため、ハルシネーションを避けたい場面や、手元のマニュアルを参照しながら作業したい場面で使えそうです。
 
 ## 参考
 
