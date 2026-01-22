@@ -8,7 +8,7 @@ topics:
   - Google
   - AI
   - 開発環境
-published: false
+published: true
 ---
 
 # Claude CodeからNotebookLMに質問できるSkillを試してみた
@@ -21,10 +21,17 @@ Google NotebookLMは、アップロードしたドキュメントに基づいて
 
 ## インストール
 
-SkillsMPを使ってインストールした。
+[PleasePrompto/notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill)をインストールした。使用しているパッケージマネージャーに応じて、以下のいずれかのコマンドを実行する。
 
 ```bash
+# npmの場合
+npx skills add PleasePrompto/notebooklm-skill
+
+# bunの場合
 bunx skills add PleasePrompto/notebooklm-skill
+
+# pnpmの場合
+pnpm dlx skills add PleasePrompto/notebooklm-skill
 ```
 
 このコマンドで`.claude/skills/notebooklm/`（または`.agents/skills/notebooklm/`）にスキルがインストールされる。
@@ -232,5 +239,5 @@ NotebookLMスキルを試してみたところ、Claude Codeの会話の中で�
 
 ## 参考
 
-- [notebooklm-skill (GitHub)](https://github.com/PleasePrompto/notebooklm-skill)
-- [SkillsMP](https://skillsmp.com/)
+- [PleasePrompto/notebooklm-skill (GitHub)](https://github.com/PleasePrompto/notebooklm-skill) - スキルのソースコードとドキュメント
+- [notebooklm-skill (SkillsMP)](https://skillsmp.com/skills/pleaseprompto-notebooklm-skill-skill-md) - SkillsMarketplaceでのスキルページ
