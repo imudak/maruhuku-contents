@@ -34,7 +34,13 @@ bunx skills add PleasePrompto/notebooklm-skill
 pnpm dlx skills add PleasePrompto/notebooklm-skill
 ```
 
-このコマンドで`.claude/skills/notebooklm/`（または`.agents/skills/notebooklm/`）にスキルがインストールされます。
+コマンドを実行すると、いくつかの選択肢が表示されます。
+
+1. **Select agents to install skills to** - インストール先のエージェントを選択します。Claude Code、Codex、Cursorなど、検出されたエージェントから選べます
+2. **Installation scope** - `Project`（現在のプロジェクトのみ）か`User`（ユーザー全体）かを選択します
+3. **Installation method** - `Symlink (Recommended)`か`Copy`かを選択します。Symlinkを選ぶと、スキルの更新が自動的に反映されます
+
+今回は「Claude Code, Codex」「Project」「Symlink」を選択しました。選択が完了すると、`.claude/skills/notebooklm/`（または`.agents/skills/notebooklm/`）にスキルがインストールされます。
 
 ## 初回セットアップ
 
