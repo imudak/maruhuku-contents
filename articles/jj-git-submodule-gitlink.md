@@ -12,16 +12,15 @@ published: true
 
 ## TL;DR（結論）
 
-`git submodule add`で追加したsubmoduleのgitlinkは、jjではなく**gitで直接コミット**する必要があります。
+**最終結論**: jjをメインで使いたいなら、**submoduleをやめてVSCodeマルチルートワークスペース**に移行するのがおすすめです（[後日談](#後日談submoduleをやめてvscodeワークスペースに移行した)参照）。
+
+**submoduleを使い続ける場合**: gitlinkはjjではなく**gitで直接コミット**する必要があります。
 
 ```bash
 # submoduleを追加
 git submodule add https://github.com/user/repo.git projects/repo
 
-# gitlinkをstage（警告は無視してよい）
-git add projects/repo
-
-# gitで直接コミット
+# gitで直接コミット（git submodule addで自動的にstageされている）
 git commit -m "chore: repoをsubmoduleとして追加"
 
 # jjにインポートしてpush
@@ -29,7 +28,7 @@ jj git import
 jj git push
 ```
 
-jjはgitのstagingを見ないため、`jj commit`ではgitlinkがコミットされません。
+jjはgitのstagingを見ないため、`jj commit`ではgitlinkがコミットされません。また、`jj status`でsubmoduleが`D`(Deleted)と誤表示される問題もあり、運用上の課題が多いです。
 
 ## 問題の発生状況
 
@@ -122,7 +121,7 @@ jjはgitのstagingを使わず、**working copy（作業ディレクトリ）の
 
 ### 図解
 
-```
+```text
 ┌──────────────────────────────────────────────────────┐
 │ git submodule add                                    │
 │   ├── .gitmodules (working copy) ← jjが認識         │
@@ -228,6 +227,43 @@ git ls-files --stage projects/repo
 
 出力があればOK。空の場合はgitlinkがコミットされていません。
 
+## 追加の問題：jj statusでsubmoduleが「削除」と表示される
+
+submoduleが正しく登録されていても、`jj status`を実行すると予期せぬ表示が出ます：
+
+```bash
+jj st
+# Working copy changes:
+# D projects/project-a
+# D projects/project-b
+```
+
+すべてのsubmoduleが`D`(Deleted)と表示される！
+
+### なぜこうなるか
+
+jjの視点では：
+
+1. 親コミット（HEAD）にはgitlinkエントリがある
+2. しかしjjはgitlinkを認識できない（ファイルではないため）
+3. 「あったものが消えた」→ `D`(Deleted)と判定
+
+### 試した回避策
+
+| 方法 | 結果 |
+|------|------|
+| `jj restore` | ✗ gitlinkを復元できない |
+| `snapshot.auto-track`で除外 | ✗ 既にHEADにあるgitlinkの「削除」検出は止められない |
+| `.gitignore`に追加 | ✗ gitlinkはファイルではないので除外不可 |
+
+### 危険な状態
+
+この`D`マークがついた状態で`jj new`すると、gitlinkの「削除」がコミットされてしまう可能性があります。つまり、**submoduleの参照が消える**。
+
+### 根本的な問題
+
+jjはgitlinkを扱えません。これはjjの設計上の制約で、[issue #494](https://github.com/jj-vcs/jj/issues/494)で議論されています。現時点ではworkaroundで解決できる問題ではなく、jj本体でのsubmoduleサポートを待つ必要があります。
+
 ## まとめ
 
 | 操作 | jjで可能か | 備考 |
@@ -236,6 +272,7 @@ git ls-files --stage projects/repo
 | gitlinkのコミット | ✗ | gitで直接コミット |
 | submodule参照の更新 | ✗ | gitで直接コミット |
 | 通常のファイル編集 | ✓ | jjで問題なし |
+| `jj status`の表示 | ✗ | submoduleが`D`と誤表示される |
 
 jjとgitを併用する環境でsubmoduleを扱う場合、**gitlinkに関する操作はgitで直接行う**ことを覚えておきましょう。
 
@@ -331,3 +368,4 @@ git commit -m "chore: submoduleからワークスペース構成に移行"
 
 - [Jujutsu公式ドキュメント](https://martinvonz.github.io/jj/)
 - [Git submodule のしくみ](https://git-scm.com/book/ja/v2/Git-のさまざまなツール-サブモジュール)
+- [jj issue #494: Add support for Git submodules](https://github.com/jj-vcs/jj/issues/494)
