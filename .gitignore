@@ -15,9 +15,8 @@ Thumbs.db
 # Claude Code settings (local configuration should not be tracked)
 .claude/settings.local.json
 
-# Skills directories (contain local data and authentication)
-.claude/skills/*
-!.claude/skills/japanese-article-proofreading/
+# .claude/skills/ は全てGit管理下
+# 他エディタのスキルはローカル設定のため除外
 .codex/skills/
 .cursor/skills/
 .agents/skills/
