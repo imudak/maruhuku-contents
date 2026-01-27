@@ -7,7 +7,7 @@ topics:
   - git
   - submodule
   - monorepo
-published: false
+published: true
 ---
 
 ## TL;DR（結論）
@@ -240,6 +240,92 @@ git ls-files --stage projects/repo
 jjとgitを併用する環境でsubmoduleを扱う場合、**gitlinkに関する操作はgitで直接行う**ことを覚えておきましょう。
 
 jjはgitのstagingを見ないため、staging経由で追加されるgitlinkはjjでは扱えません。これはjjの設計上の制約であり、バグではありません。
+
+## 後日談：submoduleをやめてVSCodeワークスペースに移行した
+
+### submodule運用の課題
+
+実際にsubmoduleでモノレポ管理を運用してみると、本記事で解説した問題以外にも課題が出てきました：
+
+- **参照更新の手間**: submodule内で変更するたびに、親リポジトリでgitlinkを更新してコミットする必要がある
+- **jjとの相性**: 前述の通り、submodule操作はgitで直接行う必要があり、jjのシンプルなワークフローが崩れる
+- **クローン時の複雑さ**: `--recurse-submodules`オプションが必要で、忘れるとsubmoduleが空になる
+- **IDE連携**: 一部のIDEやツールがsubmoduleを正しく認識しないことがある
+
+### VSCodeマルチルートワークスペースという選択肢
+
+検討した結果、**VSCodeマルチルートワークスペース**に移行しました。
+
+```text
+# 従来（submodule構成）
+parent-repo/
+├── .gitmodules
+└── projects/
+    ├── project-a/  (submodule)
+    └── project-b/  (submodule)
+
+# 移行後（ワークスペース構成）
+workspace/
+├── hub/            # ドキュメント・計画管理
+├── project-a/      # 独立リポジトリ
+└── project-b/      # 独立リポジトリ
+
+hub/workspace.code-workspace  # VSCodeワークスペース定義
+```
+
+### ワークスペース形式のメリット
+
+| 観点 | submodule | VSCodeワークスペース |
+|------|-----------|---------------------|
+| リポジトリ独立性 | 親に依存 | 完全独立 |
+| 参照更新 | 手動で必要 | 不要 |
+| jjとの相性 | 一部git直接操作 | 問題なし |
+| クローン | `--recurse-submodules` | 各リポジトリを個別clone |
+| IDE統合 | △ | ◎（VSCode前提） |
+
+### 移行手順
+
+```bash
+# 1. submoduleを削除
+git submodule deinit -f projects/project-a
+git rm -f projects/project-a
+rm -rf .git/modules/projects/project-a
+
+# 2. .gitmodulesを削除（最後のsubmoduleの場合）
+git rm .gitmodules
+
+# 3. ワークスペースファイルを作成
+cat > workspace.code-workspace << 'EOF'
+{
+  "folders": [
+    { "path": ".", "name": "hub" },
+    { "path": "../project-a", "name": "project-a" },
+    { "path": "../project-b", "name": "project-b" }
+  ]
+}
+EOF
+
+# 4. コミット
+git add -A
+git commit -m "chore: submoduleからワークスペース構成に移行"
+```
+
+### どちらを選ぶべきか
+
+**submoduleが適している場合:**
+
+- 特定のコミットに固定したい（ライブラリのバージョン管理など）
+- CI/CDで再現性のあるビルドが必要
+- VSCode以外のIDEをメインで使う
+
+**ワークスペースが適している場合:**
+
+- 各プロジェクトは常に最新を参照したい
+- jjをメインで使いたい
+- VSCodeで開発している
+- プロジェクト間の依存関係が緩い
+
+私の場合、個人プロジェクトの統合管理が目的で、厳密なバージョン固定は不要だったため、ワークスペース形式の方が運用コストが低いと判断しました。
 
 ## 参考
 
