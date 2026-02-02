@@ -9,11 +9,13 @@ mini-PC（WSL2）上でOpenClawを動かし、Discord（メイン）とSlack（�
 - mini-PC: WSL2 (Ubuntu) 導入済み、Tailscale設定済み
 - Node.js: v24.13.0（nvm 0.40.1経由）✅
 - OpenClaw: 2026.1.30 ✅
-- Claude Code: 未インストール
-- Discord: アカウントあり
+- Claude Code: インストール済み ✅
+- Discord Bot: 作成済み、OpenClawに設定済み ✅
 - Slack: アカウントあり、前回別PCで連携経験あり
 - Notion: アカウントあり、メモ蓄積
 - GitHub: アカウントあり
+- **AIプロバイダー: Anthropic OAuth設定済み（Claude Code サブスク経由）** ✅
+- **Discord連携: channels unresolved で未解決** ⚠️
 
 ## 作業項目
 
@@ -21,14 +23,18 @@ mini-PC（WSL2）上でOpenClawを動かし、Discord（メイン）とSlack（�
 
 - [x] WSL環境確認（Node.js、npm）
 - [x] OpenClawインストール
-- [ ] 基本動作確認
+- [ ] 基本動作確認（APIキー設定後）
 
 ### Phase 2: Discord連携（メイン）
 
-- [ ] Discord Developer Portalでアプリ作成
-- [ ] Botトークン取得
-- [ ] OpenClawにトークン設定
-- [ ] Gateway起動・動作確認
+- [x] Discord Developer Portalでアプリ作成
+- [x] Botトークン取得
+- [x] MESSAGE CONTENT INTENT有効化
+- [x] サーバー作成・Bot招待
+- [x] OpenClawにトークン設定
+- [x] Gatewayサービスインストール
+- [ ] AIプロバイダーAPIキー設定
+- [ ] 動作確認
 
 ### Phase 3: Slack連携（サブ）
 
