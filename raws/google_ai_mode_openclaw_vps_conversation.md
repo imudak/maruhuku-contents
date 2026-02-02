@@ -811,3 +811,253 @@ RDP経由だと設定が反映されにくいことがあり、その場合は�
 ```
 
 ここでアプリ、ドキュメント、音楽などの既定保存先を外付けドライブに変更できる。これが最も安全で簡単な方法。
+
+---
+
+# 追加会話: WSLへのSSH接続とTailscale設定
+
+日時: 2026/02/02
+ソース: Claude Code
+
+---
+
+## Q29: WSLに直接SSH接続したい。Cloudflare Tunnelを使うべきか
+
+シン・テレワークで外部から自宅のmini-PCに接続できているが、Windowsまるごと接続はネットワーク負荷が重い。WSLに直接SSHで接続したい。お名前ドットコムで独自ドメインを持っているので、Cloudflare Tunnelを使うのが良いか。
+
+### 回答
+
+Cloudflare Tunnelは良い選択だ。ルーターのポート開放が不要で、セキュリティも高い。
+
+ただし、Cloudflare Tunnelを使うには、ドメインのネームサーバーをCloudflareに移管する必要がある。
+
+1. Cloudflareでアカウント作成（無料）
+2. 「Add a Site」で独自ドメインを追加
+3. Cloudflareが指定するネームサーバーをメモ
+4. お名前ドットコムでネームサーバーをCloudflareに変更
+
+---
+
+## Q30: お名前ドットコムのDNS設定を引き継ぐ必要があるのでは。レンタルサーバーSDプランを使っている
+
+### 回答
+
+その懸念は正しい。既にレンタルサーバーでDNS設定を使っている場合、慎重に対応する必要がある。
+
+Cloudflareへ移行する場合：
+1. 現在のDNSレコードをすべて確認・メモ
+2. Cloudflareがある程度自動でインポートするが、完全ではない
+3. 手動で不足分（特にMXレコード等）を追加
+
+### より簡単な代替案：Tailscale
+
+**Tailscale** を使えば、DNS設定を一切変更せずにWSLへSSH接続できる。
+
+| 比較 | Cloudflare Tunnel | Tailscale |
+|------|-------------------|-----------|
+| DNS移行 | **必要** | **不要** |
+| 難易度 | やや複雑 | 簡単 |
+| 接続方法 | ドメイン経由 | Tailscale IP経由 |
+| 無料枠 | 無制限 | 個人利用は無料 |
+
+レンタルサーバーSDプランを継続利用するなら、Tailscaleの方が安全で手軽だ。
+
+---
+
+## Q31: Tailscaleを選択
+
+### Tailscale を使ったWSL SSH接続の手順
+
+#### 1. WSL側の設定（mini-PC）
+
+```bash
+# SSHサーバーのインストールと起動
+sudo apt update && sudo apt install openssh-server -y
+sudo service ssh start
+
+# Tailscaleのインストール
+curl -fsSL https://tailscale.com/install.sh | sh
+
+# Tailscaleを起動（認証URLが表示される）
+sudo tailscale up
+```
+
+表示されるURLをブラウザで開き、Googleアカウント等でログインして認証する。
+
+#### 2. WSLのTailscale IPを確認
+
+```bash
+tailscale ip -4
+```
+
+`100.x.x.x` のようなIPが表示される。
+
+#### 3. 外出先PCにもTailscaleをインストール
+
+- Windows: https://tailscale.com/download/windows
+- Mac: https://tailscale.com/download/mac
+
+インストール後、同じアカウントでログインする。
+
+#### 4. SSH接続
+
+```bash
+ssh ユーザー名@100.x.x.x
+```
+
+---
+
+## Q32: SSH接続成功。WSL自動起動の設定について、bootに書く場合はtailscale upはしないのでは
+
+### 回答
+
+その通りだ。`/etc/wsl.conf` の `command` に `service ssh start` だけ書いた場合、Tailscaleは起動しない。
+
+#### 方法1: wsl.conf に両方書く
+
+```ini
+[boot]
+command = service ssh start && tailscale up --authkey=YOUR_AUTH_KEY
+```
+
+authkeyは https://login.tailscale.com/admin/settings/keys で取得。
+
+#### 方法2: systemd を使う（推奨）
+
+```ini
+[boot]
+systemd = true
+```
+
+PowerShellで `wsl --shutdown` して再起動後：
+
+```bash
+sudo systemctl enable ssh
+sudo systemctl enable tailscaled
+```
+
+これで両方とも自動起動する。
+
+---
+
+## Q33: systemdの方がLinuxらしい。WSL自体はタスクスケジューラで
+
+### 回答
+
+その通りだ。Linuxらしく systemd、Windows側はタスクスケジューラ。適材適所だ。
+
+#### WSL側：systemd を有効化
+
+```bash
+sudo nano /etc/wsl.conf
+```
+
+```ini
+[boot]
+systemd = true
+```
+
+```bash
+sudo systemctl enable ssh
+sudo systemctl enable tailscaled
+```
+
+#### Windows側：タスクスケジューラでWSL自動起動
+
+1. 「タスクスケジューラ」を開く
+2. 「タスクの作成」
+
+**全般タブ：**
+- 名前: `WSL AutoStart`
+- 「ユーザーがログオンしているかどうかにかかわらず実行する」
+- 「最上位の特権で実行する」にチェック
+
+**トリガータブ：**
+- 「新規」→「スタートアップ時」
+
+**操作タブ：**
+- プログラム: `C:\Windows\System32\wsl.exe`
+- 引数: `-d Ubuntu -- echo started`
+
+---
+
+## Q34: systemdが有効になっている。タスクスケジューラ以外の方法はあるか
+
+```
+imudak@maruhuku-mini:~$ systemctl is-enabled ssh tailscaled
+enabled
+enabled
+```
+
+### 回答
+
+タスクスケジューラより簡単な方法もある。
+
+#### スタートアップフォルダ
+
+`Win + R` で `shell:startup` を入力し、開いたフォルダに `wsl-start.vbs` を作成：
+
+```vbs
+Set ws = CreateObject("Wscript.Shell")
+ws.Run "wsl -d Ubuntu", 0
+```
+
+ログイン時にWSLがバックグラウンドで起動する。
+
+---
+
+## Q35: タスクスケジューラで設定する。接続側PCでは毎回Tailscaleを起動する必要があるか
+
+### 回答
+
+**毎回起動する必要はない。**
+
+TailscaleはWindowsにインストールすると、デフォルトでスタートアップに登録され、システムトレイに常駐する。PC起動時に自動で接続される。
+
+確認方法：タスクバー右下のシステムトレイにTailscaleのアイコンがあれば起動している。
+
+もし自動起動していない場合：
+1. Tailscaleアプリを開く
+2. 設定 → 「Run at login」にチェック
+
+これで両方のPCが起動すれば、自動的にTailscaleネットワークに接続され、いつでもSSHできる状態になる。
+
+---
+
+## Q36: タスクスケジューラで設定したが、ログインしないとSSH接続できない
+
+OS再起動後、ログインするまでSSHできず、ログイン後もターミナルで `wsl` を実行するまで接続できなかった。
+
+### 回答
+
+WSLはユーザーセッションに依存するため、通常はログインしないと起動できない。
+
+#### ログイン不要でWSLを起動する方法
+
+1. **Windows の自動ログイン**: セキュリティは低下するが最も簡単
+2. **Windows側のOpenSSHサーバー経由**: Windowsサービスとして動くのでログイン不要
+3. **タスクスケジューラで `-u root` オプションを使う**: これが解決策
+
+---
+
+## Q37: `-u root` でログイン不要で起動した
+
+タスクスケジューラの引数を `-u root` にしたところ、ログインしなくてもWSLが起動し、SSH接続できるようになった。
+
+### 最終的な設定
+
+**タスクスケジューラ：**
+
+- **全般タブ：**
+  - 名前: `WSL AutoStart`
+  - 「ユーザーがログオンしているかどうかにかかわらず実行する」
+  - 「最上位の特権で実行する」にチェック
+
+- **トリガータブ：**
+  - 「スタートアップ時」
+
+- **操作タブ：**
+  - プログラム: `C:\Windows\System32\wsl.exe`
+  - 引数: `-u root`
+
+これでWindows起動時にWSLが自動起動し、systemd経由でSSHとTailscaleも立ち上がる。ログイン不要で外部からSSH接続可能。
