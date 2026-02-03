@@ -30,18 +30,28 @@ published: false
 OpenClawを起動して、Discordの専用チャンネルでメンションします。
 
 ```
-@エージェント名 こんにちは
+@クロウ候 こんにちは
 ```
 
-AIが応答し、最初はセットアップウィザード的なやり取りでペルソナ（名前や性格）を設定しました。
+すると、こんな感じで応答が返ってきます。
+
+> 👑
+>
+> よろしい、卿。余は**クロウ候**。本日より卿の傍らに在る。
+>
+> さて、卿。余に何を命じる？
+
+銀英伝のラインハルト風のキャラを設定してみました（完全に趣味です）。最初はセットアップウィザード的なやり取りがあり、ペルソナ（名前や性格）を設定できます。
 
 ## GitHub認証
 
 まずはGitHubリポジトリにアクセスするための認証です。
 
 ```
-@エージェント名 GitHub認証を設定して
+@クロウ候 GitHub認証を設定して
 ```
+
+> gh CLIをインストールして認証を設定しよう。
 
 AIがgh CLIをインストールし、認証手順を案内してくれました。
 
@@ -58,7 +68,7 @@ Personal Access Tokenを使ってログインし、プライベートリポジ�
 次にFlutterのインストールです。
 
 ```
-@エージェント名 Flutterをインストールして
+@クロウ候 Flutterをインストールして
 ```
 
 sudoが使えない環境だったので、AIは自動的にユーザーディレクトリへのインストールに切り替えてくれました。
@@ -71,11 +81,12 @@ tar -xf flutter_linux_*.tar.xz
 echo 'export PATH="$HOME/flutter/bin:$PATH"' >> ~/.bashrc
 ```
 
-途中で依存パッケージ（clang, cmake, ninja-build等）が必要になり、「これを実行して」と指示されました。
+途中で依存パッケージ（clang, cmake, ninja-build等）が必要になると、こう言われます。
 
-```bash
-sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev lld unzip
-```
+> sudoにパスワードが必要だ。卿、以下を実行してくれ：
+> ```bash
+> sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev lld unzip
+> ```
 
 sudoが必要な部分は人間が実行し、それ以外はAIが自動で進めるという分業体制です。
 
@@ -84,7 +95,7 @@ sudoが必要な部分は人間が実行し、それ以外はAIが自動で進�
 GitHubのプライベートリポジトリをクローンします。
 
 ```
-@エージェント名 私のリポジトリをクローンして
+@クロウ候 私のリポジトリをクローンして
 ```
 
 AIが`gh repo list`で一覧を取得し、必要なリポジトリを順番にクローンしてくれました。10個のリポジトリが数分で揃いました。
@@ -96,7 +107,9 @@ The current Dart SDK version is 3.6.2.
 Because project requires SDK version ^3.10.4, version solving failed.
 ```
 
-AIが「最新のFlutter 3.38.9にアップグレードが必要」と判断し、自動でアップグレードしてくれました。
+> なるほど。**Flutter 3.38.9（Dart 3.10.8）が最新安定版**で、プロジェクトはそれで開発されている。アップグレードする。
+
+AIが自動でアップグレードしてくれました。
 
 ```bash
 flutter upgrade
@@ -104,6 +117,8 @@ flutter upgrade
 ```
 
 再度ビルドすると成功です。
+
+> 👑 **ビルド成功！**
 
 ```
 ✓ Built build/linux/x64/release/bundle/project_name
@@ -122,9 +137,11 @@ MESA: error: ZINK: failed to choose pdev
 
 AIと一緒にトラブルシューティングを試みました。
 
-- DISPLAY変数の設定 → 効果なし
-- ソフトウェアレンダリング → 効果なし
-- シンプルなxeyesで確認 → やはり表示されない
+> 試してみよう。
+> - DISPLAY変数の設定 → 効果なし
+> - ソフトウェアレンダリング → 効果なし
+>
+> **SSH経由では難しい。** WSLgはあるが、SSH接続からはグラフィックス表示ができない。
 
 結論として、WSLgはリモートデスクトップ経由だと動作しない場合があるようです。物理的にPCの前にいる時に再試行することにしました。
 
