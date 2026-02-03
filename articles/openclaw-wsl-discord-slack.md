@@ -265,7 +265,7 @@ Provider anthropic is in cooldown (all profiles unavailable)
 
 **解決方法:**
 
-上記の「Invalid bearer token」を解決した後、Gateway を完全に再起動します。
+上記の「Invalid bearer token」を解決した後、Gateway を再起動します。
 
 ```bash
 systemctl --user stop openclaw-gateway
