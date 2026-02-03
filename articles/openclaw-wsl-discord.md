@@ -8,7 +8,7 @@ topics:
   - wsl
   - ai
   - claudecode
-published: false
+published: true
 ---
 
 ## はじめに
@@ -283,6 +283,18 @@ journalctl --user -u openclaw-gateway -f
 cat /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
 ```
 
+## 便利な使い方
+
+### 自身のバージョンアップ
+
+OpenClawに「バージョンアップして」と頼むと、自分自身を更新してくれます。
+
+```text
+@OpenClaw OpenClawのバージョンアップをお願いします
+```
+
+実行してよいか確認された後、`npm update -g openclaw` を実行し、Gatewayを再起動してくれます。
+
 ## まとめ
 
 ここまでの作業で以下が完了しました。
@@ -290,7 +302,7 @@ cat /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
 | 項目 | 状態 |
 | ---- | ---- |
 | Node.js / npm | 完了（v24.13.0 nvm経由） |
-| OpenClaw | 完了（2026.1.30） |
+| OpenClaw | 完了（2026.2.1） |
 | Claude Code | 完了（OAuth トークン取得済み） |
 | Discord Bot作成 | 完了（Developer Portal） |
 | OpenClaw Discord設定 | 完了（Open設定） |

@@ -46,7 +46,7 @@ mini-PC（WSL2）上でOpenClawを動かし、Discordから使えるようにす
 
 ## 記事化
 
-- 記事: `articles/openclaw-wsl-discord-slack.md`（Discord専用に変更）
+- 記事: `articles/openclaw-wsl-discord.md`（Discord専用に変更）
 - 状態: 執筆完了、公開前
 
 ## 参考
