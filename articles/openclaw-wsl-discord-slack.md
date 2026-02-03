@@ -1,21 +1,21 @@
 ---
-title: "ミニPCのWSL2でOpenClawを動かしてDiscordとSlack両方で使う"
+title: "ミニPCのWSL2でOpenClawを動かしてDiscordから使う"
 emoji: "🤖"
 type: tech
 topics:
   - openclaw
   - discord
-  - slack
   - wsl
   - ai
+  - claudecode
 published: false
 ---
 
 ## はじめに
 
-自宅のミニPCをAIアシスタントサーバーにしたいと思いました。OpenClawを使えば、DiscordやSlackから話しかけるだけでAIと対話できます。
+自宅のミニPCをAIアシスタントサーバーにしたいと思いました。OpenClawを使えば、Discordから話しかけるだけでAIと対話できます。
 
-前回はSlack連携だけ設定しましたが、Slack無料プランは90日でメッセージ履歴が消えてしまいます。個人用途ならDiscordの方が向いていると感じたので、今回は両方設定して使い分けられるようにします。
+Discordを選んだ理由は、メッセージ履歴が無制限で残ること、Bot設定がシンプルなことです。
 
 ## 環境
 
@@ -24,21 +24,6 @@ published: false
 - 外部接続: Tailscale経由でSSH
 - Node.js: v24.13.0（nvm経由）
 - OpenClaw: 2026.1.30
-
-## SlackとDiscordの比較
-
-比較した結果をまとめます。
-
-| 観点 | Slack (Free) | Discord (無料) |
-|------|--------------|----------------|
-| メッセージ履歴 | 90日で消失 | 無制限 |
-| Bot設定の複雑さ | やや複雑（トークン2種類） | シンプル（トークン1種類） |
-| スレッド機能 | 強力 | あるが弱い |
-| 通知設定 | 細かく制御可能 | 普通 |
-
-個人用AIアシスタントにはDiscordが向いていると判断しました。履歴が消えないのが大きいです。
-
-ただ、職場でSlackを使っているので操作感が同じ方が楽という面もあり、両方設定して併用することにしました。
 
 ## OpenClawのインストール
 
@@ -123,8 +108,11 @@ openclaw onboard
 4. 「Select channel」→ Discord (Bot API)
 5. 「Enter Discord bot token」→ 先ほど取得したトークンを貼り付け
 6. 「Configure Discord channels access?」→ Yes
-7. 「Discord channels access」→ Allowlist (recommended)
-8. 「Discord channels allowlist」→ `サーバー名/#チャンネル名`（例: `AI Assistant/#一般`）
+7. 「Discord channels access」→ **Open (allow all channels)**
+
+:::message
+「Allowlist」で特定チャンネルのみ許可する設定にすると、「channels unresolved」エラーが出ることがあります。個人用サーバーなら「Open」で全チャンネル許可にする方が確実です。
+:::
 
 設定が完了すると、systemdサービスとしてGatewayがインストールされます。
 
@@ -196,52 +184,123 @@ systemctl --user restart openclaw-gateway
 
 Anthropic Console や OpenAI で API キーを取得している場合は、`openclaw configure` の Model セクションで直接設定できます。
 
-<!-- TODO: 動作確認後に成功時のログを記載 -->
+## 動作確認
 
-## Slack連携の設定
+Discordで `@OpenClaw こんにちは` とメンションを送ります。
 
-Discordがメインなので、Slackは簡潔にまとめます。詳細は前回の記事を参照してください。
+:::message
+`@` を入力して表示される入力補完リストから `@OpenClaw` を選択してください。
 
-https://zenn.dev/maruhuku/articles/openclaw-slack-troubleshoot
+- `@OpenClaw#6551` のようにコピペや手入力すると、プレーンテキストとして送信されメンションとして認識されません
+- メッセージを編集してメンションを追加しても、Botには通知されません。新規メッセージで送信してください
 
-### ポイント
+:::
 
-- `botToken`は`xoxb-`で始まる（OAuth & Permissions）
-- `appToken`は`xapp-`で始まる（Basic Information → App-Level Tokens）
-- App Manifestで権限を一括設定すると楽
-- 設定後は「Reinstall to Workspace」を忘れずに
-
-## 使い分け
-
-| 用途 | 使うサービス |
-|------|--------------|
-| 日常のAI対話 | Discord |
-| 通知を受け取りたいとき | Slack |
-| 仕事関連の質問 | Slack（職場と同じ操作感） |
+正常に動作すれば、目のリアクション（👀）が付いた後、Botから応答が返ってきます。
 
 ## トラブルシューティング
 
-<!-- TODO: 実際にハマったことを記載 -->
+### channels unresolved エラー
+
+```text
+[discord] channels unresolved: 1234567890/9876543210
+```
+
+特定チャンネルのみ許可する設定（Allowlist）で、チャンネルIDの解決に失敗しています。
+
+**解決方法:**
+
+```bash
+openclaw configure
+```
+
+1. Channels → Configure/link → Discord → Modify settings
+2. 「Discord channels access」→ **Open (allow all channels)** に変更
+
+設定ファイル（`~/.openclaw/openclaw.json`）を直接編集する場合は、`guilds` を空にします。
+
+```json
+"channels": {
+  "discord": {
+    "enabled": true,
+    "token": "...",
+    "groupPolicy": "open",
+    "guilds": {}
+  }
+}
+```
+
+### Invalid bearer token / authentication_error
+
+```text
+HTTP 401 authentication_error: Invalid bearer token
+```
+
+Claude Code のセッションが切れています。
+
+**解決方法:**
+
+```bash
+# Claude Code に再ログイン
+claude login
+
+# 新しい setup-token を生成
+claude setup-token
+
+# OpenClaw に再設定
+openclaw configure
+# → Model を選択して新しいトークンを貼り付け
+
+# Gateway 再起動
+systemctl --user restart openclaw-gateway
+```
+
+### Provider is in cooldown
+
+```text
+Provider anthropic is in cooldown (all profiles unavailable)
+```
+
+認証エラーが発生した後、プロバイダーが一時停止状態になっています。
+
+**解決方法:**
+
+上記の「Invalid bearer token」を解決した後、Gateway を完全に再起動します。
+
+```bash
+systemctl --user stop openclaw-gateway
+sleep 5
+systemctl --user start openclaw-gateway
+```
+
+### ログの確認方法
+
+```bash
+# リアルタイムログ
+journalctl --user -u openclaw-gateway -f
+
+# 詳細ログ
+cat /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
+```
 
 ## まとめ
 
 ここまでの作業で以下が完了しました。
 
 | 項目 | 状態 |
-|------|------|
+| ---- | ---- |
 | Node.js / npm | 完了（v24.13.0 nvm経由） |
 | OpenClaw | 完了（2026.1.30） |
 | Claude Code | 完了（OAuth トークン取得済み） |
 | Discord Bot作成 | 完了（Developer Portal） |
-| OpenClaw Discord設定 | 完了（トークン・チャンネル設定済み） |
-| Gateway systemdサービス | 完了（インストール済み） |
+| OpenClaw Discord設定 | 完了（Open設定） |
+| Gateway systemdサービス | 完了（自動起動） |
 | AIプロバイダー設定 | 完了（Anthropic OAuth） |
-| Slack連携 | 未設定 |
+| 動作確認 | 完了 |
 
-<!-- TODO: 動作確認後に最終状態を更新 -->
+これでDiscordからいつでもAIアシスタントに話しかけられるようになりました。
 
 ## 関連情報
 
 - [OpenClaw公式サイト](https://openclaw.ai/)
 - [OpenClaw Discordドキュメント](https://docs.openclaw.ai/channels/discord)
-- [前回のSlack連携記事](https://zenn.dev/maruhuku/articles/openclaw-slack-troubleshoot)
