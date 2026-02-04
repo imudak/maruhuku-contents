@@ -7,6 +7,57 @@
 
 Discordからopenclawのアップデートを依頼した後、応答がなくなり `openclaw --version` も失敗する状態になった。
 
+## OpenClawエージェントが実行した手順
+
+Discordから「特に作業していなければあなた自身をupdateしてください」と依頼を受け、以下の手順を実行した。
+
+### 1. gateway ツールによる更新試行
+
+```
+gateway action=update.run
+→ タイムアウト（10秒後）
+```
+
+### 2. 状態確認
+
+```bash
+openclaw status
+→ "Update available (npm 2026.2.2-3)" と表示
+```
+
+### 3. openclaw update 実行
+
+```bash
+openclaw update
+```
+
+結果:
+```
+npm error code ENOTEMPTY
+npm error syscall rename
+npm error path /home/imudak/.nvm/versions/node/v24.13.0/lib/node_modules/openclaw
+npm error dest /home/imudak/.nvm/versions/node/v24.13.0/lib/node_modules/.openclaw-2PbyTivh
+npm error errno -39
+```
+
+### 4. npmキャッシュクリア試行
+
+```bash
+npm cache clean --force && npm install -g openclaw@latest
+```
+
+結果: キャッシュディレクトリ自体の削除でENOTEMPTYエラー
+
+### 5. キャッシュ強制削除後に再試行
+
+```bash
+rm -rf ~/.npm/_cacache && npm install -g openclaw@latest
+```
+
+結果: 再びENOTEMPTYエラー（パッケージディレクトリのrename失敗）
+
+この時点でOpenClawエージェントは応答不能となった。
+
 ## 症状
 
 - Discordからのアップデート依頼後、応答なし
@@ -110,8 +161,50 @@ Agents: main (default)
 
 4. **手動削除が必要な場合がある**: パッケージが壊れた状態だと `npm uninstall` が失敗することがあり、手動での削除が必要になる場合がある
 
+## 今後の対策
+
+### 1. アップデート前にgatewayを停止する
+
+```bash
+systemctl --user stop openclaw-gateway
+openclaw update
+systemctl --user start openclaw-gateway
+```
+
+### 2. ENOTEMPTYエラーが出たら即座に手動対応
+
+中途半端な状態を放置せず、壊れたパッケージを手動削除してからクリーンインストール:
+
+```bash
+rm -rf ~/.nvm/versions/node/v24.13.0/lib/node_modules/openclaw
+rm -f ~/.nvm/versions/node/v24.13.0/bin/openclaw
+npm install -g openclaw
+systemctl --user restart openclaw-gateway
+```
+
+### 3. アップデートは人間が監視できる状態で実行
+
+- Discordからエージェントに依頼→エージェント実行は危険
+- 失敗時に復旧できる人がいる状態で行う
+- または、アップデート専用のスクリプトを用意しておく
+
 ## 関連ファイル
 
 - 設定ディレクトリ: `~/.openclaw/`
 - systemdサービス: `~/.config/systemd/user/openclaw-gateway.service`
 - npmパッケージ: `~/.nvm/versions/node/v24.13.0/lib/node_modules/openclaw/`
+
+---
+
+## 記事化依頼
+
+このrawファイルをもとに、Zenn記事として整形してください。
+
+- タイトル案: 「OpenClawのアップデートで応答不能に！復旧手順と対策まとめ」
+- 対象読者: OpenClawユーザー、npmグローバルパッケージを使う開発者
+- トーン: 実体験ベースのトラブルシューティング記事
+- 含めるべき内容:
+  - 何が起きたか（エージェントからのアップデート依頼→応答不能）
+  - なぜ起きたか（ENOTEMPTY、パッケージ破損）
+  - どう直したか（手動削除→再インストール→gateway再起動）
+  - 今後どうすべきか（対策3点）
