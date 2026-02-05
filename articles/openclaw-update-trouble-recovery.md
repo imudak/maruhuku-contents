@@ -163,3 +163,45 @@ OpenClawのアップデートが`ENOTEMPTY`で失敗した場合は、以下の�
 設定は`~/.openclaw/`に保存されているので、再インストールしても消えません。
 
 アップデートはgatewayを停止してから行うと安全です。
+
+## おまけ：WSL起動時のchdirエラー
+
+WSLを起動したときに以下のエラーが出ることがあります。
+
+```
+PS C:\Users\username> wsl
+<3>WSL (43429 - Relay) ERROR: CreateProcessCommon:792: chdir(/mnt/c/Users/username) failed 5
+```
+
+これは、WSLがWindowsのカレントディレクトリ（`/mnt/c/Users/username`）にアクセスできなかったというエラーです。エラーコード5は「アクセス拒否」を意味します。
+
+### 対処法
+
+**1. WSLを再起動する**
+
+```powershell
+wsl --shutdown
+wsl
+```
+
+多くの場合、これで解決します。
+
+**2. 起動時にホームディレクトリに移動する**
+
+PowerShellから起動する際に、ホームディレクトリを指定します。
+
+```powershell
+wsl ~
+```
+
+**3. .bashrcで回避する**
+
+`~/.bashrc`の先頭に以下を追加すると、エラーが出ても自動的にホームに移動します。
+
+```bash
+cd ~ 2>/dev/null
+```
+
+### 補足
+
+このエラーが出ても、WSL自体は起動しています（プロンプトが表示される）。Windowsのディレクトリにアクセスできなかっただけなので、動作に大きな影響はありません。
