@@ -247,6 +247,80 @@ WSLの自動起動に関する技術記事を書いてほしい。
 3. 記事完成後、textlintを実行して修正
 ```
 
+## 実践例：Remotion動画生成基盤の構築
+
+agent teamsを活用した実際の開発事例を紹介します。将棋の棋譜解説動画を自動生成するプロジェクトで、Remotion（React製の動画生成フレームワーク）の基盤をセットアップしたときの記録です。
+
+### タスク概要
+
+```text
+（OpenClawへの指示）
+mirushogiプロジェクトにRemotionの基盤をセットアップしてほしい。
+設計ドキュメント（docs/remotion-design.md）を読んで、Phase 1を実装して。
+```
+
+### 実行コマンド
+
+OpenClawからClaude Codeに以下のように指示を投げました。
+
+```bash
+claude --dangerously-skip-permissions -p "
+Read docs/remotion-design.md for context, then implement Phase 1:
+Create the Remotion foundation with:
+- remotion/ directory structure
+- ShogiVideo.tsx (main composition)
+- Root.tsx (registerRoot setup)
+- remotion.config.ts (CLI configuration)
+"
+```
+
+### agent teamsの動き
+
+Claude Codeは内部でagent teamsを編成し、以下のように並列作業を行いました。
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│  Lead Agent（リード）                                        │
+│  ・設計ドキュメントを読んで方針決定                           │
+│  ・チームメンバーにタスクを振り分け                           │
+│  ・最終的な統合と型エラーの解消                              │
+└─────────────────────────────────────────────────────────────┘
+         │
+         ├──────────────────┬──────────────────┐
+         ▼                  ▼                  ▼
+┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+│  setup-agent    │ │  types-agent    │ │  config-agent   │
+│  ───────────    │ │  ───────────    │ │  ───────────    │
+│  ディレクトリ構造  │ │  型定義の作成    │ │  設定ファイル    │
+│  基本ファイル作成  │ │  Props interface │ │  remotion.config │
+└─────────────────┘ └─────────────────┘ └─────────────────┘
+```
+
+### 成果物
+
+約3分で以下のファイルが生成されました。
+
+```text
+remotion/
+├── ShogiVideo.tsx      # メインコンポジション
+├── Root.tsx            # registerRoot()設定
+└── remotion.config.ts  # Remotion CLI設定
+```
+
+### リードによる統合作業
+
+並列作成されたファイルをリードが統合する際、Remotion v4の`Composition`ジェネリクス型に互換性の問題が発生しました。リードがこれを検出し、Phase 1ではpropsなしのシンプルなコンポーネントに修正することで解決しています。
+
+```typescript
+// 修正前（型エラー）
+export const ShogiVideo: React.FC<VideoProps> = ({ kifu, commentary }) => { ... }
+
+// 修正後（Phase 1用にシンプル化）
+export const ShogiVideo: React.FC = () => { ... }
+```
+
+このように、agent teamsは単純な並列作業だけでなく、**統合時の問題解決**もリードが担当する構造になっています。
+
 ## 検証結果と学び
 
 この体制を実際に運用して得られた知見をまとめます。
