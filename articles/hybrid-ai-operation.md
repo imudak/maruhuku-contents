@@ -323,9 +323,9 @@ export const ShogiVideo: React.FC = () => { ... }
 
 ### 注意が必要なこと
 
-- `--dangerously-skip-permissions`の使いどころは慎重に判断する必要がある。`rm -rf`や`git push --force`などの破壊的な操作も確認なしで実行されるため、対象タスクを限定すべき
-- 長時間タスクではClaude Codeのセッションが切れることがある。タスクは適度な粒度に分割するのが安全
-- sessions_spawnの結果をClaude Codeに渡す部分は、現状ではOpenClawが仲介する形になる。完全自動化にはもう一段の工夫が必要
+- `--dangerously-skip-permissions`の使いどころは慎重に判断する必要がある。`rm -rf`や`git push --force`などの破壊的操作も確認なしで実行されるため、対象タスクを限定すべき
+- 長時間タスクではClaude Codeのセッション切断に注意。タスクは適度な粒度に分割するのが安全
+- sessions_spawnの結果をClaude Codeに渡す部分は、現状OpenClawによる仲介が必要。完全自動化には工夫を要する
 
 ### 振り分け判断の実践的な指針
 
