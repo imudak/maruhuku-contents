@@ -261,37 +261,6 @@ JavaScriptで動的に追加されるフォーム要素は、初回のsnapshot�
 
 → **対処**: AIはダイアログの存在を検知して適切に処理できます。`dialog`アクションで応答可能。
 
-## Tailscale経由でリモートマシンのChromeも操作可能
-
-OpenClaw Copilotのもうひとつの強力な機能が、**リモートマシンのChromeも操作できる**ということです。
-
-### ユースケース
-
-- 自宅のデスクトップPCのChromeを、外出先から操作
-- 社内サーバーのブラウザを、別のマシンから操作
-- チーム内で「あのマシンのブラウザで確認して」が可能に
-
-### 仕組み
-
-```
-┌──────────────────┐     Tailscale      ┌──────────────────┐
-│  Machine A (WSL)  │◄──────VPN─────────►│  Machine B (Win) │
-│  OpenClaw Agent   │                    │  Chrome + 拡張   │
-│                   │   node host経由    │  OpenClaw Node   │
-└──────────────────┘                    └──────────────────┘
-```
-
-**Machine B**にOpenClawのNode（ペアリング済み）とChrome拡張がインストールされていれば、Machine AのAIエージェントが`target="node"`を指定してMachine BのChromeを操作できます。
-
-通信はTailscaleのVPNトンネルを通るので、ポート開放やVPN設定の手間はありません。
-
-```
-# リモートマシンのChromeを操作する場合
-browser tool: action=snapshot, profile="chrome", target="node", node="machine-b"
-```
-
-自宅のミニPC（常時稼働サーバー）にOpenClaw Nodeを入れておけば、外出先からでもそのマシンのChromeを操作できます。「あのサービスの管理画面、設定変更しておいて」が、文字通りどこからでも可能になります。
-
 ## 注意点・Tips
 
 ### セキュリティに関する注意
@@ -340,8 +309,6 @@ OpenClaw Copilotの最大の強みは、**スクリプトを書かなくてもAI
 2. WSL↔Windows Chrome間は **localhost経由で自動接続**、特別な設定不要
 3. `profile="chrome"` で **既存のログインセッションをそのまま活用**
 4. snapshot → act の繰り返しで、**フォーム入力やボタンクリックを自動化**
-5. Tailscale + Node hostで **リモートマシンのChromeも操作可能**
-
 前回記事の「AIに仕事を任せる技術」は、主にターミナルの中の話でした。今回のOpenClaw Copilotにより、**ターミナルの外——Webブラウザの世界まで**、AIの「手」が届くようになりました。
 
 APIがないサービスの管理画面、手作業でしか設定できないフォーム、毎回同じ手順を繰り返すルーティン。これらを全てAIに「やっておいて」と言えるようになる世界が、もう手の届くところにあります。
