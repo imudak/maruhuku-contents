@@ -8,7 +8,7 @@ topics:
   - "wsl"
   - "自動化"
   - "openclaw"
-published: false
+published: true
 ---
 
 ## はじめに — AIにブラウザ操作を任せるとは
