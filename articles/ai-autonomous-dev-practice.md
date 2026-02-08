@@ -7,7 +7,7 @@ topics:
   - "ai"
   - "openai"
   - "個人開発"
-published: false
+published: true
 price: 500
 ---
 
