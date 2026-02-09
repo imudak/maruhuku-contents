@@ -84,7 +84,8 @@ npx remotion studio
 ```
 my-video/
 ├── src/
-│   ├── Root.tsx          # Compositionの登録（エントリポイント）
+│   ├── index.ts          # エントリポイント（registerRoot）
+│   ├── Root.tsx          # Compositionの登録
 │   ├── MyComposition.tsx # 動画コンポーネント
 │   └── ...
 ├── public/               # 静的アセット（画像、フォントなど）
@@ -92,6 +93,17 @@ my-video/
 ├── package.json
 └── tsconfig.json
 ```
+
+### エントリポイント（src/index.ts）
+
+```typescript
+import { registerRoot } from "remotion";
+import { RemotionRoot } from "./Root";
+
+registerRoot(RemotionRoot);
+```
+
+`registerRoot()`はRemotionに対してルートコンポーネントを登録する関数です。これがプロジェクトの起点になります。
 
 ### remotion.config.ts
 
@@ -431,7 +443,7 @@ export const RemotionRoot: React.FC = () => {
         headline: "サンプルニュース",
         body: "これはサンプルです。",
         author: "編集部",
-        publishedAt: "2025-01-01",
+        publishedAt: "2026-01-01",
       }}
     />
   );
@@ -458,7 +470,7 @@ CLIでデータを渡してレンダリング：
 
 ```bash
 npx remotion render NewsVideo out/news.mp4 \
-  --props='{"headline":"速報: Remotion 5.0リリース","body":"...","author":"Tech編集部","publishedAt":"2025-02-01"}'
+  --props='{"headline":"速報: Remotion v4最新アップデート","body":"...","author":"Tech編集部","publishedAt":"2026-02-01"}'
 ```
 
 ### calculateMetadata — 動的なメタデータ
@@ -970,7 +982,8 @@ npx remotion render MyVideo out.mp4 --concurrency=4
 BGMや効果音を動画に含める場合は`<Audio>`コンポーネントを使います。
 
 ```tsx
-import { Audio, staticFile, Sequence } from "remotion";
+import { Audio } from "@remotion/media";
+import { staticFile, Sequence } from "remotion";
 
 <Audio src={staticFile("bgm.mp3")} volume={0.3} />
 
@@ -979,6 +992,10 @@ import { Audio, staticFile, Sequence } from "remotion";
   <Audio src={staticFile("se-move.mp3")} volume={0.8} />
 </Sequence>
 ```
+
+:::message
+**`<Audio>`のインポート元について:** Remotion v4以降、`<Audio>`は`@remotion/media`パッケージからインポートすることが推奨されています。`remotion`パッケージの`<Audio>`（現在は`<Html5Audio>`）も動作しますが、`@remotion/media`版はレンダリング時により正確な音声抽出を行います。
+:::
 
 **注意点：**
 - 音声ファイルは`public/`に配置し、`staticFile()`で参照
@@ -1024,8 +1041,9 @@ import { Audio, staticFile, Sequence } from "remotion";
 Remotionは活発に開発が続けられており、以下のような進化が期待されます。
 
 - **Remotion Lambda**の更なる最適化（分散レンダリングのコスト削減）
-- **Remotion Studio**の進化（非エンジニアでもテンプレートから動画作成）
-- **AI連携**（LLMで生成したスクリプトからの自動動画生成）
+- **Remotion Studio**の進化（非エンジニアでもテンプレートから動画作成。Editor Starterテンプレートも公開済み）
+- **ブラウザ内レンダリング**（WebCodecs / Mediabunnyとの統合による新しいレンダリングパイプライン）
+- **AI連携**（LLMで生成したスクリプトからの自動動画生成。公式のLLMシステムプロンプトも提供）
 
 「動画をコードで書く」という概念は、まだ多くのエンジニアに届いていません。しかし、動画コンテンツの需要が増え続ける中、プログラマブルな動画生成は確実にニーズが拡大していく分野です。
 
