@@ -89,7 +89,7 @@ SDKにはストリーミングを簡潔に扱うヘルパーがあります。
 ### TypeScript — イベントハンドラ方式
 
 ```typescript
-const stream = client.messages.stream({
+const stream = await client.messages.stream({
   model: "claude-sonnet-4-20250514",
   max_tokens: 1024,
   messages: [{ role: "user", content: "Hello" }],

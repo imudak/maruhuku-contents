@@ -1,7 +1,7 @@
 title: "Claude API実践レシピ集 ― TypeScript/Pythonで学ぶAI活用パターン"
 summary: "Anthropic Claude APIを使った実践的なレシピ集。基本的なAPI呼び出しからストリーミング、Tool Use、Vision、バッチ処理、コスト最適化まで、実際に動くコード例とともに解説します。"
 topics: ["claude", "ai", "typescript", "python", "api"]
-published: false
+published: true
 price: 800
 chapters:
   - 01-basics

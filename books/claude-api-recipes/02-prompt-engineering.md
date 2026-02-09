@@ -1,5 +1,6 @@
 ---
 title: "プロンプトエンジニアリングの実践テクニック"
+free: true
 ---
 
 ## この章で学ぶこと
@@ -81,7 +82,11 @@ JSONのみを出力し、説明文は不要です。
 
 ## JSON出力の制御
 
-Claude APIにはJSON Modeがないため、プロンプトで制御します。
+Claude APIでJSON出力を確実に得るには、プロンプトで制御します。
+
+:::message
+Claude Sonnet 4.5 / Opus 4.1以降のモデルでは、Structured Outputs（ベータ）により`output_format`パラメータでJSON Schemaに従った出力を保証できます。本書で使用するClaude Sonnet 4では未対応のため、プロンプトベースの制御を解説します。
+:::
 
 ```python
 import anthropic

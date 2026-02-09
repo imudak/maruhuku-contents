@@ -33,8 +33,8 @@ claude -p "src/index.tsのバグを修正して"
 # パイプで入力
 git diff | claude -p "このdiffをレビューして"
 
-# 出力をファイルに
-claude -p "Dockerfileを作成して" --output-file Dockerfile
+# 出力をファイルに保存（シェルリダイレクト）
+claude -p "Dockerfileを作成して" > Dockerfile
 ```
 
 ### CLAUDE.md によるプロジェクト設定
@@ -149,6 +149,7 @@ pip install mcp
 
 ```python
 # mcp_server.py
+import json
 from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP("my-tools")
