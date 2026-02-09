@@ -3,7 +3,7 @@ title: "Remotion動画自動生成入門 — Reactで作るプログラマブル
 emoji: "🎬"
 type: "tech"
 topics: ["remotion", "react", "typescript", "video"]
-published: false
+published: true
 price: 500
 ---
 
@@ -71,11 +71,11 @@ npx create-video@latest my-video
 # ディレクトリに移動
 cd my-video
 
-# 開発サーバー起動（プレビュー）
-npm start
+# 開発サーバー起動（Remotion Studio）
+npx remotion studio
 ```
 
-`npm start`を実行すると、ブラウザにRemotionのプレビュー画面（Remotion Studio）が開きます。ここでタイムラインを操作しながら、リアルタイムで動画の仕上がりを確認できます。
+`npx remotion studio`を実行すると、ブラウザにRemotionのプレビュー画面（Remotion Studio）が開きます。ここでタイムラインを操作しながら、リアルタイムで動画の仕上がりを確認できます。
 
 ### プロジェクト構成
 
