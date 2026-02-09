@@ -8,7 +8,7 @@ topics:
   - "openai"
   - "個人開発"
 published: true
-price: 500
+price: 0
 ---
 
 ## はじめに

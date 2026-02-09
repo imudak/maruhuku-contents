@@ -9,7 +9,7 @@ topics:
   - チーム開発
   - 移行ガイド
 published: true
-price: 500
+price: 0
 ---
 
 # Git → jj 移行 完全ガイド

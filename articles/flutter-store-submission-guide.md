@@ -4,7 +4,7 @@ emoji: "🚀"
 type: "tech"
 topics: ["flutter", "googleplay", "appstore", "個人開発"]
 published: true
-price: 500
+price: 0
 ---
 
 # はじめに

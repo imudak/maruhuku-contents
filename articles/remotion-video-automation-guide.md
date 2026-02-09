@@ -4,7 +4,7 @@ emoji: "🎬"
 type: "tech"
 topics: ["remotion", "react", "typescript", "video"]
 published: true
-price: 500
+price: 0
 ---
 
 ## はじめに

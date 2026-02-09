@@ -4,7 +4,7 @@ emoji: "🤖"
 type: "tech"
 topics: ["claude", "notion", "api", "自動化", "ai"]
 published: true
-price: 500
+price: 0
 ---
 
 # はじめに
