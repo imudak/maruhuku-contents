@@ -13,7 +13,7 @@ published: true
 
 ## はじめに
 
-OpenClawはセルフホスト型のAIアシスタントです。Slackと連携すれば、チャンネルやDMからAIに話しかけられるようになります。
+OpenClawはセルフホスト型のAIアシスタントです。Slackと連携すれば、チャンネルやDMからAIへ話しかけられます。
 
 設定自体は簡単そうに見えたのですが、何度かハマりました。同じエラーに遭遇した方の参考になればと思います。
 
@@ -73,7 +73,7 @@ OpenClawを起動すると、以下のエラーが出て接続に失敗します
 
 設定ファイル `~/.openclaw/openclaw.json` を確認したところ、`botToken`と`appToken`の両方に`xapp-`で始まるトークンを設定していました。
 
-誤った設定の例:
+誤った設定の例です。
 
 ```json
 "botToken": "xapp-X-XXXXXXXXXXX-XXXXXXXXXXXXX-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
@@ -91,7 +91,7 @@ Slack Appには2種類のトークンがあり、それぞれ取得場所と用�
 
 OAuth & Permissionsページから正しいBot Tokenを取得し、設定ファイルを修正しました。
 
-正しい設定:
+正しい設定は以下の通りです。
 
 ```json
 "botToken": "xoxb-XXXXXXXXXXXX-XXXXXXXXXXXXX-XXXXXXXXXXXXXXXXXXXXXXXX",

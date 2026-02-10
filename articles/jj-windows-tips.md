@@ -16,7 +16,7 @@ published_at: 2026-01-15
 
 ## はじめに
 
-Jujutsu（jj）をWindows環境で使う際の便利なTipsをまとめます。日常的な操作をより効率的にするためのコマンドや設定方法を紹介します。
+Jujutsu（jj）をWindows環境で使う際の便利なTipsをまとめました。日常的な操作をより効率的にするためのコマンドや設定方法です。
 
 ## 便利なTips
 
@@ -76,7 +76,7 @@ Hint: Consider using the `:builtin` pager.
 
 #### 一時的に無効化
 
-個別のコマンドでのみ無効化したい場合：
+個別のコマンドでのみ無効化したい場合は以下の通りです。
 
 ```powershell
 jj log --no-pager
@@ -88,14 +88,14 @@ jj log --no-pager
 
 #### PowerShellプロファイルの編集
 
-プロファイルファイルのパスを確認：
+プロファイルファイルのパスを確認します。
 
 ```powershell
 $PROFILE
 C:\Users\<ユーザー名>\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
 ```
 
-プロファイルに以下を追加：
+プロファイルに以下を追加します。
 
 ```powershell
 # UTF-8エンコーディングを設定
@@ -103,7 +103,7 @@ C:\Users\<ユーザー名>\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
 $OutputEncoding = [System.Text.Encoding]::UTF8
 ```
 
-設定を即座に適用：
+設定を即座に適用します。
 
 ```powershell
 . $PROFILE
@@ -128,7 +128,7 @@ Jujutsuでは、グローバル設定とは別に、リポジトリごとに異�
 
 #### 設定の優先順位
 
-Jujutsuは以下の優先順位で設定を読み込みます：
+Jujutsuは以下の優先順位で設定を読み込みます。
 
 1. **リポジトリローカル設定**（`.jj/repo/config.toml`）
 2. **ユーザー設定**（`~/.jjconfig.toml`）
@@ -142,7 +142,7 @@ jj config list | Select-String "user"
 
 #### リポジトリごとの設定
 
-特定のリポジトリでのみ異なるユーザー情報を使う：
+特定のリポジトリでのみ異なるユーザー情報を使う場合は以下の通りです。
 
 ```powershell
 # このリポジトリだけの設定
@@ -179,7 +179,7 @@ jj config list | Select-String "user"
 - `git config user.name` → Gitコマンド使用時に適用
 - `jj config set user.name` → Jujutsuコマンド使用時に適用
 
-`jj describe`や`jj commit`などでコミットを作成すると、**Jujutsuの設定**が使われます。そのため、GitとJujutsuを併用する場合は両方の設定を揃えておくことを推奨します。
+`jj describe`や`jj commit`などでコミットを作成すると、**Jujutsuの設定**が使われます。そのため、GitとJujutsuを併用する場合は両方の設定を揃えておくのがよさそうです。
 
 ```powershell
 # 両方の設定を確認
@@ -311,9 +311,9 @@ jj commit -m "説明"
 - 新しい空のchangeを作成
 - **ブックマーク（main）は移動しない** ← ここが重要！
 
-#### 推奨ワークフロー
+#### ワークフロー例
 
-mainに反映させるには、以下のいずれかを使用：
+mainに反映させるには、以下のいずれかを使います。
 
 ##### パターン1：先にmainに反映
 
@@ -398,7 +398,7 @@ jj split -r <change-id> path/to/file.md
 
 #### 分割後の操作
 
-分割後は2つのコミットが作成され、それぞれに同じメッセージが付きます。必要に応じてメッセージを修正してください。
+分割後は2つのコミットが作成され、それぞれに同じメッセージが付きます。必要に応じてメッセージを修正します。
 
 ```powershell
 # 分割後の状態を確認
@@ -413,9 +413,9 @@ jj desc -r <2つ目のchange-id> -m "chore: CLAUDE.mdを追加"
 
 ## まとめ
 
-Jujutsuは強力なバージョン管理ツールですが、Windows環境では特有の問題に遭遇することがあります。この記事で紹介した解決方法とTipsを活用することで、より快適にJujutsuを使用できます。
+JujutsuをWindows環境で使う際に遭遇した問題と、その解決方法をまとめました。
 
-特に重要なポイント：
+特に重要なポイントは以下の通りです。
 
 1. **PowerShell設定**：UTF-8エンコーディングとページャー無効化を設定
 2. **`jj abandon`で不要なchangeを削除**：履歴をクリーンに保つ

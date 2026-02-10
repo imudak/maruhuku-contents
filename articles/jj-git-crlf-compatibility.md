@@ -58,7 +58,7 @@ Jujutsu（v0.32.0以降）には`working-copy.eol-conversion`設定がありま�
 - `.gitattributes`非対応（現在v0.37.0は未実装、[Issue #53](https://github.com/jj-vcs/jj/issues/53)）
 - Git設定も無視（`core.autocrlf`を読み取らない）
 
-つまり、jjは`.gitattributes`もGit設定も認識しないため、独自の設定が必要です。
+つまり、jjは`.gitattributes`やGit設定を認識しないため、独自の設定が必要です。
 
 ## うまくいった設定
 
@@ -85,7 +85,7 @@ git config --global core.safecrlf true  # 安全性チェック有効化
 
 #### 2. `.gitattributes`を作成
 
-プロジェクトルートに`.gitattributes`を配置：
+プロジェクトルートに`.gitattributes`を配置します。
 
 ```gitattributes
 # デフォルト：自動判定
@@ -262,4 +262,4 @@ git commit -m "chore: normalize line endings"
 
 モダンなエディタはLFをネイティブサポートしているため、Windows環境でも問題なく開発できます。
 
-**もう`autocrlf`で悩む必要はありません。**
+自分の環境では、この設定にしてから`autocrlf`で悩むことはなくなりました。

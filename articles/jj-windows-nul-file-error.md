@@ -126,7 +126,7 @@ jj status
 
 ### 1. `.gitignore`で予約デバイス名を除外
 
-プロジェクトルートの`.gitignore`に以下を追加：
+プロジェクトルートの`.gitignore`に以下を追加します。
 
 ```gitignore
 # Windows予約デバイス名
@@ -140,7 +140,7 @@ lpt[1-9]
 
 ### 2. Gitフックでチェック
 
-`.git/hooks/pre-commit`を作成して、コミット前に予約デバイス名をチェック：
+`.git/hooks/pre-commit`を作成して、コミット前に予約デバイス名をチェックできます。
 
 ```bash
 #!/bin/sh
@@ -157,7 +157,7 @@ done
 
 ### 3. CIでの検証
 
-GitHub Actionsなどで、リポジトリに予約デバイス名のファイルが含まれていないかチェック：
+GitHub Actionsなどで、リポジトリに予約デバイス名のファイルが含まれていないかチェックする方法もあります。
 
 ```yaml
 - name: Check for Windows reserved names
@@ -169,7 +169,7 @@ GitHub Actionsなどで、リポジトリに予約デバイス名のファイル
 
 ### Q: リモートリポジトリにすでにpushされている場合は？
 
-A: `git push --force`でリモートも更新する必要があります：
+A: `git push --force`でリモートも更新する必要があります。
 
 ```powershell
 git push --force origin main
@@ -179,16 +179,16 @@ git push --force origin main
 
 ### Q: 特定のコミットだけを修正したい場合は？
 
-A: `git filter-branch`や`git filter-repo`を使って履歴を書き換えます：
+A: `git filter-branch`や`git filter-repo`を使って履歴を書き換えます。
 
 ```powershell
-# git filter-repoを使った例（推奨）
+# git filter-repoを使った例
 git filter-repo --path nul --invert-paths
 ```
 
 ### Q: Linuxでは問題なかったのに、なぜWindowsでエラーになる？
 
-A: Linux/macOSではこれらは通常のファイル名として扱えますが、Windowsではシステムレベルで予約されています。クロスプラットフォーム開発では、これらの名前を避けることが重要です。
+A: Linux/macOSではこれらは通常のファイル名として扱えますが、Windowsではシステムレベルで予約されています。クロスプラットフォーム開発では、これらの名前を避けるようにしています。
 
 ## まとめ
 
@@ -197,4 +197,4 @@ A: Linux/macOSではこれらは通常のファイル名として扱えますが
 - `.gitignore`やGitフックで事前にチェックすることで予防可能
 - 発生時は、Gitインデックスの再構築とJujutsuの再初期化で解決
 
-クロスプラットフォーム開発では、これらの予約デバイス名を避けることが重要です。
+クロスプラットフォーム開発では、これらの予約デバイス名に注意が必要です。

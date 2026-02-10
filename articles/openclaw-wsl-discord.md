@@ -47,7 +47,7 @@ npm --version   # 11.6.2
 ```
 
 :::message
-`apt install nodejs`でも入りますが、バージョンが古いことが多いです。nvmなら後でバージョンアップも簡単です。
+`apt install nodejs`でも入りますが、バージョンの古いものになりがちです。nvmなら後からバージョンアップも簡単です。
 :::
 
 ### OpenClawのインストール
@@ -96,7 +96,7 @@ openclaw --version  # 2026.1.30
 
 ### 4. OpenClawへの設定
 
-`openclaw onboard` コマンドで対話形式で設定します。
+`openclaw onboard`コマンドを使い、対話形式で設定します。
 
 ```bash
 openclaw onboard
@@ -111,7 +111,7 @@ openclaw onboard
 7. 「Discord channels access」→ **Open (allow all channels)**
 
 :::message
-「Allowlist」で特定チャンネルのみ許可する設定にすると、「channels unresolved」エラーが出ることがあります。個人用サーバーなら「Open」で全チャンネル許可にする方が確実です。
+「Allowlist」で特定チャンネルのみ許可する設定にすると、「channels unresolved」エラーの原因になります。個人用サーバーなら「Open」で全チャンネル許可にする方が確実です。
 :::
 
 設定が完了すると、systemdサービスとしてGatewayがインストールされます。
@@ -129,27 +129,27 @@ OpenClawを動かすには、AIプロバイダー（Anthropic、OpenAI等）のA
 
 #### Claude Code サブスクリプションを使う方法
 
-Claude Code（Anthropicの公式CLI）のサブスクリプションを持っていれば、別途APIキーを取得しなくても OpenClaw を動かせます。
+Claude Code（Anthropicの公式CLI）のサブスクリプションを持っていれば、別途APIキーを取得しなくてもOpenClawを動かせます。
 
-まず Claude Code をインストールします。
+まずClaude Codeをインストールします。
 
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
 
-ログインします。WSL ではブラウザが開かないので、表示される URL を手動でブラウザで開いて認証します。
+ログインします。WSLではブラウザが開かないので、表示されたURLを手動でブラウザに貼り付けて認証します。
 
 ```bash
 claude login
 ```
 
-次に setup-token を生成します。これも同様に URL を開いて認可が必要です。
+次にsetup-tokenを生成します。これも同様にURLを開いて認可が必要です。
 
 ```bash
 claude setup-token
 ```
 
-成功すると、1年間有効な OAuth トークンが表示されます。
+成功すると、1年間有効なOAuthトークンが表示されます。
 
 ```text
 ✓ Long-lived authentication token created successfully!
@@ -161,7 +161,7 @@ sk-ant-oat01-xxxxx...
 Store this token securely. You won't be able to see it again.
 ```
 
-このトークンを OpenClaw に設定します。
+このトークンをOpenClawに設定します。
 
 ```bash
 openclaw configure
@@ -170,11 +170,11 @@ openclaw configure
 1. 「Where will the Gateway run?」→ Local (this machine)
 2. 「Select sections to configure」→ **Model** を選択
 3. 「Paste Anthropic setup-token」→ 先ほどのトークンを貼り付け
-4. 「Token name」→ default のまま Enter
+4. 「Token name」→ defaultのままEnter
 5. 「Anthropic OAuth models」→ 使いたいモデルをスペースキーで選択（複数可）
-6. 「Select sections to configure」→ Continue で終了
+6. 「Select sections to configure」→ Continueで終了
 
-設定後、Gateway を再起動します。
+設定後、Gatewayを再起動します。
 
 ```bash
 systemctl --user restart openclaw-gateway
@@ -182,7 +182,7 @@ systemctl --user restart openclaw-gateway
 
 #### 従来の API キーを使う方法
 
-Anthropic Console や OpenAI で API キーを取得している場合は、`openclaw configure` の Model セクションで直接設定できます。
+Anthropic ConsoleやOpenAIでAPIキーを取得している場合は、`openclaw configure` のModelセクションで直接設定できます。
 
 ## 動作確認
 
@@ -191,7 +191,7 @@ Discordで `@OpenClaw こんにちは` とメンションを送ります。
 :::message
 `@` を入力して表示される入力補完リストから `@OpenClaw` を選択してください。
 
-- `@OpenClaw#6551` のようにコピペや手入力すると、プレーンテキストとして送信されメンションとして認識されません
+- `@OpenClaw#6551` のようにコピペや手入力すると、プレーンテキスト扱いになりメンションとして認識されません
 - メッセージを編集してメンションを追加しても、Botには通知されません。新規メッセージで送信してください
 
 :::
@@ -236,7 +236,7 @@ openclaw configure
 HTTP 401 authentication_error: Invalid bearer token
 ```
 
-Claude Code のセッションが切れています。
+Claude Codeのセッションが切れています。
 
 **解決方法:**
 
@@ -265,7 +265,7 @@ Provider anthropic is in cooldown (all profiles unavailable)
 
 **解決方法:**
 
-上記の「Invalid bearer token」を解決した後、Gateway を再起動します。
+上記の「Invalid bearer token」を解決した後、Gatewayを再起動します。
 
 ```bash
 systemctl --user stop openclaw-gateway
@@ -310,7 +310,7 @@ OpenClawに「バージョンアップして」と頼むと、自分自身を更
 | AIプロバイダー設定 | 完了（Anthropic OAuth） |
 | 動作確認 | 完了 |
 
-これでDiscordからいつでもAIアシスタントに話しかけられるようになりました。
+これでDiscordからいつでもAIアシスタントと対話できるようになりました。
 
 ## 関連情報
 

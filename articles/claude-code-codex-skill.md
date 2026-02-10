@@ -137,7 +137,7 @@ jj file untrack ".claude/"
 
 **2026年1月17日追記**: v0.87.0からは`config.toml`直接編集ではなく`codex login --with-api-key`での認証が必要になりました。
 
-参考記事に感謝いたします。
+参考記事に感謝します。
 
 ## 参考
 

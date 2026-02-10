@@ -15,7 +15,7 @@ WindowsからLinuxサーバーにSSH接続するとき、毎回パスワード�
 
 ## 前提
 
-- Windows 10/11（OpenSSH クライアントがインストール済み）
+- Windows 10/11（OpenSSHクライアントがインストール済み）
 - 接続先のLinuxサーバー（Ubuntu）
 - SSH鍵ペアは作成済み
 

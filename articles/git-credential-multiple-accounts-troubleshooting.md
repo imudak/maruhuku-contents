@@ -34,7 +34,7 @@ jj git remote list
 # 出力: origin https://github.com/personal-account/my-project.git
 ```
 
-問題の原因は、Windows Git Credential Managerに保存された認証情報にありました。現在保存されているGitHubアカウントを確認してみます。
+問題の原因は、Windows Git Credential Managerへ保存された認証情報にありました。現在保存されているGitHubアカウントを確認してみます。
 
 ```bash
 git credential-manager github list
@@ -94,17 +94,17 @@ Git Credential Managerは、複数のGitHubアカウントを同時に管理で�
 - `https://github.com/personal-account/my-project.git` → `personal-account`アカウントを使用
 - `https://github.com/work-account/other-repo.git` → `work-account`アカウントを使用
 
-## 回避すべき方法
+## 避けた方がよい方法
 
-### PATをリモートURLに埋め込む（非推奨）
+### PATをリモートURLに埋め込む
 
-以下の方法は動作しますが、セキュリティ上推奨されません。
+以下の方法は動作しますが、セキュリティ上の問題があります。
 
 ```bash
 jj git remote set-url origin https://TOKEN@github.com/your-account/your-repo.git
 ```
 
-推奨されない理由は以下の通りです。
+避ける理由は以下の通りです。
 
 - `jj git remote list` で誰でもトークンが見える
 - トークンが履歴に残る可能性がある
