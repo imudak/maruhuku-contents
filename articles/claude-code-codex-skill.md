@@ -16,17 +16,17 @@ published_at: 2026-01-16
 
 ## きっかけ
 
-[@owayo](https://zenn.dev/owayo)さんの記事「[Claude CodeとCodexの連携をMCPからSkillに変えたら体験が劇的に改善した](https://zenn.dev/owayo/articles/63d325934ba0de)」を読んで、自分のプロジェクトにも適用してみた。
+[@owayo](https://zenn.dev/owayo)さんの記事「[Claude CodeとCodexの連携をMCPからSkillに変えたら体験が劇的に改善した](https://zenn.dev/owayo/articles/63d325934ba0de)」を読んで、自分のプロジェクトにも適用してみました。
 
-基本的な設定方法は元記事の通りなので、ここでは追加で行った設定を記録する。
+基本的な設定方法は元記事の通りなので、ここでは追加で行った設定を記録します。
 
 ## 追加で設定したこと
 
 ### 1. 追加したスキルをgit管理対象にする
 
-`.claude/`ディレクトリは`.gitignore`で除外しているプロジェクトが多い。
+`.claude/`ディレクトリは`.gitignore`で除外しているプロジェクトが多いです。
 
-追加したスキルは共有したいので、`.gitignore`の否定パターンを使って許可する。
+追加したスキルは共有したいので、`.gitignore`の否定パターンを使って許可します。
 
 ```gitignore
 # .claude/は基本的に除外
@@ -39,11 +39,11 @@ published_at: 2026-01-16
 !.claude/skills/codex/
 ```
 
-これで追加したスキルだけがgit管理対象になる。
+これで追加したスキルだけがgit管理対象になります。
 
 ### 2. CLAUDE.mdへの記載
 
-プロジェクトの`CLAUDE.md`（Claude Codeへの指示ファイル）にCodexスキルの使い方を追加した。
+プロジェクトの`CLAUDE.md`（Claude Codeへの指示ファイル）にCodexスキルの使い方を追加しました。
 
 ```markdown
 ### Codexスキル（セカンドオピニオン）
@@ -72,7 +72,7 @@ echo "sk-proj-your-api-key-here" | npx @openai/codex login --with-api-key
 npx @openai/codex login status
 ```
 
-重要なポイントは以下の通り。
+重要なポイントは以下の通りです。
 
 - config.toml直接編集は不可: v0.87.0では`config.toml`への`api_key`直接記載が効かなくなった
 - loginコマンド必須: `codex login --with-api-key` でstdinからAPIキーを渡す
@@ -81,7 +81,7 @@ npx @openai/codex login status
 
 #### v0.86.x以前の設定方法
 
-v0.86.x以前では、`~/.codex/config.toml`への直接記載が必要だった。
+v0.86.x以前では、`~/.codex/config.toml`への直接記載が必要でした。
 
 ```powershell
 # 1. Codex CLIをグローバルインストール
@@ -108,9 +108,9 @@ codex --version
 cat ~\.codex\config.toml
 ```
 
-v0.86.x以前での重要なポイントは以下の通り。
+v0.86.x以前で重要なポイントは以下の通りです。
 
-- 環境変数は不要: `OPENAI_API_KEY`環境変数は使用されない
+- 環境変数は不要: `OPENAI_API_KEY`環境変数を設定しても使用されない
 - model_provider必須: `model_provider = "openai"` を文字列として設定しないと401エラーになる
 - プロジェクトスコープAPIキー: OpenAI Platformでは`sk-proj-`で始まるプロジェクトスコープのAPIキーのみ作成可能
 
@@ -118,28 +118,26 @@ v0.86.x以前での重要なポイントは以下の通り。
 
 ### jjとの相性
 
-自分のプロジェクトは[jj（Jujutsu）](https://github.com/martinvonz/jj)でバージョン管理している。jjは`.gitignore`を尊重するが、一度追跡したファイルは`jj file untrack`で明示的に除外する必要があった。
+自分のプロジェクトは[jj（Jujutsu）](https://github.com/martinvonz/jj)でバージョン管理しています。jjは`.gitignore`を尊重しますが、一度追跡したファイルは`jj file untrack`で明示的に除外する必要がありました。
 
-`.gitignore`を変更した後、既に追跡されているファイルがある場合は次のコマンドが必要になる。
+`.gitignore`を変更した後、既に追跡されているファイルがある場合は次のコマンドで解除します。
 
 ```bash
 # 追跡を解除
 jj file untrack ".claude/"
 ```
 
-が必要になる場合がある。
-
 ## まとめ
 
-元記事の設定をそのまま適用した上で、以下を追加した。
+元記事の設定をそのまま適用した上で、以下を追加しました。
 
 1. `.gitignore`の否定パターンでCodexスキルだけをgit管理
 2. `CLAUDE.md`にプロジェクト固有の使い方を記載
 3. Windows向けのAPIキー設定方法（v0.86.x / v0.87.0両対応）
 
-**2026年1月17日追記**: v0.87.0からは`config.toml`直接編集ではなく`codex login --with-api-key`での認証が必要になった。
+**2026年1月17日追記**: v0.87.0からは`config.toml`直接編集ではなく`codex login --with-api-key`での認証が必要になりました。
 
-参考記事に感謝します。
+参考記事に感謝いたします。
 
 ## 参考
 

@@ -36,9 +36,9 @@ pnpm dlx skills add PleasePrompto/notebooklm-skill
 
 コマンドを実行すると、いくつかの選択肢が表示されます。
 
-1. **Select agents to install skills to** - インストール先のエージェントを選択します。Claude Code、Codex、Cursorなど、検出されたエージェントから選べます
-2. **Installation scope** - `Project`（現在のプロジェクトのみ）か`User`（ユーザー全体）かを選択します
-3. **Installation method** - `Symlink (Recommended)`か`Copy`かを選択します。Symlinkを選ぶと、スキルの更新が自動的に反映されます
+1. **Select agents to install skills to** — インストール先のエージェントを選択する。Claude Code、Codex、Cursorなど、検出されたエージェントから選べる
+2. **Installation scope** — `Project`（現在のプロジェクトのみ）か`User`（ユーザー全体）かを選択する
+3. **Installation method** — `Symlink (Recommended)`か`Copy`かを選択する。Symlinkを選ぶと、スキルの更新が自動的に反映される
 
 今回は「Claude Code, Codex」「Project」「Symlink」を選択しました。選択が完了すると、`.claude/skills/notebooklm/`（または`.agents/skills/notebooklm/`）にスキルがインストールされます。
 
@@ -97,7 +97,7 @@ Cyber-Gのバッテリー使用時間は？
 > - USB PD等の急速充電には非対応
 > - 8分間操作がないと自動電源オフ
 
-ドキュメントからの引用なので、ハルシネーションがなく信頼性が高いです。
+ドキュメントからの引用で回答してくれるため、ハルシネーションのリスクが低いです。
 
 ### 複数のノートブックを管理する
 
@@ -146,7 +146,7 @@ https://notebooklm.google.com/notebook/xxxxx
 MUSUBI SDD Frameworkのノートブックをアクティブにして
 ```
 
-または、質問と一緒に指定することもできます。
+または、質問と一緒に指定できます。
 
 ```text
 MUSUBI SDD Frameworkのノートブックで、CodeGraphの機能について教えて
@@ -174,8 +174,8 @@ python scripts/run.py ask_question.py --question "質問内容" --notebook-id no
 
 - ローカルのClaude Codeのみ対応（Web版のClaude.aiでは使えない）
 - 各質問は独立しており、前の質問の文脈を引き継がない
-- NotebookLMの無料枠には1日50クエリの制限がある
-- ノートブックは事前にNotebookLMにアップロードしておく必要がある
+- NotebookLMの無料枠は1日50クエリの制限がある
+- ノートブックは事前にNotebookLMへアップロードしておく必要がある
 
 ## トラブルシューティング
 
@@ -232,7 +232,7 @@ NotebookLMにドキュメントを集約しておけば、Claude Codeから離�
 
 ## まとめ
 
-NotebookLMスキルを試してみたところ、Claude Codeの会話の中でドキュメントベースの質問応答ができることが分かりました。
+NotebookLMスキルを試してみたところ、Claude Codeの会話の中でドキュメントベースの質問応答ができるとわかりました。
 
 セットアップの流れは以下の通りです。
 
