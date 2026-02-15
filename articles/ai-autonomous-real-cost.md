@@ -7,7 +7,7 @@ topics:
   - "ai"
   - "個人開発"
   - "自動化"
-published: false
+published: true
 price: 0
 ---
 
