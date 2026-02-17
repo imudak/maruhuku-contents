@@ -57,29 +57,22 @@ DBの整合性チェックも同様です。「AテーブルとBテーブルで�
 
 決定論的処理をjimuchoに移すことで、以前のフローがどう変わったかを図にまとめます。
 
-```mermaid
-flowchart TB
-    subgraph BEFORE["Before — 決定論的処理もLLM経由"]
-        direction TB
-        b_cron["OS crontab"]
-        b_oc["OpenClaw"]
-        b_llm["LLMセッション起動"]
-        b_tasks["日報生成 / 整合性チェック\nステータス更新"]
-        b_cron -->|"agentTurn payload"| b_oc
-        b_oc --> b_llm
-        b_llm --> b_tasks
-    end
+**Before — 決定論的処理もLLM経由**
 
-    subgraph AFTER["After — jimucho が担う"]
-        direction TB
-        a_cron["OS crontab"]
-        a_jimucho["jimucho\nlocalhost:3100"]
-        a_db[(SQLite DB)]
-        a_main["メインセッション\n（LLM）"]
-        a_cron -->|"systemEvent payload"| a_jimucho
-        a_jimucho <--> a_db
-        a_main -->|"参照のみ"| a_jimucho
-    end
+```mermaid
+flowchart TD
+    b_cron["OS crontab"] -->|"agentTurn payload"| b_oc["OpenClaw"]
+    b_oc --> b_llm["LLMセッション起動"]
+    b_llm --> b_tasks["日報生成 / 整合性チェック / ステータス更新"]
+```
+
+**After — jimuchoが担う**
+
+```mermaid
+flowchart TD
+    a_cron["OS crontab"] -->|"systemEvent payload"| a_jimucho["jimucho localhost:3100"]
+    a_jimucho <--> a_db[(SQLite DB)]
+    a_main["メインセッション（LLM）"] -->|"参照のみ"| a_jimucho
 ```
 
 jimuchoのシステム構成は以下のとおりです。
@@ -89,14 +82,14 @@ flowchart LR
     os_cron["crontab（OS側）"]
 
     subgraph OC["OpenClaw"]
-        oc_cron["cronジョブ\n（定時実行）"]
-        oc_main["メインセッション\n（LLM）"]
+        oc_cron["cronジョブ（定時実行）"]
+        oc_main["メインセッション（LLM）"]
     end
 
     subgraph JM["jimucho（localhost:3100）"]
-        jm_api["REST API\n/projects /todos /pipeline\n/activity /kaizen /inputs"]
+        jm_api["REST API"]
         jm_db[(SQLite DB)]
-        jm_ui["Next.js\nダッシュボード"]
+        jm_ui["Next.js ダッシュボード"]
         jm_api <--> jm_db
         jm_api --- jm_ui
     end
