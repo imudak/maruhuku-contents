@@ -3,7 +3,7 @@ title: "LLMに決定論的な処理をさせていた話 — jimuchoの誕生"
 emoji: "🔧"
 type: "tech"
 topics: ["ai", "workflow", "automation", "claude"]
-published: false
+published: true
 ---
 
 ## 前提 — 1人で40件のプロジェクトを回している
