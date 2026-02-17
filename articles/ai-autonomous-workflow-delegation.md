@@ -58,7 +58,7 @@ DBの整合性チェックも同様です。「AテーブルとBテーブルで�
 決定論的処理をjimuchoに移すことで、以前のフローがどう変わったかを図にまとめます。
 
 ```mermaid
-flowchart LR
+flowchart TB
     subgraph BEFORE["Before — 決定論的処理もLLM経由"]
         direction TB
         b_cron["OS crontab"]
