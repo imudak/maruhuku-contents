@@ -185,7 +185,7 @@ MUSUBIで蓄積した27スキル定義は資産です。multi-agent-shogunの枠
 - **オプションB**: MUSUBIにtmux並列実行レイヤーを追加する（既存システムを拡張）
 - **オプションC**: 用途別に使い分ける（大規模タスクは並列実行、通常作業はシングルセッション）
 
-自分のプロジェクトでは当面オプションAを試してみる予定です。いきなり10エージェントではなく、まず3エージェント（オーケストレーター + ワーカー2名）でパターンを掴みたいと思います。
+自分のプロジェクトではオプションAを実際に試してみました。いきなり10エージェントではなく、まず3エージェント（オーケストレーター + ワーカー2名）から始め、その後さらに別の方式へと移行しています。実際に試した経緯と結果は[次の記事](https://zenn.dev/imudak/articles/multi-agent-orchestration-comparison)で書いています。
 
 ## まとめ
 
@@ -195,7 +195,9 @@ MUSUBIは「何をするか」（27スキル定義）を持っており、multi-
 
 定義と実装のギャップを埋めることが、次のステップです。
 
-## 参考
+## 参考・関連記事
 
 - [Claude Codeで「AI部下10人」を作ったら〜](https://zenn.dev/shio_shoppaize/articles/5fee11d03a11a1)
 - [MUSUBI - Specification Driven Development](https://www.npmjs.com/package/musubi-sdd)
+- [マルチエージェントAI開発の現実 — tmux手動オーケストレーションから自律実行フローへの移行記](https://zenn.dev/imudak/articles/multi-agent-orchestration-comparison)（後編：shogunの実運用から移行まで）
+- [LLMに決定論的な処理をさせていた話 — jimuchoの誕生](https://zenn.dev/imudak/articles/ai-autonomous-workflow-delegation)（マルチエージェント運用の中で生まれた決定論的処理の分離）

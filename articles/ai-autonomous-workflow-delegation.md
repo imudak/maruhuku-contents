@@ -260,6 +260,11 @@ AIが担っている処理は「この情報をどう判断するか」「次に
 
 副次効果として、Notionからの脱却とcronジョブのシンプル化も起きました。「LLMが処理しやすい形で情報を渡せる」インターフェースを自分で設計できることが、思いのほか大きな差になりました。
 
+## 関連記事
+
+- [Claude Codeのマルチエージェント実行を理解する — multi-agent-shogunから学ぶ](https://zenn.dev/imudak/articles/claude-code-multi-agent-shogun)（マルチエージェントの概念比較。jimuchoが生まれた文脈となるマルチエージェント運用の気づきを扱っている）
+- [マルチエージェントAI開発の現実 — tmux手動オーケストレーションから自律実行フローへの移行記](https://zenn.dev/imudak/articles/multi-agent-orchestration-comparison)（shogun実運用からOpenClaw+Claude Code方式への移行。jimuchoはこの運用の中で生まれた）
+
 ---
 
 *次の記事では、AIに指示を守らせようとして文書を増やしたら逆効果になった話——AGENTS.mdの肥大化と削減について書く予定です。*

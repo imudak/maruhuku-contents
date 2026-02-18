@@ -17,7 +17,7 @@ tmux上で複数のClaude Codeインスタンスを戦国時代の軍制で管�
 :::message
 [前回の記事](https://zenn.dev/imudak/articles/ai-autonomous-dev-practice)では「司令塔AI + マルチエージェント」の概要を紹介しました。今回はオーケストレーション層にフォーカスします。
 
-multi-agent-shogunの設計・実装は[yohey-w氏](https://github.com/yohey-w)によるものです。自分はfork・設定・運用した立場から比較しています。
+MUSUBIとmulti-agent-shogunの概念比較（「スキル定義 ≠ マルチエージェント」の気づきなど）は[こちらの記事](https://zenn.dev/imudak/articles/claude-code-multi-agent-shogun)でまとめています。multi-agent-shogunの設計・実装は[yohey-w氏](https://github.com/yohey-w)によるものです。自分はfork・設定・運用した立場から比較しています。
 :::
 
 ## 比較対象
@@ -258,5 +258,7 @@ dashboard.mdの更新者を家老だけに限定した設計は、分散シス�
 
 ## 関連記事
 
+- [Claude Codeのマルチエージェント実行を理解する — multi-agent-shogunから学ぶ（前編）](https://zenn.dev/imudak/articles/claude-code-multi-agent-shogun)
 - [AIに仕事を任せる技術 — AI司令塔×マルチエージェント実践](https://zenn.dev/imudak/articles/ai-autonomous-dev-practice)
+- [LLMに決定論的な処理をさせていた話 — jimuchoの誕生](https://zenn.dev/imudak/articles/ai-autonomous-workflow-delegation)
 - [multi-agent-shogun（fork元）](https://github.com/yohey-w/multi-agent-shogun)
