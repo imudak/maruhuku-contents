@@ -180,7 +180,9 @@ for d in ~/projects/*/; do
 done
 ```
 
-この話の詳細は[別の記事](https://zenn.dev/imudak/articles/musubi-not-really-using-it)に書いています。
+この話の詳細はこちらに書いています。
+
+https://zenn.dev/imudak/articles/musubi-not-really-using-it
 
 ## まとめ
 
@@ -188,4 +190,10 @@ done
 - **既存プロジェクト** → `musubi-onboard` でコード分析 → 仕様変更は `musubi-change` で管理
 - **どちらでも** → `musubi-gaps` で定期的にギャップチェック
 
-「initしたけど次に何すればいいかわからない」という人は、まず `musubi-onboard` を実行してみてください。コードベースを分析してsteering docsを自動生成してくれるので、そこからスタートできます。
+initの後で手が止まっている場合、まず `musubi-onboard` を実行するとコードベースを分析してsteering docsを自動生成してくれます。そこからスタートできます。
+
+## 関連記事
+
+https://zenn.dev/imudak/articles/musubi-not-really-using-it
+
+https://zenn.dev/imudak/articles/ai-agent-skill-design

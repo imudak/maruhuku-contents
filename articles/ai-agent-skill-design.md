@@ -175,3 +175,9 @@ AIエージェントの「わかったフリ」は、知識と手順のギャッ
 3. **コンテキスト効率を意識する** — 必要な時だけロード、300行を毎回入れない
 
 AIは知識を持っています。足りないのは、プロジェクト固有の手順です。
+
+## 関連記事
+
+https://zenn.dev/imudak/articles/musubi-not-really-using-it
+
+https://zenn.dev/imudak/articles/musubi-greenfield-brownfield

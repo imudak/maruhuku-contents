@@ -192,3 +192,9 @@ SDD出力先、Change Managementの手順——これらを曖昧にしておく
 改善のきっかけは **「最終仕様はどこ？」という素朴な疑問** でした。答えに詰まった時点で、何かがおかしいと気づくべきだったのかもしれません。
 
 今は40プロジェクト全てが整備済み。次に仕様を変更する時は `musubi-change` から始めます。
+
+## 関連記事
+
+https://zenn.dev/imudak/articles/musubi-greenfield-brownfield
+
+https://zenn.dev/imudak/articles/ai-agent-skill-design
