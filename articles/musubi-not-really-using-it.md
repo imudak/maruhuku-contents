@@ -27,6 +27,12 @@ published: false
 
 AIエージェント（OpenClaw + Claude Code）に聞いてみたところ、以下の問題が判明しました。
 
+### 根本原因: Claude Codeが「雰囲気で」作業を始める
+
+`musubi init` を実行すると、CLAUDE.mdやプロンプトファイルが生成されます。Claude Codeはこれを読んで「MUSUBIを使うプロジェクトだな」と認識するのですが、**MUSUBIの正式な手順やファイル配置ルールまでは理解していません。**
+
+結果、Claude Codeは「なんとなくそれっぽい」SDD文書を自己流で書き始めます。ファイル名も配置場所も、その時の気分次第。これが以下の全ての問題の根っこでした。
+
 ### 問題1: 仕様ファイルの置き場所がバラバラ
 
 MUSUBIのv6.3.0では、SDD文書の出力先が明確に定義されています。
@@ -164,7 +170,7 @@ SDD出力先、Change Managementの手順——これらを曖昧にしておく
 
 ### MUSUBIスキルの導入
 
-同じ知識を毎回読み込むのはコンテキストの無駄遣いです。MUSUBIの運用手順をスキル化して、必要な時だけ自動ロードされるようにしました。
+根本原因は「Claude CodeがMUSUBIの正式手順を知らない」ことでした。musubi.md（運用手順書）を毎回コンテキストに入れるのはトークンの無駄遣いなので、スキル化して必要な時だけ自動ロードされるようにしました。
 
 - **OpenClaw用**: `~/.openclaw/workspace/skills/musubi/SKILL.md`
 - **Claude Code用**: `.claude/skills/musubi/SKILL.md`（全プロジェクトに配布）
