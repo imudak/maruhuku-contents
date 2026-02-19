@@ -8,7 +8,7 @@ topics:
   - 仕様管理
   - AI
   - 開発プロセス
-published: false
+published: true
 ---
 
 ## 「最終仕様はどこを見ればいいの？」
