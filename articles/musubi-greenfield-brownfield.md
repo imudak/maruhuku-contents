@@ -1,5 +1,5 @@
 ---
-title: "MUSUBIの二通りの使い方 — 新規プロジェクトと既存プロジェクトで全然違う"
+title: "仕様書作ってって言ったらコード直し始めた — MUSUBIのGreenfield/Brownfieldを知らなかった話"
 emoji: "🌱"
 type: "tech"
 topics:
