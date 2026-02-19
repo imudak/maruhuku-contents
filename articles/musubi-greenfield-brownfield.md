@@ -85,7 +85,7 @@ musubi-onboard    # コードベースを分析してsteering docsを自動生�
 /sdd-design existing-feature        # 設計を文書化
 ```
 
-**⚠️ `/sdd-implement` は絶対に実行しない** — 既存コードを上書き・二重実装するリスクがあります。
+**⚠️ 仕様起こしが済んでいない既存機能に `/sdd-implement` を実行しない** — 既存コードを上書き・二重実装するリスクがあります。逆に、`musubi-gaps detect` でギャップを検出した後であれば、テスト追加やコード修正に `/sdd-implement` を使うのは正当な手順です。仕様側を修正したい場合は `musubi-change` を使います。
 
 ### 新機能の追加
 
@@ -139,7 +139,7 @@ musubi-change archive CHANGE-001
 | **既存コードの扱い** | なし | 仕様の逆起こし（任意） |
 | **新機能追加** | SDDフロー（共通） | SDDフロー（共通） |
 | **仕様変更** | ファイルを直接更新 | `musubi-change` でDelta Spec |
-| **注意点** | 特になし | `/sdd-implement` を既存機能に実行しない |
+| **注意点** | 特になし | 仕様起こし前の既存機能に `/sdd-implement` を実行しない |
 
 ## ギャップ検出: どちらでも使える
 
