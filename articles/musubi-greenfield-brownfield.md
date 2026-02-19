@@ -11,13 +11,11 @@ topics:
 published: false
 ---
 
-## 「musubi init したけど、次に何すればいいの？」
+## 「既存プロジェクトでは /sdd-implement 使うなって、誰か先に言ってくれ」
 
-[MUSUBI](https://github.com/nahisaho/MUSUBI)を導入したものの、initの後で手が止まる人は多いのではないでしょうか。
+[MUSUBI](https://github.com/nahisaho/MUSUBI)のSDDコマンドを既存プロジェクトで片っ端から実行したら、既存コードと生成コードが衝突して大変なことになりかけました。
 
-実は、MUSUBIには **二通りの使い方** があります。新規プロジェクト（Greenfield）と既存プロジェクト（Brownfield）で、やることが全然違います。
-
-私は40以上のプロジェクトでMUSUBIを使っていますが、この区別を理解したのはつい最近です。
+調べてわかったのですが、MUSUBIには **二通りの使い方** があります。新規プロジェクト（Greenfield）と既存プロジェクト（Brownfield）で、やることが全然違う。私は40以上のプロジェクトでMUSUBIを使っていますが、この区別を理解したのはつい最近です。
 
 ## Greenfield: まっさらなプロジェクト
 
