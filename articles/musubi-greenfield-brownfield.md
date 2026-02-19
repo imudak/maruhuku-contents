@@ -8,7 +8,7 @@ topics:
   - 仕様駆動開発
   - AIコーディング
   - チュートリアル
-published: false
+published: true
 ---
 
 ## 仕様書作ってもらおうと思ったら、コード直し始めた

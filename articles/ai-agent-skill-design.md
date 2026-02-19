@@ -8,7 +8,7 @@ topics:
   - Claude Code
   - AgentSkill
   - プロンプトエンジニアリング
-published: false
+published: true
 ---
 
 ## せっかく一緒に調べたのに、次の日には忘れている
