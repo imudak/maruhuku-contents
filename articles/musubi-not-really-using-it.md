@@ -42,13 +42,7 @@ storage/
 
 ところが私のプロジェクトでは、一部の仕様が `steering/features/` に、別の仕様が `storage/specs/` に散在していました。`steering/` はプロジェクトメモリ（プロダクト概要・技術スタック・構造等）の場所であって、個別機能の仕様を置く場所ではありません。
 
-### 問題2: pushしていなかった
-
-ローカルではjjでcommitしていたものの、GitHubにpushしていませんでした。つまりGitHubを見ても最新の状態がわからない。
-
-「pushはいつやるのか？」——このルールが未定義でした。
-
-### 問題3: 仕様変更の管理をしていなかった
+### 問題2: 仕様変更の管理をしていなかった
 
 MUSUBIには `musubi-change` というChange Managementの仕組みがあります。仕様変更時にDelta Specification（差分仕様書）を作成し、変更履歴を追跡できます。
 
@@ -62,11 +56,11 @@ musubi-change archive CHANGE-001
 
 **この機能の存在を知らなかった。** 仕様変更のたびに、既存のrequirementsを書き換えるか、新しいファイルを作るかを場当たり的に判断していました。
 
-### 問題4: init だけして放置しているプロジェクトが大半
+### 問題3: init だけして放置しているプロジェクトが大半
 
 40プロジェクト中、実際にSDD文書（storage/specs/）が存在したのは **4プロジェクトだけ**。残り35プロジェクトは `musubi init` を実行しただけで、steering filesの自動生成（`musubi-onboard`）すらしていませんでした。
 
-### 問題5: テストのギャップ
+### 問題4: テストのギャップ
 
 メインプロジェクト（jimucho）で `musubi-gaps detect` を実行したところ：
 
@@ -95,33 +89,7 @@ cp steering/features/onegai-management/design.ja.md \
 rm -r steering/features/
 ```
 
-### 2. plans/ の移動
-
-`steering/plans/` をプロジェクトルート直下の `plans/` に移動。steering/ は恒久的なプロジェクトメモリ、plans/ は一時的なフェーズ計画——役割が違うので分離しました。
-
-```bash
-# 全プロジェクトで一括実行
-for d in ~/projects/*/; do
-  if [ -d "$d/steering/plans" ]; then
-    mkdir -p "$d/plans"
-    cp -r "$d/steering/plans/"* "$d/plans/" 2>/dev/null
-    rm -r "$d/steering/plans"
-  fi
-done
-```
-
-### 3. pushルールの確立
-
-全プロジェクトのCLAUDE.md（AIエージェント向け指示書）に追記：
-
-```markdown
-## Git Push ルール
-作業完了時は必ず `jj git push` を実行すること。
-```
-
-決定論的に。迷う余地をなくす。
-
-### 4. musubi-sdd グローバルインストール
+### 2. musubi-sdd グローバルインストール
 
 ```bash
 npm install -g musubi-sdd
@@ -138,7 +106,7 @@ for d in ~/projects/*/; do
 done
 ```
 
-### 5. 未活用プロジェクトの一括onboard
+### 3. 未活用プロジェクトの一括onboard
 
 35プロジェクトに `musubi-onboard` を一括実行。コードベースを分析して steering files を自動生成します。
 
@@ -150,7 +118,7 @@ done
 
 これで各プロジェクトに `steering/product.md`、`steering/tech.md`、`steering/structure.md` 等が生成されました。
 
-### 6. ギャップ解消
+### 4. ギャップ解消
 
 メインプロジェクト（jimucho: 79件）とflow-manager（14件）のギャップをClaude Codeに委譲して解消。
 
@@ -192,7 +160,7 @@ npm test で全PASS確認。musubi-gaps detect で0件確認。
 
 ### 「決定論的にやる」が鍵
 
-pushルール、SDD出力先、Change Managementの手順——これらを曖昧にしておくと、人間もAIエージェントも場当たり的に判断してしまいます。ルールを明文化して判断の余地をなくすことが重要でした。
+SDD出力先、Change Managementの手順——これらを曖昧にしておくと、人間もAIエージェントも場当たり的に判断してしまいます。ルールを明文化して判断の余地をなくすことが重要でした。
 
 ### MUSUBIスキルの導入
 
@@ -210,7 +178,6 @@ pushルール、SDD出力先、Change Managementの手順——これらを曖�
 - 仕様ファイルの配置ルール → ❌ 理解してなかった
 - Change Management → ❌ 存在を知らなかった
 - ギャップ検出 → ❌ 実行してなかった
-- push → ❌ ルール未定義
 
 ツールの機能の30%しか使っていなかったのに、「MUSUBIで開発している」と思い込んでいました。
 
