@@ -13,9 +13,9 @@ published: false
 
 ## はじめに
 
-AIエージェントに「自分自身を更新して」と頼んだら、更新後にそのエージェント自身がgatewayにアクセスできなくなりました。再起動後に「接続拒否」と返ってきたときは、なかなか味わい深い状況でした。
+AIエージェントに「自分自身を更新して」と頼んだら、更新はできたものの、その直後からDiscordにセキュリティエラーの警告が流れてきました。エージェント自身がgatewayにアクセスできなくなっていたようなのですが、CLIの内部動作なので手元からは何が起きているのかわかりません。
 
-OpenClawをv2026.2.17からv2026.2.19-2に更新したところ、セキュリティ強化の影響で設定変更が必要になったので、その対応と背景をまとめておきます。
+ただ、最近OpenClaw周辺でセキュリティ問題が話題になっていたのは知っていたので、そのあたりが関係していそうだと見当をつけて調べてもらいました。結果的に、かなり大きな話につながったのでまとめておきます。
 
 ## OpenClawの構成をざっくり理解する
 
@@ -44,11 +44,78 @@ graph LR
     Cron -->|WebSocket| GW
 ```
 
-**Gateway**がすべての中心です。チャットアプリからのメッセージを受け取り、AIに渡し、結果を返す。CLIやcronジョブもgatewayに接続して動きます。
+**Gateway**がすべての中心です。チャットアプリからのメッセージを受け取り、AIに渡し、結果を返します。CLIやcronジョブもWebSocket経由でgatewayに接続して動きます。
 
-## 何が起きていたのか
+## 更新したら動かなくなった
 
-2026年2月、OpenClawのセキュリティ周りが大きく動きました。
+### 状況
+
+自分のOpenClawはWSL2上でsystemdサービスとして動いています。gatewayのbind設定は`tailnet`にしていました。Tailscale（VPN）経由で複数端末からアクセスできるようにするためです。
+
+```mermaid
+graph LR
+    subgraph "WSL2"
+        GW["Gateway<br/>100.122.114.36:18789"]
+    end
+
+    subgraph "Tailscaleネットワーク"
+        PC["別PC"] -->|Tailscale| GW
+        Phone["スマホ"] -->|Tailscale| GW
+        CLI["WSL内CLI"] -->|ws://100.x.x.x| GW
+    end
+```
+
+### 何が起きたか
+
+v2026.2.19-2への更新自体は成功しました。ところがその直後、Discordにこんなエラーが流れてきます。
+
+```
+SECURITY ERROR: Gateway URL "ws://100.122.114.36:18789"
+uses plaintext ws:// to a non-loopback address.
+Both credentials and chat data would be exposed to network interception.
+```
+
+```mermaid
+graph LR
+    CLI["CLI"] -->|"ws://100.x.x.x:18789<br/>❌ ブロック"| GW["Gateway"]
+    Agent["エージェント<br/>ツール"] -->|"ws://100.x.x.x:18789<br/>❌ ブロック"| GW
+
+    style GW fill:#ff6b6b,color:#fff
+```
+
+エージェントがgatewayの操作（cron編集など）をしようとするたびにセキュリティエラーで弾かれている状態でした。Discord経由のチャットは動いているので会話はできるのですが、内部のツール呼び出しが壊れています。
+
+### 対応
+
+原因はわかりやすくて、`ws://`（暗号化なし）でloopback以外のアドレスに接続することが、新バージョンのセキュリティチェックでブロックされていました。
+
+外部からgatewayに直接接続する必要はなかったので、`loopback`に変更しました。
+
+```bash
+openclaw config set gateway.bind loopback
+openclaw gateway restart
+```
+
+```mermaid
+graph LR
+    subgraph "WSL2"
+        CLI["CLI"] -->|"ws://127.0.0.1:18789<br/>✅ OK"| GW["Gateway<br/>127.0.0.1:18789"]
+        Agent["エージェント"] -->|"ws://127.0.0.1:18789<br/>✅ OK"| GW
+    end
+
+    subgraph "影響なし"
+        ExtPC["別PC"] -->|SSH :22| WSL2["WSL2"]
+        ExtPC -->|HTTP :3100| Jimucho["Webアプリ"]
+    end
+
+    style GW fill:#51cf66,color:#fff
+```
+
+これで復旧しました。SSH経由での作業やWebアプリ（別ポート）には影響ありません。gatewayポート（18789）だけの話です。
+
+## 調べてみたら、もっと大きな話だった
+
+動かなくなった原因は単純でしたが、なぜこんなに急にセキュリティが厳しくなったのか気になって調べてみたところ、2026年2月のOpenClaw周辺はかなり騒がしい状況でした。
 
 ### CVE-2026-25253（CVSS 8.8）
 
@@ -69,7 +136,7 @@ sequenceDiagram
     攻撃者のサーバー->>被害者のGateway: 任意コード実行
 ```
 
-localhostにバインドしていても攻撃可能という点が厄介でした。ブラウザがトークンを外部に送ってしまうので、gatewayがlocalhostでリッスンしていても関係ありません。v2026.1.29で修正済みです。
+localhostにバインドしていても攻撃可能という点が厄介です。ブラウザがトークンを外部に送ってしまうので、gatewayがlocalhostでリッスンしていても関係ありません。v2026.1.29で修正済みです。
 
 ### ClawHavocキャンペーン
 
@@ -105,13 +172,13 @@ graph LR
     style GW3 fill:#ff6b6b,color:#fff
 ```
 
-## v2026.2.19で何が変わったか
+## v2026.2.19のセキュリティ修正
 
-こうした背景を受けて、v2026.2.19ではセキュリティ関連の修正が40件以上入りました。CHANGELOGのFixesセクションの大半がセキュリティ修正です。主なものをカテゴリ別に整理します。
+こうした背景を受けて、v2026.2.19ではセキュリティ関連の修正が40件以上入りました。自分の環境で踏んだ`ws://`ブロックもその1つです。主なものをカテゴリ別に整理します。
 
 ### ネットワーク層
 
-- `ws://`（暗号化なし）でのnon-loopback接続をブロック
+- `ws://`（暗号化なし）でのnon-loopback接続をブロック ← **今回踏んだやつ**
 - SSRF対策をIPv6トンネリング（NAT64、6to4、Teredo）にも拡大
 - ブラウザURL遷移にSSRFガードを追加
 
@@ -133,76 +200,9 @@ graph LR
 - スキルパッケージのシンボリックリンクを拒否
 - 整合性メタデータなしのプラグインに警告を表示
 
-## 自分の環境で起きた問題
-
-ここからが実体験です。
-
-### 状況
-
-自分のOpenClawはWSL2上でsystemdサービスとして動いています。gatewayのbind設定は`tailnet`にしていました。Tailscale（VPN）経由で複数端末からアクセスできるようにするためです。
-
-```mermaid
-graph LR
-    subgraph "WSL2"
-        GW["Gateway<br/>100.122.114.36:18789"]
-    end
-
-    subgraph "Tailscaleネットワーク"
-        PC["別PC"] -->|Tailscale| GW
-        Phone["スマホ"] -->|Tailscale| GW
-        CLI["WSL内CLI"] -->|ws://100.x.x.x| GW
-    end
-```
-
-### 更新後に起きたこと
-
-v2026.2.19-2に更新した直後、CLIからcronジョブを編集しようとしたら、こうなりました。
-
-```
-SECURITY ERROR: Gateway URL "ws://100.122.114.36:18789"
-uses plaintext ws:// to a non-loopback address.
-Both credentials and chat data would be exposed to network interception.
-```
-
-```mermaid
-graph LR
-    CLI["CLI"] -->|"ws://100.x.x.x:18789<br/>❌ ブロック"| GW["Gateway"]
-    CLI2["エージェント<br/>ツール"] -->|"ws://100.x.x.x:18789<br/>❌ ブロック"| GW
-
-    style GW fill:#ff6b6b,color:#fff
-```
-
-`ws://`（暗号化なし）でloopback以外のアドレスに接続することが、新しいセキュリティチェックでブロックされていました。Tailscaleは暗号化されたVPNなので実質安全なのですが、OpenClaw側は一律でブロックする方針のようです。
-
-### 対応
-
-外部からgatewayに直接接続する必要がなかったので、`loopback`に変更しました。
-
-```bash
-openclaw config set gateway.bind loopback
-openclaw gateway restart
-```
-
-```mermaid
-graph LR
-    subgraph "WSL2"
-        CLI["CLI"] -->|"ws://127.0.0.1:18789<br/>✅ OK"| GW["Gateway<br/>127.0.0.1:18789"]
-        Agent["エージェント"] -->|"ws://127.0.0.1:18789<br/>✅ OK"| GW
-    end
-
-    subgraph "影響なし"
-        ExtPC["別PC"] -->|SSH :22| WSL2["WSL2"]
-        ExtPC -->|HTTP :3100| Jimucho["Webアプリ"]
-    end
-
-    style GW fill:#51cf66,color:#fff
-```
-
-これでCLIもエージェントのツールも`127.0.0.1:18789`経由で正常に動くようになりました。SSH経由での作業やWebアプリ（別ポート）には影響ありません。gatewayポート（18789）だけの話です。
-
 ## ついでにやった対策
 
-せっかくなので、いくつか追加の対策もしました。
+せっかくの機会なので、いくつか追加の対策もしました。
 
 ### ソースコードのミラーリング
 
@@ -241,7 +241,7 @@ graph TD
     Skip --> Sync
 ```
 
-ただし、自動更新は破壊的変更のリスクがあるので、ミラーでロールバックできる状態にしてから有効にしています。今回の`loopback`問題のように、更新で設定変更が必要になることがあるためです。
+ただし、自動更新は破壊的変更のリスクがあります。今回の`loopback`問題のように、更新で設定変更が必要になることがあるので、ミラーでロールバックできる状態にしてから有効にしています。
 
 ### gateway.auth.modeの確認
 
@@ -295,7 +295,3 @@ graph TB
 | 認証確認 | gateway.auth.mode = token |
 
 OpenClawを使っている方は、まず`openclaw --version`でv2026.1.29以上であることを確認してください。CVE-2026-25253の修正が入っていないバージョンは、リンクを1つクリックするだけでRCEされる可能性があります。
-
----
-
-*この記事は、OpenClawのv2026.2.17→v2026.2.19-2への更新で実際に遭遇した問題と対応を元に書いています。*
