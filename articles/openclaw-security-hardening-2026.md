@@ -1,5 +1,5 @@
 ---
-title: "OpenClawを更新したらCLIが動かなくなった — セキュリティ強化の波に巻き込まれた話"
+title: "OpenClawを更新したらDiscordにセキュリティエラーが流れてきた — 調べたら結構大きな話だった"
 emoji: "🛡️"
 type: "tech"
 topics:
