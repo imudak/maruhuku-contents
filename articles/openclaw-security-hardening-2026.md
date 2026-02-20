@@ -17,6 +17,35 @@ AIエージェントに「自分自身を更新して」と頼んだら、更新
 
 OpenClawをv2026.2.17からv2026.2.19-2に更新したところ、セキュリティ強化の影響で設定変更が必要になったので、その対応と背景をまとめておきます。
 
+## OpenClawの構成をざっくり理解する
+
+まず前提として、OpenClawの構成を簡単に説明します。
+
+```mermaid
+graph LR
+    subgraph "チャットアプリ"
+        Discord
+        Telegram
+        Slack
+    end
+
+    subgraph "自分のマシン"
+        GW["Gateway<br/>:18789"]
+        AI["AI<br/>(Claude等)"]
+        CLI["CLI<br/>openclaw コマンド"]
+        Cron["Cronジョブ"]
+    end
+
+    Discord <-->|メッセージ| GW
+    Telegram <-->|メッセージ| GW
+    Slack <-->|メッセージ| GW
+    GW <-->|推論| AI
+    CLI -->|WebSocket| GW
+    Cron -->|WebSocket| GW
+```
+
+**Gateway**がすべての中心です。チャットアプリからのメッセージを受け取り、AIに渡し、結果を返す。CLIやcronジョブもgatewayに接続して動きます。
+
 ## 何が起きていたのか
 
 2026年2月、OpenClawのセキュリティ周りが大きく動きました。
@@ -25,24 +54,56 @@ OpenClawをv2026.2.17からv2026.2.19-2に更新したところ、セキュリ�
 
 1月末に公開された脆弱性です。OpenClawのControl UIが、URLのクエリ文字列に含まれる`gatewayUrl`を無検証で信頼してしまう問題でした。
 
-攻撃の流れはこうです。
+```mermaid
+sequenceDiagram
+    participant 攻撃者
+    participant 被害者のブラウザ
+    participant 攻撃者のサーバー
+    participant 被害者のGateway
 
-1. 攻撃者が細工したリンクを用意する
-2. 被害者がクリックすると、ブラウザがgatewayトークンを攻撃者に送信する
-3. 攻撃者がそのトークンでgatewayに接続する
-4. サンドボックスを無効化して、任意のコードを実行する
+    攻撃者->>被害者のブラウザ: 細工したリンクを送る<br/>?gatewayUrl=wss://evil.com
+    被害者のブラウザ->>攻撃者のサーバー: gatewayトークンを送信
+    Note over 攻撃者のサーバー: トークン取得
+    攻撃者のサーバー->>被害者のGateway: トークンで接続
+    攻撃者のサーバー->>被害者のGateway: サンドボックス無効化
+    攻撃者のサーバー->>被害者のGateway: 任意コード実行
+```
 
-localhostにバインドしていても攻撃可能という点が厄介でした。v2026.1.29で修正済みです。
+localhostにバインドしていても攻撃可能という点が厄介でした。ブラウザがトークンを外部に送ってしまうので、gatewayがlocalhostでリッスンしていても関係ありません。v2026.1.29で修正済みです。
 
 ### ClawHavocキャンペーン
 
 ClawHub（OpenClawのスキルマーケットプレイス）で800件以上の悪意あるスキルが見つかりました。レジストリの約20%です。主にmacOS向けの情報窃取マルウェアを配布していたようです。
+
+```mermaid
+graph TB
+    subgraph "ClawHub マーケットプレイス"
+        S1["正規スキル<br/>~80%"]
+        S2["悪意あるスキル<br/>~20% (800件以上)"]
+    end
+
+    S2 -->|インストール| Agent["OpenClaw<br/>エージェント"]
+    Agent -->|"ファイル読み取り<br/>コマンド実行"| OS["ホストOS"]
+    OS -->|"認証情報・秘密鍵<br/>ブラウザCookie"| S2
+    S2 -->|送信| C2["攻撃者の<br/>C2サーバー"]
+```
 
 npmやChrome拡張で繰り返されてきたサプライチェーン攻撃と同じパターンが、AIエージェントの世界にも来た形です。
 
 ### 3万台のインターネット露出
 
 Censysなどの調査チームが、認証なしでインターネットに公開されたOpenClawインスタンスを3万台以上発見しています。企業端末上に勝手に入れられた「Shadow AI」も確認されているそうです。
+
+```mermaid
+graph LR
+    Internet["インターネット"] -->|認証なし| GW1["Gateway A<br/>:18789<br/>bind: 0.0.0.0"]
+    Internet -->|認証なし| GW2["Gateway B<br/>:18789<br/>auth: none"]
+    Internet -->|認証なし| GW3["...<br/>30,000台以上"]
+
+    style GW1 fill:#ff6b6b,color:#fff
+    style GW2 fill:#ff6b6b,color:#fff
+    style GW3 fill:#ff6b6b,color:#fff
+```
 
 ## v2026.2.19で何が変わったか
 
@@ -80,9 +141,17 @@ Censysなどの調査チームが、認証なしでインターネットに公�
 
 自分のOpenClawはWSL2上でsystemdサービスとして動いています。gatewayのbind設定は`tailnet`にしていました。Tailscale（VPN）経由で複数端末からアクセスできるようにするためです。
 
-```
-gateway.bind: "tailnet"
-→ 100.122.114.36:18789 でリッスン
+```mermaid
+graph LR
+    subgraph "WSL2"
+        GW["Gateway<br/>100.122.114.36:18789"]
+    end
+
+    subgraph "Tailscaleネットワーク"
+        PC["別PC"] -->|Tailscale| GW
+        Phone["スマホ"] -->|Tailscale| GW
+        CLI["WSL内CLI"] -->|ws://100.x.x.x| GW
+    end
 ```
 
 ### 更新後に起きたこと
@@ -93,6 +162,14 @@ v2026.2.19-2に更新した直後、CLIからcronジョブを編集しようと�
 SECURITY ERROR: Gateway URL "ws://100.122.114.36:18789"
 uses plaintext ws:// to a non-loopback address.
 Both credentials and chat data would be exposed to network interception.
+```
+
+```mermaid
+graph LR
+    CLI["CLI"] -->|"ws://100.x.x.x:18789<br/>❌ ブロック"| GW["Gateway"]
+    CLI2["エージェント<br/>ツール"] -->|"ws://100.x.x.x:18789<br/>❌ ブロック"| GW
+
+    style GW fill:#ff6b6b,color:#fff
 ```
 
 `ws://`（暗号化なし）でloopback以外のアドレスに接続することが、新しいセキュリティチェックでブロックされていました。Tailscaleは暗号化されたVPNなので実質安全なのですが、OpenClaw側は一律でブロックする方針のようです。
@@ -106,9 +183,22 @@ openclaw config set gateway.bind loopback
 openclaw gateway restart
 ```
 
-これでCLIもエージェントのツールも`127.0.0.1:18789`経由で正常に動くようになりました。
+```mermaid
+graph LR
+    subgraph "WSL2"
+        CLI["CLI"] -->|"ws://127.0.0.1:18789<br/>✅ OK"| GW["Gateway<br/>127.0.0.1:18789"]
+        Agent["エージェント"] -->|"ws://127.0.0.1:18789<br/>✅ OK"| GW
+    end
 
-ちなみに、SSH経由での作業やjimuchoなどのWebアプリ（別ポート）には影響ありません。gatewayポート（18789）だけの話です。
+    subgraph "影響なし"
+        ExtPC["別PC"] -->|SSH :22| WSL2["WSL2"]
+        ExtPC -->|HTTP :3100| Jimucho["Webアプリ"]
+    end
+
+    style GW fill:#51cf66,color:#fff
+```
+
+これでCLIもエージェントのツールも`127.0.0.1:18789`経由で正常に動くようになりました。SSH経由での作業やWebアプリ（別ポート）には影響ありません。gatewayポート（18789）だけの話です。
 
 ## ついでにやった対策
 
@@ -119,6 +209,14 @@ openclaw gateway restart
 OpenClawは開発体制が流動的です。創設者がOpenAIに移籍し、財団化が進行中。急にリポジトリが消えるリスクはゼロではありません。
 
 forkではなくprivateミラーとして保持することにしました。forkだとGitHub上で関係が見えてしまうためです。
+
+```mermaid
+graph LR
+    Upstream["openclaw/openclaw<br/>(本家)"] -->|"git fetch upstream"| Local["ローカルリポジトリ"]
+    Local -->|"git push origin"| Mirror["yourname/openclaw-mirror<br/>(private)"]
+
+    style Mirror fill:#339af0,color:#fff
+```
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
@@ -133,6 +231,16 @@ git push -u origin main --tags
 
 手動更新は忘れます。cronで毎朝バージョンを比較して、差分があれば`gateway update.run`を実行するようにしました。
 
+```mermaid
+graph TD
+    Cron["毎朝6:00 cron"] --> Check{"バージョン比較<br/>CURRENT ≠ LATEST?"}
+    Check -->|異なる| Update["gateway update.run"]
+    Check -->|同じ| Skip["スキップ"]
+    Update --> Report["Discordに報告"]
+    Update --> Sync["ミラー同期"]
+    Skip --> Sync
+```
+
 ただし、自動更新は破壊的変更のリスクがあるので、ミラーでロールバックできる状態にしてから有効にしています。今回の`loopback`問題のように、更新で設定変更が必要になることがあるためです。
 
 ### gateway.auth.modeの確認
@@ -146,6 +254,27 @@ v2026.2.19以降はデフォルトでトークンが自動生成されますが�
 ## AIエージェントのセキュリティについて思うこと
 
 OpenClawの問題はOpenClaw固有というより、AIエージェント全般の構造的な課題だと感じています。
+
+```mermaid
+graph TB
+    subgraph "AIエージェントの攻撃面"
+        direction TB
+        A["ファイルアクセス<br/>全ディスク読み書き"]
+        B["コマンド実行<br/>シェルアクセス"]
+        C["ネットワーク<br/>外部API・ブラウザ"]
+        D["マーケットプレイス<br/>サードパーティスキル"]
+        E["認証情報<br/>OAuthトークン・APIキー"]
+    end
+
+    A --> Impact["侵害時の影響"]
+    B --> Impact
+    C --> Impact
+    D --> Impact
+    E --> Impact
+    Impact --> Result["マシン上の全データが<br/>リスクにさらされる"]
+
+    style Result fill:#ff6b6b,color:#fff
+```
 
 エージェントが便利であるためにはファイルアクセスやコマンド実行の権限が必要ですが、それがそのまま攻撃面になります。マーケットプレイスの信頼モデルも、npmやChrome Web Storeで何度も見てきた問題の再来です。
 
