@@ -8,7 +8,7 @@ topics:
   - Discord
   - WebSocket
   - AIエージェント
-published: false
+published: true
 ---
 
 ## はじめに
@@ -19,7 +19,9 @@ Claude Code自体は正常に動きます。ターミナルから直接叩けば
 
 調査してみたら、**Discord WebSocketが2日間で5,600回以上の再接続ループ**を起こしていて、その原因がセキュリティアップデートによるpairing権限の欠落でした。
 
-この記事は、前回の[OpenClawセキュリティ強化の記事](https://zenn.dev/imudak/articles/openclaw-security-hardening-2026)の「後日談」にあたります。セキュリティ対策自体は正しかったのですが、そのアップデートが別の壊れ方を引き起こしていた、という話です。
+この記事は、前回のセキュリティ強化記事の「後日談」にあたります。セキュリティ対策自体は正しかったのですが、そのアップデートが別の壊れ方を引き起こしていた、という話です。
+
+https://zenn.dev/imudak/articles/openclaw-security-hardening-2026
 
 ## 環境
 
@@ -214,7 +216,7 @@ $ journalctl --user -u openclaw-gateway --since "1 minute ago" | grep -c "WebSoc
 
 ## 前回との関係
 
-[前回のセキュリティ強化記事](https://zenn.dev/imudak/articles/openclaw-security-hardening-2026)では、`gateway.bind`を`loopback`に変更し、auth tokenが設定されていることを確認しました。これ自体は正しい対応でした。
+前回のセキュリティ強化記事では、`gateway.bind`を`loopback`に変更し、auth tokenが設定されていることを確認しました。これ自体は正しい対応でした。
 
 しかし、同じアップデートがスコープモデルも変更していて、その影響は**すぐには表面化しませんでした**。Discord経由のチャットは動く、Heartbeatも動く、でもexec経由の操作だけ壊れる——という部分的な故障だったため、気づくのに時間がかかりました。
 
@@ -258,6 +260,8 @@ OpenClawを自動更新している方は、更新後に`openclaw doctor`が通�
 
 ## 関連記事
 
-- [OpenClawを更新したらDiscordにセキュリティエラーが流れてきた — 調べたら結構大きな話だった](https://zenn.dev/imudak/articles/openclaw-security-hardening-2026)
-- [OpenClawのアップデートで応答不能に！復旧手順と対策まとめ](https://zenn.dev/imudak/articles/openclaw-update-trouble-recovery)
-- [ミニPCのWSL2でOpenClawを動かしてDiscordから使う](https://zenn.dev/imudak/articles/openclaw-wsl-discord)
+https://zenn.dev/imudak/articles/openclaw-security-hardening-2026
+
+https://zenn.dev/imudak/articles/openclaw-update-trouble-recovery
+
+https://zenn.dev/imudak/articles/openclaw-wsl-discord

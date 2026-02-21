@@ -205,3 +205,9 @@ cd ~ 2>/dev/null
 ### 補足
 
 このエラーが出ても、WSL自体は起動しています（プロンプトが表示される）。Windowsのディレクトリにアクセスできなかっただけなので、動作に大きな影響はありません。
+
+## 関連記事
+
+https://zenn.dev/imudak/articles/openclaw-pairing-scope-investigation
+
+https://zenn.dev/imudak/articles/openclaw-security-hardening-2026
