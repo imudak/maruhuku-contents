@@ -7,7 +7,7 @@ topics:
   - CLI
   - ドキュメント
   - 自動化
-published: false
+published: true
 ---
 
 ## はじめに
