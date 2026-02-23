@@ -7,7 +7,7 @@ topics:
   - 個人開発
   - 生産性
   - 自動化
-published: true
+published: false
 ---
 
 去年の春、「AIを使っているのに業務が全然楽にならない」という状態が数ヶ月続きました。
