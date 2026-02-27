@@ -7,7 +7,7 @@ topics:
   - aiagent
   - automation
   - architecture
-published: false
+published: true
 ---
 
 「レビューお願いします」という通知が、同じプロジェクトから3回来ました。
