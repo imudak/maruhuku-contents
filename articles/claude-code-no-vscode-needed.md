@@ -8,7 +8,7 @@ topics:
   - tmux
   - 開発環境
   - ai
-published: false
+published: true
 ---
 
 「Cursorで動かすのは情弱」——Xでそんな投稿を見かけました。煽り気味の物言いですが、言いたいことはわかります。Claude CodeはCLIツールなので、VS CodeやCursorを間に挟む意味がないのでは、ということです。
