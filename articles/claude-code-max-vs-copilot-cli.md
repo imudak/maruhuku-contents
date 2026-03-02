@@ -8,7 +8,7 @@ topics:
   - "ai"
   - "開発ツール"
   - "個人開発"
-published: false
+published: true
 price: 0
 ---
 
