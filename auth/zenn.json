@@ -1,0 +1,125 @@
+{
+  "cookies": [
+    {
+      "name": "_ga",
+      "value": "GA1.1.667655705.1772558651",
+      "domain": ".zenn.dev",
+      "path": "/",
+      "expires": 1807118651.301988,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_zenn_session",
+      "value": "JjT%2BED87jxeydldoobUhSNjChhDlrPGwBownf%2BGZY5YA6rvBhclxFxY3Of8N93RrDNAl2zgzHOnTBN4pqwWZh%2BrXqFgZaOQfGGtNzBhAlbtFK2Z4nPD06QXSHoCWdMgPLY%2FI3JMUkufTW5mUH5mtS3azCvYp%2BJc%2B%2FFBUHOl8BNYWHo45DrjebUg0zZpcSu38L%2F05lPB64jq6T%2Be5%2FTTmXG4nKAmZdfsNEzFo9JktPWNTs9iu2eWmaYQ03C9i%2FkwspWxV96FV9G1AHC653hEUF7V03R8KnEa9yoAV2zlpMkmAyWuoIIUnN1MQVe7or3%2FD%2FzsxeZw5qoPbmPbm6Y8GHartjauP4TxZ5BxWQvjPNn8c9KvX8xxCfhKDSnOHB5UIQO68JOCxQxNMJLx79cxGK8vKdS6dnQ9DxwRXCWzIDSEapMgSB%2FoG4pU4S29vfHkxPVftLjEQ3jyfO4Ta8Ild4J9aLaYIvD03vOV1meuCcuXumKM6oJOPQBVF6zVZ7GvWu2jb3rRPCsP2sf8YH7RUB2W1orLFlch2YaHgIDhxLDG9uclqOiWJht5l7RN0WlIG35LYnTQTZcYi--0n%2FzYfNx93FQfwTL--CHUsUqxCkWXBUS4S0w6taA%3D%3D",
+      "domain": ".zenn.dev",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Host-GAPS",
+      "value": "1:ni7QwEnMeSJzTk_ciSL3c4Ypo-Zm6w:Lt5PYkHE63zV9gDP",
+      "domain": "accounts.google.com",
+      "path": "/",
+      "expires": 1807118656.388401,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ga_PVQ2KDWHD2",
+      "value": "GS2.1.s1772558651$o1$g0$t1772558656$j55$l0$h0",
+      "domain": ".zenn.dev",
+      "path": "/",
+      "expires": 1807118656.535954,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "OTZ",
+      "value": "8504244_20_20__20_",
+      "domain": "accounts.google.com",
+      "path": "/",
+      "expires": 1775150657,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "NID",
+      "value": "529=LeN_fikQaXlPUU8A7hOsPXqQODMM0NwiC-4YWOZOzf9utatDOD55j3xjP53zFXWmh8HqRILjR5R2g8eNScR-QVo8p9wCj14v11EcN7mqO88Jyn34LQ4sP91W4DWIGkWRVLWfY8-dty9t0UL_QA8oOJG-rGHRJKVnEtUP7kxJCl_kv7avZvL3n2CoYUDukdZsIPPHqLiasGWlGg_IvkZ53hdZLCDXpZ-zWvpyL45KmbDCL9CcXkaxstwCVxg",
+      "domain": ".google.com",
+      "path": "/",
+      "expires": 1788369857.055265,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "SUPPORT_CONTENT",
+      "value": "639081556730811369-3763897702",
+      "domain": ".support.google.com",
+      "path": "/",
+      "expires": 1772560674.309359,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ga",
+      "value": "GA1.3.1755959673.1772558875",
+      "domain": ".support.google.com",
+      "path": "/",
+      "expires": 1807118874.757776,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_gid",
+      "value": "GA1.3.1540462092.1772558875",
+      "domain": ".support.google.com",
+      "path": "/",
+      "expires": 1772645274,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_gat_gtag_UA_175894890_5",
+      "value": "1",
+      "domain": ".support.google.com",
+      "path": "/",
+      "expires": 1772558934,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ga_H30R9PNQFN",
+      "value": "GS2.1.s1772558874$o1$g0$t1772558880$j54$l0$h0",
+      "domain": ".support.google.com",
+      "path": "/",
+      "expires": 1807118880.266856,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://zenn.dev",
+      "localStorage": [
+        {
+          "name": "zenn_current_user",
+          "value": "{\"shouldFetchNext\":false}"
+        }
+      ]
+    }
+  ]
+}
