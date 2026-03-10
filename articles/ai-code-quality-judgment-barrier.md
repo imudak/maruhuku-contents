@@ -7,7 +7,7 @@ topics:
   - programming
   - claudecode
   - codereview
-published: false
+published: true
 ---
 
 Claude Codeに実装を頼んで「できました」と言われたとき、ちゃんと動くか試したくなります。動いた。では終わりにしていいか。——最初のうちはそれで済ませていたのですが、しばらくして「これは違うな」と気づきました。
