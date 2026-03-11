@@ -2,7 +2,7 @@
 
 **Feature**: draft-article-publishing
 **Version**: 1.0.0
-**Status**: Phase 1 Completed
+**Status**: All Completed
 **Date**: 2026-03-11
 
 > 全content-managementタスク完了後の次スプリント。
@@ -40,12 +40,18 @@
 
 ## Phase 2: 未完成記事の状況整理
 
-- [ ] **TASK-DAP-003**: `obsidian-claude-skills-management.md` の執筆開始判断
+- [x] **TASK-DAP-003**: `obsidian-claude-skills-management.md` の執筆開始判断
   - フロントマターのみ存在。raws/に関連資料がある場合は執筆開始。
-  - 関連資料なし → 保留または削除
+  - 関連資料なし → **保留**（raws/にobsidian関連資料なし）
+  - 判断日: 2026-03-11
 
-- [ ] **TASK-DAP-004**: `google-play-console-setup-guide.md` の状況確認
+- [x] **TASK-DAP-004**: `google-play-console-setup-guide.md` の状況確認
   - 途中まで書かれている。続きを書くか保留判断。
+  - 内容確認：全6セクション + まとめ揃っており実質完成
+  - 校正実施：述語＋コロンパターン修正、末尾「次回の記事では〜」削除等
+  - textlint: エラー0確認済み
+  - 状態：**公開可能**（`published: true` への変更はimudak判断）
+  - 判断日: 2026-03-11
 
 ---
 
@@ -55,3 +61,4 @@
 |------|------|------|
 | textlint エラー数 | 0 | - |
 | 公開記事数（本スプリント） | 2 | 2 ✅ |
+| google-play記事の公開可能化 | 1 | 1 ✅ |
