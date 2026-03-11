@@ -7,7 +7,7 @@ topics:
   - discord
   - wsl
   - トラブルシューティング
-published: false
+published: true
 ---
 
 ## はじめに

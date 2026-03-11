@@ -8,7 +8,7 @@ topics:
   - ai
   - automation
   - workflow
-published: false
+published: true
 ---
 
 ## タスクファイルを `/tmp/task.md` に置いて叩くだけ
