@@ -167,3 +167,14 @@ published: false      # true で公開
 
 - [Zenn CLIガイド](https://zenn.dev/zenn/articles/zenn-cli-guide)
 - [Zenn Markdown記法](https://zenn.dev/zenn/articles/markdown-guide)
+
+
+## GitHub Issue 作成ルール
+
+`gh issue create` で Issue を作成する場合、**必ず以下のラベルを付与すること**:
+
+- **自律実行タスク**: `--label "type:task" --label "autonomous"`
+- **imudak操作が必要**: `--label "type:onegai" --label "human-required"`
+- **相談・判断が必要**: `--label "type:sodan" --label "human-required"`
+
+ラベルなしの Issue は百式巡回の対象外となり、自律実行されない。
