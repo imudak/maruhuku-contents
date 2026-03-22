@@ -178,3 +178,6 @@ published: false      # true で公開
 - **相談・判断が必要**: `--label "type:sodan" --label "human-required"`
 
 ラベルなしの Issue は百式巡回の対象外となり、自律実行されない。
+
+## ビルド確認ルール
+- **push前に必ず `npm run build`（またはプロジェクト固有のビルドコマンド）を実行し、エラーがないことを確認してからpushすること**（テスト全パスだけでは不十分。tscの型チェックはJestでは検出されない）
