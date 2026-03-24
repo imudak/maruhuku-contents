@@ -7,7 +7,7 @@ topics:
   - troubleshooting
   - performance
   - gdi
-published: false
+published: true
 ---
 
 CPU 4%、メモリ半分、ディスクも余裕あり。なのにマウスがカクつく。仮想デスクトップの切り替えが遅い。
