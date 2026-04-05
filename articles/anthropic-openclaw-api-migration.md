@@ -11,15 +11,15 @@ topics:
 published: false
 ---
 
-2026年4月4日（日本時間4月5日早朝）、Anthropicがひとつの変更を発表しました。
+朝起きたらDiscordのボットが返事をしなくなっていました。
 
-**Claude ProおよびMAXプランのサブスクリプション枠が、OpenClawなどサードパーティツールには適用されなくなった**
+2026年4月5日の早朝、Anthropicが変更を発表しました。Claude ProおよびMAXプランのサブスクリプション枠が、OpenClawなどサードパーティツールには適用されなくなったとのことです。前日の4月4日（PT時間）から発効していました。
 
-この変更によってOpenClawをAPIキー方式に移行しました。その際に理解したことを整理します。
+OpenClawをAPIキー方式に移行したので、その記録を残しておきます。
 
 ## 何が変わったのか
 
-Anthropicの[Boris Cherny（Claude Code責任者）の投稿](https://x.com/bcherny/status/2040206440556826908)によると、サードパーティツールはプロンプトキャッシュのヒット率が低く、Anthropicのリソースを想定以上に消費していたとのことです。
+[Boris Cherny（Claude Code責任者）の投稿](https://x.com/bcherny/status/2040206440556826908)によると、サードパーティツールはプロンプトキャッシュのヒット率が低く、Anthropicのリソースを想定以上に消費していたとのことです。
 
 > 「サードパーティのサービスはこの最適化が行われていないため、持続的に提供することが難しい」
 
@@ -30,51 +30,38 @@ Anthropicの[Boris Cherny（Claude Code責任者）の投稿](https://x.com/bche
 | MAXサブスク枠でOpenClaw動作 | MAXサブスクはAnthropic公式ツールのみ |
 | 追加課金なし | Extra Usage（従量制）またはAPIキーが必要 |
 
-## 3つの選択肢
+## Extra UsageかAPIキーか
 
-この変更に対して、取れる選択肢は以下の3つです。
+選択肢として浮かんだのは2つでした。
 
-### A. Anthropic APIキーに移行する
+- claude.aiのExtra Usageを有効化してそのまま使い続ける
+- `platform.claude.com`でAPIキーを発行してOpenClawに設定する
 
-`platform.claude.com`でAPIキーを発行し、OpenClawの認証方式をtoken認証からAPIキー認証へ切り替えます。トークン使用量ベースの従量課金になります。
-
-### B. Extra Usageを使う
-
-claude.aiのサブスク設定からExtra Usageを有効化します。サブスク額の上限を超えた分が別途請求されますが、後述する理由でプロンプトキャッシュは効きません。
-
-### C. OpenClaw自体を使わない
-
-Claude Codeなど公式ツールのみに絞ります。Discord連携や定期実行などの機能は失われます。
-
-## APIキー方式を選んだ理由
-
-A案（APIキー）を選んだ理由は、OpenClawのドキュメントに明記されていた次の一文です。
+Extra UsageはMAXサブスク上限の超過分が別途請求される仕組みです。一見手軽ですが、OpenClawのドキュメントを確認すると気になる記述がありました。
 
 > *Prompt caching is API-only; legacy Anthropic token auth does not honor cache settings.*
 
-OpenClawのシステムプロンプトは、MEMORY.mdやSOUL.mdなど複数のコンテキストファイルを含むため、相当な長さになります。プロンプトキャッシュが有効かどうかは、コストに直結します。
-
-API方式では繰り返し送信される部分のトークンコストを最大90%削減できます。Extra Usage経由ではこの最適化が適用されません。
+OpenClawのシステムプロンプトはMEMORY.mdやSOUL.mdなど複数のコンテキストファイルを含むため、相当な長さになります。プロンプトキャッシュが有効かどうかはコストに直結するので、APIキー方式を選ぶことにしました。API方式では繰り返し送信される部分のトークンコストを最大90%削減できます。
 
 ## 移行後の構成
 
-移行後の課金先は次のように整理されました。
+課金先が整理されました。
 
 | 用途 | ツール | 課金先 |
 |------|--------|--------|
 | Discord対話・cronプロンプト実行 | OpenClaw | Anthropic APIキー（従量課金） |
 | コード実装・百式巡回の実装部分 | Claude Code CLI | MAXサブスク |
 
-**Claude Codeは公式ツールのため、MAXプランが引き続き適用されます。** 変更の影響を受けるのはOpenClaw部分だけです。
+Claude Codeは公式ツールのため、MAXプランが引き続き適用されます。変更の影響を受けるのはOpenClaw部分だけでした。
 
-cronの流れで言うと、OpenClawがスケジュール管理とプロンプト判断をAPIキーで行い、実装の委譲先であるClaude CodeにはMAXプランが使われます。「判断」と「実装」で課金先が分離している形です。
+cronの流れで言うと、OpenClawがスケジュール管理とプロンプト判断をAPIキーで行い、実装の委譲先であるClaude CodeにはMAXプランが使われます。「判断」と「実装」で課金先が分離した形です。
 
-## Anthropicからの補償
+## 補償について
 
 今回の変更に際して、Anthropicは以下を提供しています。
 
-- **既存サブスク額相当のクレジット**（4月17日まで有効）
-- **Extra Usageバンドルの30%割引**
+- 既存サブスク額相当のクレジット（4月17日まで有効）
+- Extra Usageバンドルの30%割引
 
 MAX x20（$200/月）の場合、$200相当のクレジットが付与されます。APIキー方式へ移行した場合も`platform.claude.com`側にクレジットが付与されているので、コンソールで確認しておくとよいでしょう。
 
@@ -111,12 +98,12 @@ OpenClawの設定ファイル（`~/.openclaw/openclaw.json`）を次のように
 systemctl --user restart openclaw-gateway
 ```
 
-モデルをOpusからSonnetに変えているのはコスト最適化のためです。重要な判断が必要な場合は`/model opus`で一時的に切り替えられます。
+モデルをOpusからSonnetに変えているのはコスト最適化のためです。重要な判断が必要な場面では`/model opus`で一時的に切り替えられます。
 
 ## まとめ
 
-今回の変更は突然でしたが、APIキーへの移行によって実質的な運用への影響はほぼありません。むしろプロンプトキャッシュが有効になり、コスト面では改善しています。
+移行後は実質的な運用への影響はほぼありませんでした。むしろプロンプトキャッシュが有効になり、コスト面では改善しています。
 
-課金体系も整理されました。OpenClaw（対話・自律実行）はAPIキー従量課金、Claude Code（実装）はMAXサブスクという棲み分けです。
+OpenClaw（対話・自律実行）はAPIキー従量課金、Claude Code（実装）はMAXサブスクという棲み分けに落ち着いています。
 
-なお、AnthropicのBoris ChernyがプロンプトキャッシュのヒットRate改善PRをOpenClaw本体に送ったとも述べています。公式ツールとサードパーティの共存をある程度意識していることが伝わる点として、記録しておきます。
+なお、Boris ChernyはプロンプトキャッシュのヒットRate改善PRをOpenClaw本体に送ったとも述べています。公式ツールとサードパーティの共存を意識している様子は伝わりました。
