@@ -8,7 +8,7 @@ topics:
   - openclaw
   - api
   - claudecode
-published: false
+published: true
 ---
 
 朝起きたらDiscordのボットが返事をしなくなっていました。
