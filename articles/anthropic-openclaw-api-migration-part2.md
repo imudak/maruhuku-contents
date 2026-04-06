@@ -130,3 +130,7 @@ timeout --kill-after=60 3600 setsid claude --permission-mode bypassPermissions \
 - 根本対応はcronをLinux crontabに移行してOpenClawの管理から切り離すこと
 - 追加の安全策として`unset ANTHROPIC_API_KEY`をrun-claude-task.shに追加
 - 移行後は消費量を数日追うべきだった
+
+---
+
+この対応でcronは解決しましたが、実はもう一つ課題が残っていました。Discord対話自体のAPI消費については[Part 3](https://zenn.dev/imudak/articles/anthropic-openclaw-api-migration-part3)に続きます。
