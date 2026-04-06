@@ -8,7 +8,7 @@ topics:
   - openclaw
   - claudecode
   - api
-published: false
+published: true
 ---
 
 [前の記事](https://zenn.dev/imudak/articles/anthropic-openclaw-api-migration)で「移行後のコストは月$10〜30程度になりそう」と書きました。
