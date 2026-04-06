@@ -32,12 +32,14 @@ Apr 5: $17.29
 
 前の記事での構成はこうでした。
 
-| 用途 | ツール | 課金先 |
-|------|--------|--------|
-| Discord対話・cronプロンプト実行 | OpenClaw | Anthropic APIキー（従量課金） |
-| コード実装・百式巡回の実装部分 | Claude Code CLI | MAXサブスク |
+```mermaid
+graph LR
+  cron["cron（OpenClaw管理）"] -->|起動| ClaudeCode["Claude Code CLI"]
+  OpenClaw -->|env継承: ANTHROPIC_API_KEY| ClaudeCode
+  ClaudeCode -->|APIキー課金 ❌| AnthropicAPI["Anthropic API"]
+```
 
-OpenClawがcronのスケジュールを管理し、Claude Codeが実装を担う構成です。ここで問題が起きていました。
+OpenClawがcronのスケジュールを管理し、Claude Codeが実装を担う構成でした。ここで問題が起きていました。
 
 `openclaw.json`に設定したAPIキーは、OpenClawが起動する際に環境変数として展開されます。
 
@@ -51,7 +53,7 @@ OpenClawがcronのスケジュールを管理し、Claude Codeが実装を担う
 
 この環境変数は、OpenClaw経由で起動したプロセスに継承されます。そしてClaude CodeはAPIキーが環境変数にあると、MAXのOAuth認証より優先してAPIキーを使います。
 
-百式巡回は毎時45分に起動します。発掘サイクルは3時間ごとに2本。加えてメンション確認が15分おき。これだけのcronが全部APIキーで動いていたわけです。
+百式巡回は毎時45分に起動します。発掘サイクルは3時間ごとに2本。加えてメンション確認が15分おき。これだけのcronが全部APIキーで動いていました。
 
 さらにもう1つ問題がありました。cronの環境にはNVMのパスが含まれないため、`claude`コマンドが見つからずエラーになっていました。
 
@@ -106,6 +108,14 @@ timeout --kill-after=60 3600 setsid claude --permission-mode bypassPermissions \
 
 ## 修正後の構成（確定版）
 
+```mermaid
+graph LR
+  cron["cron（Linux crontab）"] -->|直接起動| ClaudeCode["Claude Code CLI"]
+  ClaudeCode -->|MAXサブスク ✅| AnthropicMax["Anthropic MAX"]
+  Discord -->|メッセージ| OpenClaw
+  OpenClaw -->|APIキー課金| AnthropicAPI["Anthropic API"]
+```
+
 | 用途 | ツール | 課金先 |
 |------|--------|--------|
 | Discord対話 | OpenClaw | Anthropic APIキー（従量課金）|
@@ -117,7 +127,7 @@ timeout --kill-after=60 3600 setsid claude --permission-mode bypassPermissions \
 
 前の記事では「移行後はほぼ影響なし」と書きました。実態は、影響がなかったのではなく確認が足りていなかったのでした。
 
-`openclaw.json`に書いたAPIキーが環境変数として子プロセスに流れることは、動作として自然です。ただClaude Codeが「APIキーがあればOAuth認証より優先する」という仕様まで把握できていませんでした。また、cronがOpenClaw経由で動いている以上、この問題は構造的に避けられなかった。
+`openclaw.json`に書いたAPIキーが環境変数として子プロセスに流れることは、動作として自然です。ただClaude Codeが「APIキーがあればOAuth認証より優先する」という仕様まで把握できていませんでした。また、cronがOpenClaw経由で動いている以上、この問題は構造的に避けられませんでした。
 
 コスト対策を入れたら、移行直後に消費量を数日分確認する——これを怠ったのが原因です。
 

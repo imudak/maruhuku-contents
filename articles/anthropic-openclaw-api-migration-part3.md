@@ -104,6 +104,14 @@ fallbackもCopilot内のモデルに変えておきます。これでAnthropic�
 
 結局3記事分かかりましたが、落ち着き先はこうなりました。
 
+```mermaid
+graph LR
+  Discord -->|メッセージ| OpenClaw
+  OpenClaw -->|Copilot Pro内 ✅| CopilotClaude["GitHub Copilot\nclaude-sonnet-4.6"]
+  cron["cron（Linux crontab）"] -->|直接起動| ClaudeCode["Claude Code CLI"]
+  ClaudeCode -->|MAXサブスク ✅| AnthropicMax["Anthropic MAX"]
+```
+
 | 用途 | ツール | 課金先 |
 |------|--------|--------|
 | Discord対話（OpenClaw） | GitHub Copilot経由 | Copilot Proプラン内 |

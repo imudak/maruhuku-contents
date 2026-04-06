@@ -47,6 +47,14 @@ OpenClawのシステムプロンプトはMEMORY.mdやSOUL.mdなど複数のコ�
 
 課金先が整理されました。
 
+```mermaid
+graph LR
+  Discord -->|メッセージ| OpenClaw
+  OpenClaw -->|APIキー課金| Anthropic["Anthropic API"]
+  OpenClaw -->|タスク委譲| ClaudeCode["Claude Code CLI"]
+  ClaudeCode -->|MAXサブスク| AnthropicMax["Anthropic MAX"]
+```
+
 | 用途 | ツール | 課金先 |
 |------|--------|--------|
 | Discord対話・cronプロンプト実行 | OpenClaw | Anthropic APIキー（従量課金） |
