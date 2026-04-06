@@ -49,12 +49,12 @@ OpenClawのシステムプロンプトはMEMORY.mdやSOUL.mdなど複数のコ�
 
 | 用途 | ツール | 課金先 |
 |------|--------|--------|
-| Discord対話 | OpenClaw | Anthropic APIキー（従量課金） |
-| cronからの自律実行・実装 | Claude Code CLI | MAXサブスク |
+| Discord対話・cronプロンプト実行 | OpenClaw | Anthropic APIキー（従量課金） |
+| コード実装・百式巡回の実装部分 | Claude Code CLI | MAXサブスク |
 
-Claude Codeは公式ツールのため、MAXプランが引き続き適用されます。変更の影響を受けるのはOpenClaw（Discord対話部分）だけでした。
+Claude Codeは公式ツールのため、MAXプランが引き続き適用されます。変更の影響を受けるのはOpenClaw部分だけでした。
 
-cronのスケジュール管理はLinux crontabに移行済みのため、OpenClawはDiscord対話の窓口としてのみ動いています。
+cronの流れで言うと、OpenClawがスケジュール管理とプロンプト判断をAPIキーで行い、実装の委譲先であるClaude CodeにはMAXプランが使われます。「判断」と「実装」で課金先が分離した形です。
 
 ## 補償について
 
