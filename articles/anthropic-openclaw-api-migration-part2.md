@@ -1,5 +1,5 @@
 ---
-title: "OpenClaw APIキー移行後に想定外の出費——cronのClaude Codeが原因だった"
+title: "OpenClaw APIキー移行後に想定外の出費——cronをLinux crontabに移行して解決した"
 emoji: "💸"
 type: "tech"
 topics:
@@ -30,11 +30,14 @@ Apr 5: $17.29
 
 ## cronのClaude Codeが毎時APIキーを使っていた
 
-前の記事で構成を「OpenClaw（対話・自律実行）はAPIキー、Claude Code（実装）はMAX」と整理したつもりでした。
+前の記事での構成はこうでした。
 
-ところが実際には、cronで起動するClaude Codeにも`ANTHROPIC_API_KEY`環境変数が流れ込んでいました。
+| 用途 | ツール | 課金先 |
+|------|--------|--------|
+| Discord対話・cronプロンプト実行 | OpenClaw | Anthropic APIキー（従量課金） |
+| コード実装・百式巡回の実装部分 | Claude Code CLI | MAXサブスク |
 
-仕組みとしてはこうです。
+OpenClawがcronのスケジュールを管理し、Claude Codeが実装を担う構成です。ここで問題が起きていました。
 
 `openclaw.json`に設定したAPIキーは、OpenClawが起動する際に環境変数として展開されます。
 
@@ -60,11 +63,26 @@ setsid: failed to execute claude: No such file or directory
 
 ## 対応した内容
 
-2つ直しました。
+3つ対応しました。
 
-### 1. cronスクリプトにPATHを追加
+### 1. cronをLinux crontabに移行（根本対応）
 
-cron-runnerの各スクリプト（9ファイル）の先頭に追加しました。
+そもそもOpenClawがcronを管理している限り、APIキーが環境変数に流れる問題は構造的に残ります。cronのスケジュール管理自体をLinux crontabに移すことにしました。
+
+```bash
+# Linux crontabに直接登録
+45 * * * *  bash ~/projects/flow-manager/scripts/cron-runner/run-hyakushiki.sh
+0 */3 * * * bash ~/projects/flow-manager/scripts/cron-runner/run-hakkutsu-phase2.sh
+30 */3 * * * bash ~/projects/flow-manager/scripts/cron-runner/run-hakkutsu-phase3.sh
+15 * * * *  bash ~/projects/flow-manager/scripts/cron-runner/run-claw-mentions.sh
+# ...（他6本）
+```
+
+OpenClawのcron機能はすべて無効化し、Linux crontabがClaude Codeを直接呼び出す形にしました。これでOpenClawはDiscord対話の窓口だけになります。
+
+### 2. cronスクリプトにPATHを追加
+
+Linux crontabの環境にはNVMのパスが含まれないため、各ラッパースクリプトに追加しました。
 
 ```bash
 set -euo pipefail
@@ -74,9 +92,9 @@ export PATH="$HOME/.local/bin:$PATH"
 
 これで`claude`、`jq`、`openclaw`がcronの環境でも見つかるようになりました。
 
-### 2. Claude Code起動前にAPIキーをunset
+### 3. Claude Code起動前にAPIキーをunset（安全策）
 
-`run-claude-task.sh`（cronからClaude Codeを起動するラッパー）で、claude起動の直前にAPIキーを除外します。
+`run-claude-task.sh`（cronからClaude Codeを起動するラッパー）で、claude起動の直前にAPIキーを除外します。Linux crontabに移行したことで理論上は不要になりましたが、何かの拍子に環境変数が混入してもAPIキーが使われないよう念のため残しています。
 
 ```bash
 # openclaw.jsonのenv注入でAPIキーが環境変数に入る場合があるが
@@ -86,16 +104,12 @@ timeout --kill-after=60 3600 setsid claude --permission-mode bypassPermissions \
   --output-format text -p "${PROMPT}" >> "${LOG_FILE}" 2>&1
 ```
 
-API使用量の事前チェック部分も同様に`unset`しています。
-
 ## 修正後の構成（確定版）
 
 | 用途 | ツール | 課金先 |
 |------|--------|--------|
 | Discord対話 | OpenClaw | Anthropic APIキー（従量課金）|
-| cronからの実装・百式巡回 | Claude Code CLI | MAXサブスク |
-
-前の記事でcronのスケジュール管理ごとLinux crontabに移行済みだったため、OpenClawが絡むのはDiscord対話だけでした。つまりcronのClaude Codeは最初からMAXの枠で動くべき構成でした。それがAPIキーを拾って動いていたのが問題の本質です。
+| cronからの自律実行・実装 | Claude Code CLI（Linux crontab経由） | MAXサブスク |
 
 修正後は百式巡回が04:45から正常に再開し、ログも通るようになっています。
 
@@ -103,7 +117,7 @@ API使用量の事前チェック部分も同様に`unset`しています。
 
 前の記事では「移行後はほぼ影響なし」と書きました。実態は、影響がなかったのではなく確認が足りていなかったのでした。
 
-`openclaw.json`に書いたAPIキーが環境変数として子プロセスに流れることは、動作として自然です。ただClaude Codeが「APIキーがあればOAuth認証より優先する」という仕様まで把握できていませんでした。
+`openclaw.json`に書いたAPIキーが環境変数として子プロセスに流れることは、動作として自然です。ただClaude Codeが「APIキーがあればOAuth認証より優先する」という仕様まで把握できていませんでした。また、cronがOpenClaw経由で動いている以上、この問題は構造的に避けられなかった。
 
 コスト対策を入れたら、移行直後に消費量を数日分確認する——これを怠ったのが原因です。
 
@@ -113,5 +127,6 @@ API使用量の事前チェック部分も同様に`unset`しています。
 
 - OpenClawのAPIキーは環境変数経由でcron起動のClaude Codeにも流れる
 - Claude Codeはenv変数のAPIキーを優先するため、意図せず全cronがAPIキー課金になっていた
-- 対策はcronスクリプトでの`unset ANTHROPIC_API_KEY`
+- 根本対応はcronをLinux crontabに移行してOpenClawの管理から切り離すこと
+- 追加の安全策として`unset ANTHROPIC_API_KEY`をrun-claude-task.shに追加
 - 移行後は消費量を数日追うべきだった
