@@ -3,7 +3,7 @@ title: "OpenClawのDiscord会話がAPIを食い尽くしていた——GitHub Co
 emoji: "🦞"
 type: "tech"
 topics: ["openclaw", "anthropic", "githubcopilot", "claude", "ai"]
-published: false
+published: true
 ---
 
 [前の記事](https://zenn.dev/imudak/articles/anthropic-openclaw-api-migration-part2)で「cronをLinux crontabに移行して解決した」と書きました。
