@@ -8,15 +8,15 @@ published: false
 
 [前の記事](https://zenn.dev/imudak/articles/anthropic-openclaw-api-migration-part2)で「cronをLinux crontabに移行して解決した」と書きました。
 
-翌週、Anthropicコンソールを開いたら2日間でまた$40を超えていました。
+その同じ日の午後、Anthropicコンソールを確認していて気づきました。cronを止めても、APIのクレジットが減り続けている。
 
 ## 今度は何が起きていたか
 
-前回の対応でcronはMAXサブスクで動くようになっていました。Claude CodeもMAXで動いています。それでも消えていく。
+crontabへの移行は終わっています。Claude CodeもMAXサブスクで動いています。それでもAPI消費が止まらない。
 
 「Discord会話が重いのかな」と漠然と思っていました。OpenClawとのやり取りが長くなると、過去ログも含めたコンテキスト全体を毎回送るので、1回の返信でそれなりのトークンを使います。
 
-でも「そんなに会話してないし」と考えていました。
+ちょうどその日はcrontabへの移行設定について長いやり取りをしていました。スレッドを追いながらコンソールの数字が動くのを見て確信しました。
 
 改めてログを確認すると——会話ごとのトークン消費がかなり大きかったです。Discordのスレッド1本で数万トークン、長いやり取りだと10万を超えることもある。毎日複数スレッド立てていれば、それだけで$20を超えます。
 
@@ -123,4 +123,4 @@ Copilot ProでClaude Sonnet 4.6を使うと「Premium requests」という枠を
 - [Part 2](https://zenn.dev/imudak/articles/anthropic-openclaw-api-migration-part2): cronがAPIキーを消費していたのでLinux crontabに移行
 - **Part 3（今回）**: Discord会話自体がAPIを食っていたのでGitHub Copilotに移行
 
-毎回「今度こそ解決」と思って書いているのに、また続きが生まれました。GitHub Copilotへの移行でようやく落ち着いた感があります。もうPart 4は書かなくていいはずです。
+3つの問題が同じ1日で連続して発覚しました。全部当日中に対応しています。「移行したら終わり」ではなく、実際に使いながら問題を見つけていくしかなかった。GitHub Copilotへの移行でようやく落ち着いた感があります。もうPart 4は書かなくていいはずです。
