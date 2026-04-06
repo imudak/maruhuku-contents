@@ -93,10 +93,9 @@ API使用量の事前チェック部分も同様に`unset`しています。
 | 用途 | ツール | 課金先 |
 |------|--------|--------|
 | Discord対話 | OpenClaw | Anthropic APIキー（従量課金）|
-| cronプロンプト判断 | OpenClaw | Anthropic APIキー（従量課金）|
-| 実装・自律実行 | Claude Code CLI | MAXサブスク |
+| cronからの実装・百式巡回 | Claude Code CLI | MAXサブスク |
 
-「判断と対話」がAPIキー、「実装の手足」がMAXという整理が実態と合いました。
+前の記事でcronのスケジュール管理ごとLinux crontabに移行済みだったため、OpenClawが絡むのはDiscord対話だけでした。つまりcronのClaude Codeは最初からMAXの枠で動くべき構成でした。それがAPIキーを拾って動いていたのが問題の本質です。
 
 修正後は百式巡回が04:45から正常に再開し、ログも通るようになっています。
 
