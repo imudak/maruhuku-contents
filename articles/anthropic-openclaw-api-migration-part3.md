@@ -26,7 +26,11 @@ published: false
 
 OpenClawはモデルプロバイダーを切り替えられます。Anthropic APIキーだけでなく、GitHub Copilotもバックエンドとして使えます。
 
-ドキュメントを確認すると、`github-copilot/claude-sonnet-4.6` が利用可能とあります。すでにVSCodeでCopilot Proを使っているので、追加費用はかかりません。
+ここが重要な点で、Anthropic APIキーは**トークン単位の従量課金**です。会話が長くなるほど、スレッドが増えるほど費用が積み上がります。
+
+一方GitHub Copilot Proは**月額固定（約$10）のサブスクリプション**です。OpenClawのDiscord対話をCopilot経由にすれば、何回やり取りしても追加費用はかかりません。すでにVSCodeでCopilotを使っている場合は、文字通りゼロ追加コストです。
+
+ドキュメントを確認すると、`github-copilot/claude-sonnet-4.6` が利用可能とあります。Claude Sonnet 4.6がそのまま使えます。
 
 設定はコマンド一発です。
 
