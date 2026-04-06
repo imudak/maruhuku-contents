@@ -12,7 +12,7 @@ published: false
 
 ## 今度は何が起きていたか
 
-crontabへの移行は終わっています。Claude CodeもMAXサブスクで動いています。それでもAPI消費が止まらない。
+crontabへの移行は終わりました。Claude CodeもMAXサブスクで動いています。それでもAPI消費が止まりません。
 
 「Discord会話が重いのかな」と漠然と思っていました。OpenClawとのやり取りが長くなると、過去ログも含めたコンテキスト全体を毎回送るので、1回の返信でそれなりのトークンを使います。
 
@@ -117,7 +117,7 @@ graph LR
 | Discord対話（OpenClaw） | GitHub Copilot経由 | Copilot Proプラン内 |
 | cronからの自律実行・実装 | Claude Code CLI（Linux crontab経由） | MAXサブスク |
 
-Discord対話はCopilotプラン内なので追加費用ゼロ。Claude Codeの自律実行はMAXサブスクで動く。AnthropicのAPIクレジットは使わない。
+Discord対話はCopilotプラン内なので追加費用はゼロです。Claude Codeの自律実行はMAXサブスクで動きます。AnthropicのAPIクレジットは使いません。
 
 ## Copilot Proの注意点
 
@@ -131,4 +131,4 @@ Copilot ProでClaude Sonnet 4.6を使うと「Premium requests」という枠を
 - [Part 2](https://zenn.dev/imudak/articles/anthropic-openclaw-api-migration-part2): cronがAPIキーを消費していたのでLinux crontabに移行
 - **Part 3（今回）**: Discord会話自体がAPIを食っていたのでGitHub Copilotに移行
 
-3つの問題が同じ1日で連続して発覚しました。全部当日中に対応しています。「移行したら終わり」ではなく、実際に使いながら問題を見つけていくしかなかった。GitHub Copilotへの移行でようやく落ち着いた感があります。もうPart 4は書かなくていいはずです。
+3つの問題が同じ1日で連続して発覚しました。全部当日中に対応しています。「移行したら終わり」ではなく、実際に使いながら問題を見つけていくしかありませんでした。GitHub Copilotへの移行でようやく落ち着いた感があります。もうPart 4は書かなくていいはずです。
