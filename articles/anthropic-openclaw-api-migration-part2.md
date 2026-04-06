@@ -11,9 +11,9 @@ topics:
 published: true
 ---
 
-[前の記事](https://zenn.dev/imudak/articles/anthropic-openclaw-api-migration)で「移行後のコストは月$10〜30程度になりそう」と書きました。
+[前の記事](https://zenn.dev/imudak/articles/anthropic-openclaw-api-migration)で「移行後は実質的な運用への影響はほぼなかった」と書きました。
 
-翌朝、Anthropicのコンソールを開いたら2日間で$40を超えていました。
+翌朝（4月6日）、Anthropicのコンソールを開いたら2日間で$40を超えていました。
 
 ## 何が起きていたか
 
@@ -53,7 +53,7 @@ OpenClawがcronのスケジュールを管理し、Claude Codeが実装を担う
 
 百式巡回は毎時45分に起動します。発掘サイクルは3時間ごとに2本。加えてメンション確認が15分おき。これだけのcronが全部APIキーで動いていたわけです。
 
-さらにもう一つ問題がありました。cronの環境にはNVMのパスが含まれないため、`claude`コマンドが見つからずエラーになっていました。
+さらにもう1つ問題がありました。cronの環境にはNVMのパスが含まれないため、`claude`コマンドが見つからずエラーになっていました。
 
 ```
 setsid: failed to execute claude: No such file or directory
@@ -67,7 +67,7 @@ setsid: failed to execute claude: No such file or directory
 
 ### 1. cronをLinux crontabに移行（根本対応）
 
-そもそもOpenClawがcronを管理している限り、APIキーが環境変数に流れる問題は構造的に残ります。cronのスケジュール管理自体をLinux crontabに移すことにしました。
+そもそもOpenClawがcronを管理している限り、APIキーが環境変数へ流れる問題は構造的に残ります。cronのスケジュール管理自体をLinux crontabへ移すことにしました。
 
 ```bash
 # Linux crontabに直接登録
@@ -133,4 +133,4 @@ timeout --kill-after=60 3600 setsid claude --permission-mode bypassPermissions \
 
 ---
 
-この対応でcronは解決しましたが、実はもう一つ課題が残っていました。Discord対話自体のAPI消費については[Part 3](https://zenn.dev/imudak/articles/anthropic-openclaw-api-migration-part3)に続きます。
+この対応でcronは解決しましたが、同じ日にもう1つ課題が見つかりました。Discord対話自体のAPI消費については[Part 3](https://zenn.dev/imudak/articles/anthropic-openclaw-api-migration-part3)に続きます。
