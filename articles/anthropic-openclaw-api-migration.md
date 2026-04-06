@@ -107,3 +107,9 @@ systemctl --user restart openclaw-gateway
 OpenClaw（対話・自律実行）はAPIキー従量課金、Claude Code（実装）はMAXサブスクという棲み分けに落ち着いています。
 
 なお、Boris ChernyはプロンプトキャッシュのヒットRate改善PRをOpenClaw本体に送ったとも述べています。公式ツールとサードパーティの共存を意識している様子は伝わりました。
+
+## 続編
+
+移行後の翌朝、コンソールを開いたら2日間で$40を超えていました。原因はcronのClaude CodeがAPIキーで動いていたことでした。
+
+→ [OpenClaw APIキー移行後に想定外の出費——cronのClaude Codeが原因だった](https://zenn.dev/imudak/articles/anthropic-openclaw-api-migration-part2)
