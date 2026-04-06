@@ -1,5 +1,5 @@
 ---
-title: "OpenClawのDiscord会話がAPIを食い尽くしていた——GitHub Copilot連携で解決した"
+title: "OpenClawのDiscord会話がAPIを食い尽くしていた——GitHub Copilot連携で解決した【Part 3】"
 emoji: "🦞"
 type: "tech"
 topics: ["openclaw", "anthropic", "githubcopilot", "claude", "ai"]

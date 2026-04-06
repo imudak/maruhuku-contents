@@ -1,5 +1,5 @@
 ---
-title: "AnthropicがOpenClawのMAXプラン利用を終了——APIキー移行で何が変わったか"
+title: "AnthropicがOpenClawのMAXプラン利用を終了——APIキー移行で何が変わったか【Part 1】"
 emoji: "🔑"
 type: "tech"
 topics:

@@ -1,5 +1,5 @@
 ---
-title: "OpenClaw APIキー移行後に想定外の出費——cronをLinux crontabに移行して解決した"
+title: "OpenClaw APIキー移行後に想定外の出費——cronをLinux crontabに移行して解決した【Part 2】"
 emoji: "💸"
 type: "tech"
 topics:
