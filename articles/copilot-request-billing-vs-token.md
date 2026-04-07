@@ -8,7 +8,7 @@ topics:
   - claude
   - openclaw
   - api
-published: false
+published: true
 ---
 
 OpenClawのAPIキー移行（[Part1](https://zenn.dev/imudak/articles/anthropic-openclaw-api-migration)・[Part2](https://zenn.dev/imudak/articles/anthropic-openclaw-api-migration-part2)）をやっているときに、気づいたことがあります。
