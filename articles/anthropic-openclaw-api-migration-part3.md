@@ -130,3 +130,7 @@ Premium requestsの残量は `https://github.com/settings/copilot` で確認で�
 - **Part 3（今回）**: Discord会話自体がAPIを食っていたのでGitHub Copilotに移行
 
 3つの問題が同じ1日で連続して発覚しました。全部当日中に対応しています。「移行したら終わり」ではなく、実際に使いながら問題を見つけていくしかありませんでした。GitHub Copilotへの移行でようやく落ち着いた感があります。もうPart 4は書かなくていいはずです。
+
+なお、「なぜCopilotのリクエスト課金がAI常駐用途に向いているのか」については別記事で詳しく解説しています。
+
+→ [GitHub CopilotのリクエストはなぜAI常駐用途に向いているのか](https://zenn.dev/imudak/articles/copilot-request-billing-vs-token)

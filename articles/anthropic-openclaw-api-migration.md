@@ -122,6 +122,6 @@ OpenClaw（対話・自律実行）はAPIキー従量課金、Claude Code（実�
 
 → [OpenClaw APIキー移行後に想定外の出費——cronのClaude Codeが原因だった](https://zenn.dev/imudak/articles/anthropic-openclaw-api-migration-part2)
 
-さらに、GitHub Copilotのリクエスト課金がAI常駐用途に向いている理由については別記事にまとめています。
+この対応を経てCopilotのリクエスト課金に乗り換えた経緯については別記事にまとめています。
 
 → [GitHub CopilotのリクエストはなぜAI常駐用途に向いているのか](https://zenn.dev/imudak/articles/copilot-request-billing-vs-token)
