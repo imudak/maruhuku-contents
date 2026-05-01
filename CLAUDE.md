@@ -181,3 +181,12 @@ published: false      # true で公開
 
 ## ビルド確認ルール
 - **push前に必ず `npm run build`（またはプロジェクト固有のビルドコマンド）を実行し、エラーがないことを確認してからpushすること**（テスト全パスだけでは不十分。tscの型チェックはJestでは検出されない）
+
+## テスト実行方法（Claude Code向け）
+
+```bash
+# テスト実行（推奨: dotレポーターで高速サマリー）
+cd app && npx vitest run --reporter=dot
+```
+
+⚠️ テストは1回だけ実行すること。
