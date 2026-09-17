@@ -20,20 +20,10 @@ published: false
 ## まず、何が起きたかを一枚で
 
 ```mermaid
-flowchart LR
-  subgraph night["夜 ― アプリを閉じた時"]
-    idb1["IndexedDB<br/>録音 96本"]
-    opfs1["OPFS<br/>印あり"]
-    cache1["CacheStorage<br/>印あり"]
-    ls1["localStorage<br/>記録あり"]
-  end
-  subgraph morning["朝 ― アプリを開いた時"]
-    idb2["IndexedDB<br/>空"]
-    opfs2["OPFS<br/>印が消えている"]
-    cache2["CacheStorage<br/>印が消えている"]
-    ls2["localStorage<br/>記録は無事"]
-  end
-  night ==>|"誰も触っていない数時間<br/>19回、これが起きた"| morning
+flowchart TB
+  night["夜 ― アプリを閉じた時<br/>IndexedDB … 録音 96本<br/>OPFS … 印あり<br/>CacheStorage … 印あり<br/>localStorage … 記録あり"]
+  morning["朝 ― アプリを開いた時<br/>IndexedDB … 空<br/>OPFS … 印が無い<br/>CacheStorage … 印が無い<br/>localStorage … 記録は無事"]
+  night ==>|"誰も触っていない数時間に<br/>19回、これが起きた"| morning
 ```
 
 **三つが揃って空になり、一つだけ生き残ります。** アプリは何もしていません。前回はきれいに接続を閉じて終わっていて、その後は一度も開いていない。`persisted: true`（永続化の許可）も毎回取れています。
@@ -48,20 +38,22 @@ flowchart LR
 flowchart TB
   subgraph phone["スマートフォン ― 内部ストレージ 109GB"]
     subgraph chrome["Chrome が管理する領域"]
-      subgraph bucket["オリジンの既定バケット ― 19回、ここがまるごと捨てられた"]
-        idb["IndexedDB<br/>曲・フレーズ・録音の本体"]
-        opfs["OPFS<br/>逃げ場の候補だった"]
-        cache["CacheStorage<br/>PWA の precache"]
+      subgraph bucket["オリジンの既定バケット ― ここが丸ごと捨てられる"]
+        idb["IndexedDB"]
+        opfs["OPFS"]
+        cache["CacheStorage"]
       end
-      ls["localStorage<br/>12回とも生き残った<br/>消失ログ・構造の控え"]
+      ls["localStorage<br/>12回とも生き残った"]
     end
-    folder["端末の実フォルダ<br/>File System Access API で選んでもらう<br/>ブラウザの割当の外側"]
+    folder["端末の実フォルダ<br/>ブラウザの割当の外側"]
   end
-  cloud["端末の外 ― クラウドや PC<br/>エクスポートした zip"]
+  cloud["端末の外 ― クラウドや PC<br/>zip"]
   folder -->|"人が持ち出す"| cloud
 ```
 
-**IndexedDB・OPFS・CacheStorage は、同じ一つの箱の中の住人です。** だから「IndexedDB が危ないので OPFS へ逃がそう」は成立しません。箱ごと捨てられるからです。
+箱の中の三つが、それぞれ何を持っているかというと ―― **IndexedDB** が曲・フレーズ・録音の本体、**OPFS** は逃げ場の候補として試した先、**CacheStorage** は PWA が自分自身を置いておく場所です。
+
+**そしてこの三つは、同じ一つの箱の中の住人です。** だから「IndexedDB が危ないので OPFS へ逃がそう」は成立しません。箱ごと捨てられるからです。
 
 `localStorage` は Chrome の管理下にありますが、**実測では19回とも道連れになりませんでした**（仕様がそう保証しているわけではなく、あくまで私の端末で観測された振る舞いです）。だから消失ログと構造の控えはそこに置いています ―― **消えた側に記録を置いても、記録ごと消えるので。**
 
@@ -120,25 +112,14 @@ localStorage も、まるごと別物です。
 次に、**誰が触れるのか**です。
 
 ```mermaid
-flowchart LR
-  app["うたループ<br/>ブラウザの中の JavaScript"]
-  browser["ブラウザ / OS"]
-  user["使う人"]
-
-  bucket2["既定バケット<br/>IndexedDB・OPFS・CacheStorage"]
-  ls2["localStorage"]
-  folder2["端末の実フォルダ"]
-  zip2["zip ― 端末の外"]
-
-  app -->|"いつでも読み書きできる"| bucket2
-  app -->|"いつでも読み書きできる"| ls2
-  app -->|"許可をもらった時だけ書ける"| folder2
-  browser -->|"予告なく、丸ごと捨てる"| bucket2
-  user -->|"ファイルアプリから見える・消せる"| folder2
-  user -->|"どこへでも預けられる"| zip2
+flowchart TB
+  app["アプリ"] -->|"いつでも読み書き"| bucket2["既定バケット"]
+  browser["ブラウザ / OS"] -->|"予告なく丸ごと捨てる"| bucket2
+  app -->|"許可をもらった時だけ"| folder2["端末の実フォルダ"]
+  user["使う人"] -->|"見える・消せる"| folder2
 ```
 
-表にすると、こうなります。
+`localStorage` と zip も含めて表にすると、こうなります。
 
 | 置き場所 | アプリから | 使う人から | ブラウザ / OS から |
 |---|---|---|---|
