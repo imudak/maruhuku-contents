@@ -8,7 +8,7 @@ topics:
   - 個人開発
   - indexeddb
   - pwa
-published: false
+published: true
 ---
 
 バックアップから復元した録音195本を、**私が書いたバックアップ処理が消しました。**
