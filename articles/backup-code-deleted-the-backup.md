@@ -28,7 +28,7 @@ published: true
 そこで、録音のたびに**端末内の実フォルダへも控えを書く**ようにしました。File System Access API です。ブラウザの割当ストレージの外なので、ここは一緒に消えません。以下はその「控え」をめぐる話です。
 
 :::message
-消失そのものの調査 ―― 何が消えて何が生き残るのか、なぜ OPFS が逃げ場にならないのか、`navigator.storage.estimate()` の `quota` を読み違えた話 ―― は[別の記事](https://zenn.dev/imudak/articles/indexeddb-bucket-wiped-22-times)に書きました。この記事はそれを読まなくても通ります。
+消失そのものの調査 ―― 何が消えて何が生き残るのか、なぜ OPFS が逃げ場にならないのか、`navigator.storage.estimate()` の `quota` を読み違えた話 ―― は[別の記事](https://zenn.dev/imudak/articles/indexeddb-bucket-wiped-22-times)に書きました。この記事はそれを読まなくても通ります。なお、以下の三件は長い方の記事にも一章として入っています（あちらを既に読んだ方には重複します）。
 :::
 
 ## 一つ目：掃除が、復元した195本を消しました
