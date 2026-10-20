@@ -103,9 +103,11 @@ localStorage も、まるごと別物です。
 
 補足を三つ。
 
-- **`navigator.storage.persist()`** で `persisted: true` を取ると、この既定バケットが persistent になります。
+- **永続化は二つのメソッドに分かれています。** 要求するのが **`navigator.storage.persist()`**、
+  いまの状態を読むのが **`navigator.storage.persisted()`** です（どちらも `Promise<boolean>`）。
+  要求が通ると、この既定バケットが persistent になります。
   ただし仕様上これが守るのは**容量逼迫による自動退去**からであって、あらゆる消え方を防ぐものではありません
-  （実際、私の22回はすべて `persisted: true` の状態で起きています）。
+  （実際、私の22回はすべて `persisted: true` の状態で起きています。この値は `persisted()` で読んだものです）。
 - **Storage Buckets API**（`navigator.storageBuckets.open()`）を使えば、名前付きのバケットを追加で作れます。
   バケットごとに永続性や期限を分けられるのですが、**同じ quota の層の下にある**ので、
   「別のバケットへ逃がせば助かる」とは考えにくく、私は採りませんでした。

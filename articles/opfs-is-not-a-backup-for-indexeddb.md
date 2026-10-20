@@ -79,7 +79,9 @@ persisted        → true
 
 ## `persisted: true` は「消えない」ではありません
 
-`navigator.storage.persist()` で `persisted: true` を取ると、この既定バケットが persistent になります。ただし仕様上これが守るのは**容量逼迫による自動退去**からであって、あらゆる消え方を防ぐものではありません。
+永続化のメソッドは二つに分かれています。**要求するのが `navigator.storage.persist()`、いまの状態を読むのが `navigator.storage.persisted()`** です（どちらも `Promise<boolean>`）。状態を知りたいだけなら後者を呼びます。
+
+要求が通ると、この既定バケットが persistent になります。ただし仕様上これが守るのは**容量逼迫による自動退去**からであって、あらゆる消え方を防ぐものではありません。
 
 **私の22回は、すべて `persisted: true` の状態で起きています。**
 
