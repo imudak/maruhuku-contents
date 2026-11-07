@@ -28,7 +28,7 @@ published: true
 そこで、録音のたびに**端末内の実フォルダへも控えを書く**ようにしました。File System Access API です。ブラウザの割当ストレージの外なので、ここは一緒に消えません。以下はその「控え」をめぐる話です。
 
 :::message
-消失そのものの調査 ―― 何が消えて何が生き残るのか、なぜ OPFS が逃げ場にならないのか、`navigator.storage.estimate()` の `quota` を読み違えた話 ―― は[別の記事](https://zenn.dev/imudak/articles/indexeddb-bucket-wiped-22-times)に書きました。この記事はそれを読まなくても通ります。なお、以下の三件は長い方の記事にも一章として入っています（あちらを既に読んだ方には重複します）。
+消失そのものの調査 ―― 何が消えて何が生き残るのか、なぜ OPFS が逃げ場にならないのか、`navigator.storage.estimate()` の `quota` を読み違えた話 ―― は[別の記事](https://zenn.dev/imudak/articles/indexeddb-bucket-wiped-22-times)に書きました。この記事はそれを読まなくても通ります。OPFS の件だけは[OPFS は IndexedDB のバックアップ先になりません](https://zenn.dev/imudak/articles/opfs-is-not-a-backup-for-indexeddb)に単独で書いています。なお、以下の三件は長い方の記事にも一章として入っています（あちらを既に読んだ方には重複します）。
 :::
 
 ## 一つ目：掃除が、復元した195本を消しました
@@ -157,4 +157,4 @@ if (ids && !(ids.length === 0 && wanted.size > 0)) res.presentIds = ids
 
 ---
 
-このアプリは[うたループ](https://maruhuku.jp/products/utaloop/)という名前で公開しています。消失そのものの調査は[IndexedDBが22回消えました](https://zenn.dev/imudak/articles/indexeddb-bucket-wiped-22-times)に書きました。
+このアプリは[うたループ](https://maruhuku.jp/products/utaloop/)という名前で公開しています。消失そのものの調査は[IndexedDBが22回消えました](https://zenn.dev/imudak/articles/indexeddb-bucket-wiped-22-times)に、OPFS を控えの置き場にできない理由は[OPFS は IndexedDB のバックアップ先になりません](https://zenn.dev/imudak/articles/opfs-is-not-a-backup-for-indexeddb)に書きました。
